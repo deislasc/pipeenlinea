@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: pipeenlinea_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: pipeenlinea
+      POSTGRES_USER: pipeenlinea_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=es_MX.UTF-8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/indexes.sql:/docker-entrypoint-initdb.d/02-indexes.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pipeenlinea_user -d pipeenlinea"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pipeenlinea_network
+
+  # Flask Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pipeenlinea_app
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://pipeenlinea_user:${DB_PASSWORD:-changeme123}@postgres:5432/pipeenlinea
+      FLASK_ENV: ${FLASK_ENV:-production}
+      SECRET_KEY: ${SECRET_KEY}
+      ENCRYPTION_KEY_PATH: /app/secret.key
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./mysite/uploads:/app/uploads
+      - ./mysite/working:/app/working_backup  # Backup de JSONs
+      - ./secret.key:/app/secret.key:ro
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - pipeenlinea_network
+
+  # pgAdmin para administración (opcional, solo desarrollo)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pipeenlinea_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pipeenlinea.com
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - pipeenlinea_network
+    profiles:
+      - dev  # Solo se activa con: docker-compose --profile dev up
+
+  # Migration Service (one-time use)
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile.migration
+    container_name: pipeenlinea_migration
+    environment:
+      DATABASE_URL: postgresql://pipeenlinea_user:${DB_PASSWORD:-changeme123}@postgres:5432/pipeenlinea
+      ENCRYPTION_KEY_PATH: /app/secret.key
+    volumes:
+      - ./mysite/working:/app/working:ro
+      - ./secret.key:/app/secret.key:ro
+      - ./migration_logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pipeenlinea_network
+    profiles:
+      - migrate  # Solo se activa con: docker-compose --profile migrate up migration
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  pipeenlinea_network:
+    driver: bridge
