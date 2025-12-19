@@ -1,0 +1,39 @@
+# ============================================================================
+# Dockerfile.migration - Script de Migración de Datos
+# ============================================================================
+
+FROM python:3.9-slim
+
+# Variables de entorno
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    postgresql-client \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# Instalar dependencias de Python
+RUN pip install --upgrade pip && \
+    pip install psycopg2-binary cryptography
+
+# Copiar script de migración
+COPY migrate_to_postgres.py /app/
+COPY mysite/database.py /app/mysite/
+
+# Crear directorio para mysite module
+RUN mkdir -p /app/mysite /app/logs && \
+    touch /app/mysite/__init__.py
+
+# Hacer script ejecutable
+RUN chmod +x /app/migrate_to_postgres.py
+
+# Por defecto, ejecutar migración
+ENTRYPOINT ["python", "/app/migrate_to_postgres.py"]
+CMD ["--help"]
