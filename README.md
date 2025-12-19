@@ -93,7 +93,8 @@ pipeenlinea/
 ├── docker-compose.yml   # Orquestación de servicios
 ├── Dockerfile           # Imagen de la aplicación
 ├── start.sh             # Script de inicio automático ⭐
-└── migrate_to_postgres.py  # Script de migración
+├── migrate.sh           # Script de migración interactivo ⭐
+└── migrate_to_postgres.py  # Script de migración (core)
 ```
 
 ## 🎨 Frontend Moderno
@@ -136,7 +137,22 @@ Ver documentación completa en: `FRONTEND_DESIGN_SYSTEM.md`
 
 ## 🔄 Migración de Datos
 
-El sistema incluye migración completa desde JSONs encriptados:
+### Método Recomendado: Script Interactivo ⭐
+
+```bash
+./migrate.sh
+```
+
+Este script **interactivo** te permite elegir entre:
+
+1. **Dry-Run (Prueba)** - Simula la migración sin guardar
+2. **Migración Real** - Migra todos los datos a PostgreSQL
+3. **Batch Size Personalizado** - Ajusta el tamaño de lote (100-5000)
+4. **Omitir Tablas** - Migra solo las tablas que necesites
+5. **Ver Estado** - Estadísticas de registros por tabla
+6. **Limpiar DB** - Reinicia la base de datos desde cero
+
+### Método Manual:
 
 ```bash
 # 1. Verificación pre-migración
