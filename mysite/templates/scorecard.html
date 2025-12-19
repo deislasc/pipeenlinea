@@ -1,0 +1,913 @@
+
+{%- extends "base.html" -%}
+{%- block content -%}
+
+    <div class="panelPipeLine" id="panelPipeLine" style="height:100%;">   
+        <div class="botoneraLarga">
+            <form id="scoreCardsForm" action="/scorecard" method="Post">
+                    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">    
+                    <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                    <input type="hidden" name="viewName" value="{{viewName}}">
+                <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">   
+                    <tr> 
+                    <td align="center">Desde:</td>  
+                    <td ></td>
+                    <td align="center">Hasta:</td>
+                    <td ></td>
+                    <td align="center">Fecha de Referencia:</td>  
+                    <td ></td>
+                   <!--  <td align="center">Producto:</td>
+                    <td ></td> -->
+                    <td align="center">Frecuencia:</td>
+                    <td ></td> 
+                    <td align="center" rowspan="2">
+                        <input type="submit" value="Consultar">
+                    </td>  
+                    <td align="center" rowspan="2">
+                        <input type="button" value="Ver Solicitudes" onClick="mostrarVisorSolicitudes(this);">
+                    </td>  
+                    <td align="center" rowspan="2">
+                        <input type="button" value="IMPRIMIR" onclick="printElem('listadoPipeLine');">
+                    </td>                   
+                    </tr>
+                    <tr>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fechaInicio" name="fechaInicio" min="2019-01-02"
+                             value="{{formData['fechaInicio']}}"></input>
+                        </td>  
+                        <td></td>
+                        <td  align="center">
+                            <input type="date" class="roundInput" id="fechaFin" name="fechaFin" min="2019-01-02" value="{{formData['fechaFin']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fecha" name="fecha"
+                             min="2019-01-02" value="{{formData['fecha']}}"></input>
+                        </td>  
+                        <td></td>
+                       <!--  <td  align="center">
+                            <select class="roundInput" id="producto" name="producto">
+                                <option value=""></option>
+                                <option value="Adelanto de Nómina"
+                                    {%- if formData['producto']=="Adelanto de Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}
+                                >Adelanto de Nómina</option>
+                                <option value="Nómina"
+                                {%- if formData['producto']=="Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}>Nómina</option>
+                                <option value="Vehículo"
+                                {%- if formData['producto']=="Vehículo" -%}
+                                     selected="true"
+                                    {%- endif-%}>Vehículo</option>
+                            </select>
+                        </td> 
+                        <td></td> -->
+                        <td  align="center">
+                            <select class="roundInput" id="frecuenia" name="frecuencia">
+                                <option value="1"
+                                {%- if formData['frecuencia']=="1" -%}
+                                     selected="true"
+                                    {%- endif-%}>Fin de Mes</option>
+                                <option value="2"
+                                {%- if formData['frecuencia']=="2" -%}
+                                     selected="true"
+                                    {%- endif-%}>Diario</option>
+                                <option value="3"
+                                selected="true"
+                                {%- if formData['frecuencia']=="3" -%}
+                                     selected="true"
+                                    {%- endif-%}>Mismo día hábil</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+         <div class="listadoPipeLine" id="listadoPipeLine" name="listadoPipeLine">
+            <table style="word-wrap: break-word; 
+                                    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                    background-color:#ffffff;
+                                    text-align: center;
+                                    display: none;" 
+                    border="2" 
+                    cellspacing="0" 
+                    width="100%"
+                    >
+                <tr>
+                    <td width="150px" style="text-align: center; vertical-align: middle;" ><img src="{{ url_for('static', filename='img/Logo_MiPymex.jpg') }}" alt=""
+                        style="width: 140px; height: auto;"></td>
+                    <td>SCORECARD</td>
+                </tr>
+            </table>
+
+
+            {%- for scorecard in scorecards -%}
+            <table style="border: 3px solid;
+                          margin:8px;" cellspacing="0">
+                <tr>
+                    <td colspan="17" style="text-align: center; border: 2px solid #000000; font-weight: bold;">{{scorecard.fecha}}</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="border: 1px solid #000000; 
+                                           text-align: center
+                    ">ASESOR</td>
+                    <td colspan="6" style="border: 1px solid #000000; 
+                                    background: navy; 
+                                    color:white; 
+                                    text-align: center;
+                    ">CN</td>
+                    <td colspan="6" style="border: 1px solid #000000; 
+                                    background: #0033cc; 
+                                    color:white; 
+                                    text-align: center;
+                    ">AN</td>
+                    <td colspan="4" style="border: 1px solid #000000; 
+                                    background: blue; 
+                                    color:white; 
+                                    text-align: center;
+                    ">MIX</td>
+                </tr>
+                <tr>
+                    <!-- CAMPOS PARA CN -->
+                    <td style="border: 1px solid #000000;  
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: navy; 
+                        color:white; 
+                    ">Contactados <br><br>-30-</td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: navy; 
+                        color:white; 
+                    ">Entregados a<br>Riesgos<br>-25-</td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: navy; 
+                        color:white; 
+                    ">Autorizados<br><br>-20-</td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: navy; 
+                        color:white; 
+                    ">Monto Neto Autorizado</td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: navy; 
+                        color:white; 
+                    ">%<br>Comisión<br>estimado</td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: navy; 
+                        color:white; 
+                    ">$<br>Comisión<br>estimada</td>
+
+                    <!-- CAMPOS PARA AN -->
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: #0033CC; 
+                        color:white; 
+                    ">Contactados</td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: #0033CC;
+                        color:white; 
+                    ">Entregados a<br>Riesgos<br></td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: #0033CC;
+                        color:white; 
+                    ">Autorizados</td>
+                    <td style="border: 1px solid #000000;  
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: #0033CC;
+                        color:white; 
+                    ">Monto Neto</td>
+                    <td style="border: 1px solid #000000;  
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: #0033CC;
+                        color:white; 
+                    ">% Comisión Estimado</td>
+                     <td style="border: 1px solid #000000;  
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: #0033CC;
+                        color:white; 
+                    ">$ Comisión Estimada</td>
+
+                    <!-- CAMPOS PARA MIX -->
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: blue; 
+                        color:white; 
+                    ">Total con Créditos Ponderados</td>
+
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: blue;
+                        color:white; 
+                    ">Monto Neto Total<br><br></td>
+
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: blue;
+                        color:white; 
+                    ">% Comisión Estimada</td>
+                    
+                    <td style="border: 1px solid #000000;  
+                        font-weight: bold;
+                        font-size: 10px;
+                        text-align: center;
+                        background: blue;
+                        color:white; 
+                    ">Comisión<br>Estimada</td>
+                    
+
+                </tr>
+
+                <!-- {{scorecard["scoreCard"]["CN"]["asesores"]|pprint}} -->
+
+                {%-for asesor in scorecard["scoreCard"]['CN']["asesores"]-%}
+
+                <tr>
+                    <td style="border: 1px solid #000000;  
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: left;
+                        background: white; 
+                        color:black; 
+                    ">{{asesor}}</td>
+                    
+                    <!-- VALORES PARA CN -->
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: {{scorecard['scoreCard']['CN']['asesores'][asesor].contactados.bgcolor}};
+                        color:{{scorecard['scoreCard']['CN']['asesores'][asesor].contactados.color}};"
+                        onclick="mostrarDetalleScoreCard('{{scorecard.fecha}}','CN', '{{asesor}}', 'contactados')"
+                    >  {{scorecard["scoreCard"]["CN"]["asesores"][asesor].contactados.total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: {{scorecard['scoreCard']['CN']['asesores'][asesor].entregadosARiesgos.bgcolor}};
+                        color:{{scorecard['scoreCard']['CN']['asesores'][asesor].entregadosARiesgos.color}};
+                    "
+                    onclick="mostrarDetalleScoreCard('{{scorecard.fecha}}','CN', '{{asesor}}', 'entregadosARiesgos')"
+                    >  {{scorecard["scoreCard"]["CN"]["asesores"][asesor].entregadosARiesgos.total}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: {{scorecard['scoreCard']['CN']['asesores'][asesor].autorizados.bgcolor}};
+                        color:{{scorecard['scoreCard']['CN']['asesores'][asesor].autorizados.color}};
+                    "
+                    onclick="mostrarDetalleScoreCard('{{scorecard.fecha}}','CN', '{{asesor}}', 'autorizados')">  {{scorecard["scoreCard"]["CN"]["asesores"][asesor].autorizados.total}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: {{scorecard['scoreCard']['CN']['asesores'][asesor].autorizados.bgcolor}};
+                        color:{{scorecard['scoreCard']['CN']['asesores'][asesor].autorizados.color}};
+                    ">  {{scorecard["scoreCard"]["CN"]["asesores"][asesor].autorizados.monto}}
+                    </td>
+                    
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: {{scorecard['scoreCard']['CN']['asesores'][asesor].autorizados.bgcolor}};
+                        color:{{scorecard['scoreCard']['CN']['asesores'][asesor].autorizados.color}};
+                    ">  {{scorecard["scoreCard"]["CN"]["asesores"][asesor].autorizados.factorComision}}
+                    </td>
+
+                     <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: {{scorecard['scoreCard']['CN']['asesores'][asesor].autorizados.bgcolor}};
+                        color:{{scorecard['scoreCard']['CN']['asesores'][asesor].autorizados.color}};
+                    ">  {{scorecard["scoreCard"]["CN"]["asesores"][asesor].autorizados.montoComision}}
+                    </td>
+
+                    <!-- VALORES PARA AN -->
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: #ffffff;
+                        color:#000000;
+                    "
+                    onclick="mostrarDetalleScoreCard('{{scorecard.fecha}}','AN', '{{asesor}}', 'contactados')">  {{scorecard["scoreCard"]["AN"]["asesores"][asesor].contactados.total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: #ffffff;
+                        color:#000000;
+                    "
+                    onclick="mostrarDetalleScoreCard('{{scorecard.fecha}}','AN', '{{asesor}}', 'entregadosARiesgos')">
+                    {{scorecard["scoreCard"]["AN"]["asesores"][asesor].entregadosARiesgos.total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: #ffffff;
+                        color:#000000;"
+                        onclick="mostrarDetalleScoreCard('{{scorecard.fecha}}','AN', '{{asesor}}', 'autorizados')">
+                    {{scorecard["scoreCard"]["AN"]["asesores"][asesor].autorizados.total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: #ffffff;
+                        color:#000000;
+                    "
+                     >  {{scorecard["scoreCard"]["AN"]["asesores"][asesor].autorizados.monto}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: #ffffff;
+                        color:#000000;
+                    ">  {{scorecard["scoreCard"]["AN"]["asesores"][asesor].autorizados.factorComision}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: #ffffff;
+                        color:#000000;
+                    ">  {{scorecard["scoreCard"]["AN"]["asesores"][asesor].autorizados.montoComision}}
+                    </td>
+
+                    <!-- VALORES PARA MIX -->
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: #ffffff;
+                        color:#000000;
+                    ">  {{scorecard["scoreCard"]["MIX"]["asesores"][asesor].total}}
+                    </td>
+
+                    
+
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: #ffffff;
+                        color:#000000;
+                    ">  {{scorecard["scoreCard"]["MIX"]["asesores"][asesor].montoTotal}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: {{scorecard['scoreCard']['MIX']['asesores'][asesor].bgcolor}};
+                        color:{{scorecard['scoreCard']['MIX']['asesores'][asesor].color}};
+                    ">  {{scorecard["scoreCard"]["MIX"]["asesores"][asesor].factorComision}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                        font-weight: bold;
+                        font-size: 14px;
+                        text-align: center;
+                        background: {{scorecard['scoreCard']['MIX']['asesores'][asesor].bgcolor}};
+                        color:{{scorecard['scoreCard']['MIX']['asesores'][asesor].color}};
+                    ">  {{scorecard["scoreCard"]["MIX"]["asesores"][asesor].montoComision}}
+                    </td>        
+                   
+                </tr>
+
+                {%-endfor-%}
+
+                <!-- Se agrega el Total del dia-->
+                <tr>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: right;
+                            background: #dcdcdc;
+                            color:#000000;">Total
+                    </td>
+
+                    <!-- Se agrega el Total del dia para CN-->
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["CN"]["Total"]["contactados"].total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["CN"]["Total"]["entregadosARiesgos"].total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["CN"]["Total"]["autorizados"].total}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["CN"]["Total"].monto}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #000000;
+                            color:#000000;
+                    "> 
+                    <!-- No se llena este espacio de la tabla -->
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["CN"]["Total"].montoComision}}
+                    </td>
+
+                    <!-- Se agrega el Total del dia para AN-->
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["AN"]["Total"]["contactados"].total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["AN"]["Total"]["entregadosARiesgos"].total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["AN"]["Total"]["autorizados"].total}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["AN"]["Total"].monto}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #000000;
+                            color:#000000;
+                    "> 
+                    <!-- No se llena este espacio de la tabla -->
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["AN"]["Total"].montoComision}}
+                    </td>
+
+
+                     <!-- Se agrega el Total del dia para MIX-->
+                     <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["MIX"]["Total"].total}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["MIX"]["Total"].monto}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #000000;
+                            color:#000000;
+                    "> 
+                    <!-- No se llena este espacio de la tabla -->
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #dcdcdc;
+                            color:#000000;
+                    "> 
+
+                    {{scorecard["scoreCard"]["MIX"]["Total"].montoComision}}
+                    </td>
+                </tr>
+
+                <!-- Renglon del dia anterior -->
+                <tr>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: right;
+                            background: #777777;
+                            color:#ffffff;">Total {{scorecard["scoreCard"]["diaPrevio"].fecha}}
+                    </td>
+
+                    <!-- Se agrega el Total del dia para CN-->
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["CN"]["Total"]["contactados"].total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["CN"]["Total"]["entregadosARiesgos"].total}}
+                    </td>
+
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["CN"]["Total"]["autorizados"].total}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["CN"]["Total"].monto}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #000000;
+                            color:#000000;
+                    "> 
+                    <!-- No se llena este espacio de la tabla -->
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["CN"]["Total"].montoComision}}
+                    </td>
+
+                    <!-- Se agrega el Total del dia para AN-->
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["AN"]["Total"]["contactados"].total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["AN"]["Total"]["entregadosARiesgos"].total}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["AN"]["Total"]["autorizados"].total}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["AN"]["Total"].monto}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #000000;
+                            color:#000000;
+                    "> 
+                    <!-- No se llena este espacio de la tabla -->
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["AN"]["Total"].montoComision}}
+                    </td>
+
+
+                     <!-- Se agrega el Total del dia para MIX-->
+                     <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["MIX"]["Total"].total}}
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["MIX"]["Total"].monto}}
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #000000;
+                            color:#000000;
+                    "> 
+                    <!-- No se llena este espacio de la tabla -->
+                    </td>
+
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #777777;
+                            color:#ffffff;
+                    "> 
+
+                    {{scorecard["scoreCard"]["diaPrevio"]["scoreCard"]["MIX"]["Total"].montoComision}}
+                    </td>
+                </tr>
+
+                <!-- Se agrega el renglon de Metas al Día Hábil -->
+                <tr>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #ffffff;
+                            color:navy;
+                    "> 
+                    Meta al día hábil
+                    </td>
+                     <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #ffffff;
+                            color:navy;
+                    "> 
+                     {{scorecard["scoreCard"]["CN"]["metasDia"].contactados}}
+                    </td>
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #ffffff;
+                            color:navy;
+                    "> 
+                     {{scorecard["scoreCard"]["CN"]["metasDia"].entregadosARiesgos}}
+                    </td>
+                    </td>
+                    <td style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #ffffff;
+                            color:navy;
+                    "> 
+                     {{scorecard["scoreCard"]["CN"]["metasDia"].autorizados}}
+                    </td>
+                    <td colspan="13" 
+                        style="border: 1px solid #000000; 
+                            font-weight: bold;
+                            font-size: 14px;
+                            text-align: center;
+                            background: #000000;
+                            color:navy;
+                    "> 
+                     <!-- No se llena estes espacio de la tabla -->
+                    </td>
+                </tr>
+
+
+                
+            </table>
+            
+            
+                 
+            {%- endfor -%}
+
+        </div>
+    </div>
+    
+    <div id="visorSolicitudes" style="visibility: hidden; display: none;">
+        
+        <div class="panelPipeLine" id="panelPipeLine" style="height:300px; width:calc(100% - 350px);">   
+            <div class="listadoPipeLine" id="detallePipeLine" name="detallePipeLine" style="height: 100%">
+
+                <table border="1" cellspacing="0" 
+                 style="table-layout: fixed; 
+                        width: calc(100% - 8px);
+                 ">                        
+                    <th class="encabezadoTabla">Datos</th>
+                    {%-for campo in listaCamposFiltro-%}
+                        {%- if campo.pipeLineRenderable=="true"-%}
+                            <th class="encabezadoTabla">    
+                                {{campo.label}}
+                            </th>
+                        {%-endif-%}
+                    {%-endfor-%}
+                </table>
+            </div>             
+        </div>
+        
+        <div class="panelPipeLine" style="height:300px; width: 330px;">  
+            <table width="100%" >
+                    <tr>
+                        <th class="encabezadoTabla" 
+                            colspan="2"
+                            style="border:2px solid #000000;" 
+                            >SOLICITUD</th>
+                    </tr>
+            </table>
+            <div class="listadoPipeLine" id="listadoPipeLine" name="listadoPipeLine" style="height: 100%">
+                <table>
+                    <tbody id="detalleSolicitud">
+                        
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    
+
+
+    
+{%- endblock -%}
+
+
+
+
+ 

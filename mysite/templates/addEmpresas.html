@@ -1,0 +1,91 @@
+<form id="formaUsuarioAdd" action="/empresas/add" method="Post"> 
+    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">	
+    <input type="hidden" name="viewName" value="{{viewName}}">
+	<div class="detalleSolicitudItem" id="detalleSolicitudAdd">
+		<table id="tablaaddDetalleUsuario" border="0px" spacing=0 width="100%" height="100%" cellpadding="0" cellspacing="0">
+			{%- for campo in listaCamposFiltro -%}
+                {%-set campoActual=campo.value-%}
+                {%- if campo.addRenderable=="true" -%}
+                    <tr>
+                        {%- if campo.tipo=="textarea" -%}
+                            <td colspan="3" class="boldSmallLabel">
+                               {{campo.label}} 
+                            </td></tr><tr>
+                        {%-else-%}
+                            <td class="boldSmallLabel" align="right">
+                            {{campo.label}}
+                        {%-endif-%}   
+                     
+                        {%- if campo.addToogle == 'false' -%}
+
+                            {%- if campo.tipo!="textarea" -%} 
+                                <td colspan="2" style="padding-right:16px; ">
+                            {%- else -%} 
+                                <td colspan="3"> 
+                            {%-endif-%}  
+
+                            
+                        	<{{campo.tipo}} id="{{campo.value}}"  name="{{campo.value}}" class="{{campo.class}}" style="width:100%;" 
+                            {%- if campo.inputType=="float" -%}
+                                type="number"
+                                step=".01"
+                            {%- endif-%}
+                            {%- if campo.inputType=="integer" -%}
+                                type="number"
+                            {%- endif-%}
+                            {%- if campo.required=="true" -%}
+                                required="true" 
+                            {%- endif-%}
+
+                                value=""
+                            {%- if campo.readOnly=="true" -%}
+                                readonly="true"
+                            {%- endif -%}
+                            >          
+                                {%- if campo.tipo=="select"-%}
+                                        {%- if campoActual=="asesor"-%}
+                                            <option value=""></option>
+                                            {%-for asesor in listaAsesores|sort(attribute='name') -%}
+                                                    <option value="{{asesor.ownerID}}" 
+                                                    >{{asesor.name}}</option>
+                                        
+                                            {%- endfor -%} 
+                                            {%- else -%}
+                                     
+                                                {# PARA TODOS LOS DEMAS CAMPOS QUE TRAEN SU optionsList #}
+
+                                                {%- for option in campo.optionsList-%}
+                                                    <option value="{{option}}">{{option}}</option>
+                                                {%- endfor -%}
+                                        {%- endif -%}
+                                    
+
+                                {%- endif-%} {# Finaliza if "select" #}
+
+                            </{{campo.tipo}}>
+                            </td>
+                        {%- elif campo.addToogle == 'true' -%}
+                            <td>
+                                <{{campo.tipo}} id="{{campo.value}}" name="{{campo.value}}" class="{{campo.class}}" readonly></{{campo.tipo}}>
+                            </td>
+                            <td align="right" style="padding-right: 6px; width: 54px;">
+                                <label class="switch">
+                                    <input type="checkbox" id="check_{{campo.value}}" name="check_{{campo.value}}" > 
+                                    <span class="slider round"></span> 
+                                </label>
+                            </td>
+                        {%- endif -%}
+                    </tr>
+                {%- endif -%}
+           {%- endfor -%}
+           <tr>
+               <td colspan=3 valign="middle" align="center">
+                   <button type="submit" class="buttonSubmit" >Guardar</button> 
+               </td>
+           </tr>
+
+		</table> {# FINALIZA <table border="0" id="tablaDetalleUsuario"> #} 
+			
+			
+	</div> <!-- FINALIZA <div class="detalleSolicitudItem"> -->
+</form>	

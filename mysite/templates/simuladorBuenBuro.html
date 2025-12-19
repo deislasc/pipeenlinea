@@ -1,0 +1,211 @@
+ <table style="
+               margin-left: 16px;
+               margin-right: 16px;
+               margin-top: 16px;
+               margin-bottom: 16px;
+               border: 1px solid;
+               border-radius: 8px;
+               font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+               font-size: 14px;
+               font-weight: bold;
+               table-layout: fixed;
+              " cellspacing="0" cellpadding="0">
+        {%- if solicitud["tipoBuroCredito"] =="Bueno"  -%}
+        <th colspan="2"
+                bgcolor="#00FF00"
+                style="color:#000000;
+                        font-weight: bold;
+                        text-align: center;
+                        border-top-left-radius: 8px;
+                        border-top-right-radius:8px;">SIMULADOR POR BUEN BURO</th>
+        {%-endif-%}
+        {%- if solicitud["tipoBuroCredito"] =="Regular con Capacidad"  -%}
+        <th colspan="2"
+                bgcolor="#FFFF00"
+                style="color:#000000;
+                        font-weight: bold;
+                        text-align: center;
+                        border-top-left-radius: 8px;
+                        border-top-right-radius:8px;">SIMULADOR POR BURO REGULAR CON CAPACIDAD</th>
+        {%-endif-%}
+        <tr/>
+
+        <tr/>
+            <td colspan="2" class="boldSmallLabel" align="center" >Cliente:</td>
+                <tr/>
+                <td colspan="2"><input readonly
+                                        class="roundInputCalc"
+                                        value='{{laPropuesta.clienteNombre}}&nbsp {{laPropuesta.clienteApellidoPaterno}}&nbsp {{laPropuesta.clienteApellidoMaterno}}'
+                                        style="text-align: center;"
+                                        ></td>
+        <tr/>
+            <td class="boldSmallLabel" align="right">Monto del contrato</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.montoAutorizado}}" ></td>
+
+        <tr/>
+            <td class="boldSmallLabel" align="right">Monto Transferencia</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.montoTransferencia}}" ></td>
+        <tr/>
+            <td class="boldSmallLabel" align="right">Plazo en meses</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.plazoAutorizado}}" ></td>
+        <tr/>
+            <td class="boldSmallLabel" align="right" width="40%">Fecha de contrato</td>
+                <td align="left" class="roundInputCalc" width="60%">
+                    <input readonly
+                           class="roundInputCalc"
+                           value="{{laPropuesta.fechaEmisionContrato}}" ></td>
+        <tr/>
+            <td class="boldSmallLabel" align="right">Pirmer pago</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.fechaPrimerCobro}}" ></td>
+
+        <tr/>
+            <td class="boldSmallLabel" align="right">Fecha del último pago</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.fechaUltimoPago}}" ></td>
+
+        <tr/>
+            <td class="boldSmallLabel" align="right">No. Amortizaciones</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.numeroPagos}}" ></td>
+
+        <tr/>
+            <td class="boldSmallLabel" align="right">Frecuencia de pago</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        {%- if laPropuesta.frecuenciaDePago=='Quincenal' -%}
+                                            value="15 Y ÚLTIMO DEL MES"
+                                        {%- endif -%}
+                                        {%- if laPropuesta.frecuenciaDePago=='Catorcenal' -%}
+                                            value="Catorcenal"
+                                        {%- endif -%}
+                                        {%- if laPropuesta.frecuenciaDePago=='Semanal' -%}
+                                            value="Semanal"
+                                        {%- endif -%}
+                                        {%- if laPropuesta.frecuenciaDePago=='Mensual' -%}
+                                            value="Mensual"
+                                        {%- endif -%}></td>
+
+        <tr/>
+            <td class="boldSmallLabel"
+                align="right"
+                style="word-wrap:normal;
+                       white-space: normal;">Seguro - Monto + IVA Calculado - <font style="color: #0000ff">{{laPropuesta.tipoPagoSeguro}}</font></td>
+                <td  align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.montoSeguro}}" ></td>
+        <tr/>
+            <td class="boldSmallLabel"
+                align="right"
+                style="word-wrap:normal;
+                       white-space: normal;">Porcentaje de Comisión Financiada</td>
+                <td  align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.tasaDeComision}}"></td>
+
+        <tr/>
+            <td class="boldSmallLabel" align="right">Comisión Financiada</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.montoComision}}" ></td>
+        <tr/>
+            <td class="boldSmallLabel" align="right">IVA Comisión Financiada</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.montoIvaComision}}" ></td>
+
+        <tr/>
+            <td class="boldSmallLabel" align="right">Pago por Parcialidad</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.pagoParcialidadSimulador}}" ></td>
+        <tr/>
+            <td class="boldSmallLabel" align="right">Capacidad de Pago</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.capacidadDePago}}" ></td>
+
+        <tr/>
+            <td class="boldSmallLabel" align="right">Total Pago de capital</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.montoMinistracion}}" ></td>
+        <tr/>
+            <td class="boldSmallLabel" align="right">Total Pago de Intereses</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.totalInteresesSimulador}}" ></td>
+        <tr/>
+            <td class="boldSmallLabel" align="right">Total Pago IVA</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.ivaInteresesSimulador}}" ></td>
+        <tr/>
+            <td class="boldSmallLabel" align="right">Pago Total</td>
+                <td align="left"><input readonly
+                                        class="roundInputCalc"
+                                        value="{{laPropuesta.pagoTotalSimulador}}" ></td>
+        <!-- <tr/>
+
+        <td class="boldSmallLabel" align="left">Comentarios:</td>
+            <tr/>
+            <td colspan="2" class="boldSmallLabel">
+                <textarea class="roundTextArea">{{laPropuesta.comentarios}}</textarea>
+            </td> -->
+
+
+        <tr/>
+
+            <td colspan="2"
+                class="boldSmallLabel"
+                align="center"
+
+                {%- if laPropuesta.capacidadDePago =="Ok" -%}
+                bgcolor="#00FF00">
+                    CUENTA CON CAPACIDAD DE PAGO</td>
+                {%-else-%}
+                    bgcolor="#FF0000" style='color:#FFFF00; word-wrap:normal; white-space: normal; font-size:16px;'>
+                    EL CLIENTE NO CUENTA CON CAPACIDAD DE PAGO EN TODO CASO SE REQUIERE DE AUTORIZACIÓN ESCRITA DEL DIRECTOR GENERAL</td>
+                {%-endif-%}
+
+        <tr/>
+
+        <tr/>
+            <td colspan="2"
+                class="boldSmallLabel"
+                align="center"
+
+                {%- if (laPropuesta.tipoBuroCredito !="Malo" and
+                        (laPropuesta.tipoListaNegra == "Sin Resultados" or
+                         laPropuesta.tipoListaNegra=="")) -%}
+                bgcolor="#00FF00">
+                    Buró y Listas Negras están Ok
+                {%-else-%}
+                bgcolor="#FF0000" style='color:#FFFF00; word-wrap:normal;
+                       white-space: normal; font-size:16px;'>
+                    RECHAZADO POR MAL BURÓ O LISTAS NEGRAS
+                    SE REQUIERE DE AUTORIZACIÓN ESCRITA DEL DIRECTOR GENERAL
+                {%-endif-%}
+            </td>
+        <tr/>
+        <td colspan="2"
+            class="boldSmallLabel"
+            align="center">
+            <br/>
+            <input type="submit" name="accion" id="accion" value="Aceptar Propuesta Buen Buro">
+        </td>
+        <tr/>
+
+        <td><br/></td>
+
+
+    </table>

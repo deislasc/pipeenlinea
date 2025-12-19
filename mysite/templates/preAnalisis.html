@@ -1,0 +1,415 @@
+{%- extends "base.html" -%}
+{%- block content -%}
+<form enctype = "multipart/form-data" id="pipeLineForm" action="/mesadeanalisis" method="Post">
+    <div style="height:78px; overflow-y: scroll; position: absolute; background-color: #dcdcdc; z-index: 2; width: calc(100% - 16px);">
+        <div class="botoneraLarga">
+            
+                    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+                    <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                    <input type="hidden" name="viewName" value="{{viewName}}">
+
+                <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                    <td align="center">Desde:</td>
+                    <td ></td>
+                    <td align="center">Hasta:</td>
+                    <td ></td>
+                    <td align="center">Producto:</td>
+                    <td ></td>
+                    <td align="center">Region:</td>
+                    <td ></td> 
+                    <td align="center">Asesor:</td>
+                    <td ></td>
+                    <td align="center">Empresa:</td>
+                    <td ></td>
+                    <td align="center">Cliente</td>
+                    <td ></td>
+                    <td align="center">Estatus</td>
+                    <td ></td>
+                    <td align="center">Analizado Por:</td>
+                    <td ></td>
+
+                    <td align="center" rowspan="2">
+                        <input type="submit" value="Consultar" name="accion" id="accion">
+                        <br/>
+                        <input type="submit" value="Actualizar" name="accion" id="accion">
+                    </td>
+                   
+                    </tr>
+                    <tr>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fechaInicio" name="fechaInicio" min="2019-01-02"
+                             value="{{formData['fechaInicio']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input type="date" class="roundInput" id="fechaFin" name="fechaFin" min="2019-01-02" value="{{formData['fechaFin']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="producto" name="producto">
+                                <option value="General"
+                                {%- if formData['producto']=="" or formData["producot"]=="General" -%}
+                                     selected="true"
+                                {%- endif-%}
+                                {%-if "producto" not in formData-%}
+                                    selected="true"
+                                {%-endif-%}>General</option>
+                                <option value="Nómina"
+                                {%- if formData['producto']=="Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}>Nómina</option>
+                                <option value="Adelanto"
+                                    {%- if formData['producto']=="Adelanto" -%}
+                                     selected="true"
+                                    {%- endif-%}
+                                >Adelanto</option> 
+                                <!-- <option value="Vehículo"
+                                {%- if formData['producto']=="Vehículo" -%}
+                                     selected="true"
+                                    {%- endif-%}>CNP</option>
+                                <option value="Seguro"
+                                {%- if formData['producto']=="Seguro" -%}
+                                     selected="true"
+                                    {%- endif-%}>Seguro</option>
+                                <option value="ARF"
+                                {%- if formData['producto']=="ARF" -%}
+                                     selected="true"
+                                    {%- endif-%}>ARF</option>
+                                <option value="ARR"
+                                {%- if formData['producto']=="ARR" -%}
+                                     selected="true"
+                                    {%- endif-%}>ARR</option>
+                                <option value="CSP"
+                                {%- if formData['producto']=="CSP" -%}
+                                     selected="true"
+                                    {%- endif-%}>CSP</option>
+                                <option value="Factoraje"
+                                {%- if formData['producto']=="Factoraje" -%}
+                                     selected="true"
+                                    {%- endif-%}>Factoraje</option> -->
+                            </select>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="region" name="region">
+                               <option value="General"
+                                {%- if formData['region']=="General" -%}
+                                     selected="true"
+                                {%- endif-%}>General</option> 
+                               <option value="CDMX"
+                                {%- if formData['region']=="CDMX" -%}
+                                     selected="true"
+                                {%- endif-%}>CDMX</option>
+                               <option value="Guadalajara"
+                                {%- if formData['region']=="Guadalajara" -%}
+                                     selected="true"
+                                {%- endif-%}>Guadalajara</option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input class="roundInput" id="asesor" name="asesor"
+                             {%-if 'asesor' in formData-%}
+                                value="{{formData['asesor']}}"
+                             {%-endif-%}>
+                        </td>
+                        <td></td>
+                        
+                        <td  align="center">
+                            <input class="roundInput" name="empresa" id="empresa"
+                             {%-if 'empresa' in formData-%}
+                                value="{{formData['empresa']}}"
+                             {%-endif-%}>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input class="roundInput" name="cliente" id="cliente"
+                             {%-if 'numeroControl' in formData-%}
+                                value="{{formData['cliente']}}"
+                             {%-endif-%}>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="estatusAnalisis" name="estatusAnalisis">
+                            <option value="General"
+                                 {%if formData['estatusAnalisis']=="General"%}
+                                 selected
+                                 {%endif%}>General</option>
+                            <option value="Pendiente"
+                                {%- if formData['estatusAnalisis']=="Pendiente" -%}
+                                     selected="true"
+                                {%- endif-%}>Pendiente</option> 
+                            <option value="En Analisis"
+                                {%- if formData['estatusAnalisis']=="En Analisis" -%}
+                                     selected="true"
+                                {%- endif-%}>En Analisis</option>
+                            <option value="En Espera"
+                                {%- if formData['estatusAnalisis']=="En Espera" -%}
+                                     selected="true"
+                                {%- endif-%}>En Espera</option> 
+                            <option value="Terminado"
+                                {%- if formData['estatusAnalisis']=="Terminado" -%}
+                                     selected="true"
+                                {%- endif-%}>Terminado</option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select id="analistaNombre"
+                                    name="analistaNombre"
+                                    class="roundInput">
+                                        <option value="General"
+                                                {% if formData['analistaNombre']=='General' %}
+                                                    selected 
+                                                {% endif %} >General</option>
+                                        <option value=""
+                                                {% if formData['analistaNombre']=='' %}
+                                                    selected 
+                                                {% endif %}>Sin Asignar</option>
+                                      {%for analista in analistas%} 
+                                          <option value="{{analista['userName']}}"
+                                          {% if formData['analistaNombre']==analista['userName'] %}
+                                            selected 
+                                          {% endif %}  
+                                            >{{analista['userName']}}</option>
+                                      {%endfor%}                                          
+                            </select>
+                        </td>
+                        <td></td>
+                        
+                    
+                </table>
+
+                <table  id="tablaEncabezadoLogs" border="1" width="100%" bgcolor="#dcdcdc">
+                    <th class="boldSmallLabel" colspan="1" rowspan="1">#</th>
+                    <th class="boldSmallLabel" colspan="1" rowspan="1">Asesor</th>
+                    <th class="boldSmallLabel" colspan="1" rowspan="1">Empresa</th>
+                    <th class="boldSmallLabel" colspan="1" rowspan="1">Cliente</th>
+                    <th class="boldSmallLabel" colspan="1" rowspan="1">Entregado a Riesgos</th>
+                    <th class="boldSmallLabel" colspan="1" rowspan="1">A partir del</th>
+                    <th class="boldSmallLabel" colspan="1" rowspan="1">Dias Transcurridos</th>
+                    <th class="boldSmallLabel" colspan="1" rowspan="1">Analista</th>
+                    <th class="boldSmallLabel" colspan="1" rowspan="1">Estatus</th>
+                    <th class="boldSmallLabel" colspan="2" rowspan="1">Buen Buró</th>
+                </table>
+           
+        </div>
+    </div>
+
+        
+        
+        <div style="height:calc(100% - 100px); overflow-y: scroll; top: 60px; position: absolute; z-index:1; width: calc(100% - 16px);" >   
+            <table  id="tablaLogs" border="1" width="100%">
+                
+                <th class="boldSmallLabel" colspan="1" rowspan="1">#</th>
+                <th class="boldSmallLabel" colspan="1" rowspan="1">Asesor</th>
+                <th class="boldSmallLabel" colspan="1" rowspan="1">Empresa</th>
+                <th class="boldSmallLabel" colspan="1" rowspan="1">Cliente</th>
+                <th class="boldSmallLabel" colspan="1" rowspan="1">Entregado a Riesgos</th>
+                <th class="boldSmallLabel" colspan="1" rowspan="1">A partir del</th>
+                <th class="boldSmallLabel" colspan="1" rowspan="1">Dias Transcurridos</th>
+                <th class="boldSmallLabel" colspan="1" rowspan="1">Analista</th>
+                <th class="boldSmallLabel" colspan="1" rowspan="1">Estatus</th>
+                <th class="boldSmallLabel" colspan="2" rowspan="1">Buen Buró</th>
+                <tr/>
+                {%-for solicitud in listaSolicitudes-%}
+                    <td class="l"
+                        rowspan="3" 
+                        bgcolor="#dcdcdc">
+                        {{loop.index}}
+                    </td>
+                    <td class=""
+                        rowspan="1">
+                        {{solicitud['asesorNombre']}}
+                    </td>
+                    <td class=""
+                        rowspan="1">
+                        {{solicitud['clienteEmpresa']|upper}}
+                    </td>
+
+                    <td class=""
+                        rowspan="1"
+                        onclick="openWindow('{{solicitud['documentos']}}')"
+                        align="center" 
+                        style="cursor: pointer; 
+                                color: #0000ff;
+                                text-decoration: underline;">                    
+                        {{solicitud['clienteNombre']|upper}}
+                        {{solicitud['clienteApellidoPaterno']|upper }}
+                        {{solicitud['clienteApellidoMaterno']|upper }}
+                        <br/>
+                        {{solicitud['producto']|upper}}
+                    </td>
+                    <td rowspan="1"
+                        class="" 
+                        align="center">
+                        {{solicitud['fechaEntregaARiesgos']}}
+                        {%if solicitud['fechaEntregaARiesgos']==''%}
+                            {{solicitud['solicitudEstatus']}}
+                        {%endif%}
+                    </td>
+                    <td rowspan="1"
+                         class="" 
+                         align="center"
+                        >{{solicitud['FechaAPartirDe']}}</td>
+                    <td rowspan="1"
+                        class="" 
+                        align="center"
+                        style="background-color: {{solicitud['bgcolor']}};
+                                          color: {{solicitud['color']}}"}>
+                        {{solicitud['diasTranscurridos']}}
+                    </td>
+                    <td rowspan="1"
+                        class="" 
+                        align="center">
+                        {% if "analistaNombre" not in user.forbidden %}
+                            <select id="analistaNombre_{{solicitud['id']}}"
+                                    name="analistaNombre_{{solicitud['id']}}"
+                                    class="roundInput">
+                                        <option value=""></option>
+                                      {%for analista in analistas%} 
+                                          <option value="{{analista['userName']}}"
+                                          {% if solicitud['analistaNombre']==analista['userName'] %}
+                                            selected 
+                                          {% endif %}  
+                                            >{{analista['userName']}}</option>
+                                      {%endfor%}                                          
+                            </select>
+
+                            
+                            {%else%}
+                                {{solicitud['analistaNombre']}}
+                        {%endif%}
+                    </td>
+                    <td>
+
+                        <select name="estatusAnalisis_{{solicitud['id']}}"
+                                id="estatusAnalisis_{{solicitud['id']}}"
+                                class="roundInput"
+                                {% if 'estatusAnalisis' in user.forbidden %}
+                                   disabled
+                                {% endif %}>
+                            <option 
+                                value="Pendiente"
+                                {% if solicitud['estatusAnalisis']=="Pendiente" %}
+                                    selected 
+                                {% endif %} >Pendiente
+                            </option>
+                            <option 
+                                value="En Analisis"
+                                {% if solicitud['estatusAnalisis']=="En Analisis" %}
+                                    selected 
+                                {% endif %} >En Analisis
+                            </option>
+                            <option 
+                                value="En Espera"
+                                {% if solicitud['estatusAnalisis']=="En Espera" %}
+                                    selected 
+                                {% endif %} >En Espera
+                            </option>
+                            <option 
+                                value="Terminado"
+                                {% if solicitud['estatusAnalisis']=="Terminado" %}
+                                    selected 
+                                {% endif %} >Terminado
+                            </option>
+                        </select>
+                    </td>
+
+                    <td>Oferta:</td>
+                    <td><input name='buenBuroMontoOferta_{{solicitud["id"]}}'
+                               class='roundInput' 
+                               {% if 'buenBuroMontoOferta' in user.forbidden %}
+                                    readonly
+                               {% endif %}
+                               {% if 'buenBuroMontoOferta' in solicitud %}
+                                    value={{solicitud['buenBuroMontoOferta']}}
+                               {% endif %}>
+                    </td>
+                    <tr/>
+                    <td colspan="1" rowspan="2">
+                        Comentarios
+                    </td>
+                    <td colspan='5' rowspan="2">
+                         <textarea id="comentarios_{{solicitud.id}}"
+                                      name="comentarios_{{solicitud.id}}"
+                                      id="comentarios_{{solicitud.id}}"
+                                      style=" height: 50px;
+                                              width: calc(100% - 8px);
+                                              resize: none;">{{solicitud.comentarios}}</textarea>
+                    </td>
+                    <td align="right">Solicitado:</td>
+                    <td rowspan="1"
+                        class="" 
+                        align="center">
+                        {{solicitud['montoSolicitado']}}
+                    </td>
+                    
+                    <td>Estatus:</td>
+                    <td><select class="roundInput"
+                                name="buenBuroEstatus_{{solicitud.id}}"
+                                id="buenBuroEstatus_{{solicitud.id}}"
+                                {% if 'buenBuroEstatus' in user.forbidden %}
+                                    disabled 
+                                {% endif %}>>
+                         <option value=""></option>
+                         <option value="No Aplica"
+                                 {%if solicitud['buenBuroEstatus']=="No Aplica"%}
+                                 selected
+                                 {%endif%}>No Aplica</option>
+                         <option value="Aceptada"
+                                 {%if solicitud['buenBuroEstatus']=="Aceptada"%}
+                                 selected
+                                 {%endif%}>Aceptada</option>
+                         <option value="En Espera"
+                                 {%if solicitud['buenBuroEstatus']=="En Espera"%}
+                                 selected
+                                 {%endif%}>En Espera</option>
+                         <option value="Rechazada"
+                                 {%if solicitud['buenBuroEstatus']=="Rechazada"%}
+                                 selected
+                                 {%endif%}>Rechazada</option>
+                        
+                        </select>
+                    </td>
+                    <tr/>
+                    <td align="right">Autorizado:</td>
+                    <td rowspan="1"
+                        class="" 
+                        align="center">
+                        {{solicitud['montoAutorizado']}}
+                    </td>
+                    <td>Aceptado:</td>
+                    <td><input name='buenBuroMontoAceptado_{{solicitud["id"]}}'
+                               class='roundInput'
+                               {% if 'buenBuroMontoAceptado' in user.forbidden %}
+                                    readonly
+                               {% endif %}
+                               {% if 'buenBuroMontoAceptado' in solicitud %}
+                                    value={{solicitud['buenBuroMontoAceptado']}}
+                               {% endif%}>
+                    </td>
+                    <tr/>
+                {%-endfor-%}
+             
+            </table>
+            
+           
+        </div>
+       
+    
+ </form>
+
+<script type="text/javascript">
+    ajustarEncabezadosLogs();
+</script>
+
+
+
+
+
+
+
+
+{%- endblock -%}

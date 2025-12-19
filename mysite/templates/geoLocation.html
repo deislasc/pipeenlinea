@@ -1,0 +1,40 @@
+{%- extends "base.html" -%}
+{%- block content -%}
+
+    	<form id="geoLocationForm" action="/geoLocalizar" method="Post" class="locationForm">
+
+            <div style="display:inline-block;">
+
+                <input class="roundInput" type="hidden" name="viewName" id="viewName" value={{viewName}}>
+                <input class="roundInput" type="hidden" name="ownerID" id="ownerID" value="{{user['ownerID']}}">
+
+                <center>
+
+                    <br>
+
+                    <input type="button" class="buttonSubmit" onclick="getLocation();" value="Obtener Posición Actual" >
+
+                    <input class="roundInput" type="text" name="coords" id="coords" readonly="true" style="width: 95%;" required="true" value="">
+
+                    <label class='boldLabel' style="width:100%; font-weight:bold; color:#ffffff; resize:;"> Motivo de Visita</label>
+
+                    <textarea name="visita"
+                              id="visita"
+                              class="roundTextAreaLarge"
+                              style="height:200px;"
+                              onfocus="getLocation();"
+                              required="true"></textarea>
+
+                </center>
+                <br>
+                <center>
+                     <button class="buttonSubmit" type="submit">Guardar</button>
+                </center>
+
+            </div>
+    	</form>
+
+
+{%- endblock -%}
+
+

@@ -1,0 +1,321 @@
+
+{%- extends "base.html" -%}
+{%- block content -%}
+            <div class="panel">
+                <div class="botonera">
+                    <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">
+                      
+                        <tr> 
+                        <td width="40%" align="center">Criterio</td>  
+                        <td ></td>
+                        <td width="40%" align="center">Valor</td>
+                        </tr>
+                        <tr>
+                            <td width="33%" align="center">
+                                <select class="roundInput" id="filtroCriterio" name="filtroCriterio" onchange="limpiarFiltroSolicitudes();">
+                                    {%- for campo in listaCamposFiltro|sort(attribute='label') -%}
+                                        {%- if (campo.filterOption=="true" and campo.voboRenderable=="true")-%}
+                                            <option value="{{campo.value}}">{{campo.label}}</option>
+                                        {%-endif-%}   
+                                        {%- if campo.filterOption=="true" and campo.onlyFilter=="true"-%}
+                                         <option value="{{campo.value}}">{{campo.label}}</option>
+                                        {%-endif-%}  
+                                    {%- endfor -%}
+                                </select>
+                            </td>  
+                            <td></td>
+                            <td width="33%" align="center">
+                                <input class="roundInput" id="filtroValor" name="filtroValor" onchange="filtrarSolicitudes(solicitudes,'filtroCriterio',this.value);"></input>
+                            </td>
+                        </tr>
+                      
+                        <tr>  
+                            <td colspan="3" align="center">
+                                <button class="buttonSubmit" onclick="viewVoBoTable();">Control de Envios</button> 
+                                <button class="buttonSubmit" onclick="viewEnviarVoBoTable();">Listado de Envío</button> 
+                            </td>  
+                        </tr>
+                    </table>
+                </div>
+
+               
+                <!--********************************************************-->
+                
+                <div class="listadoItems" id="listadoSolicitudes" name="listadoSolicitudes">
+                    {% include 'addSolicitudes.html' %}
+                    {%- for solicitud in listaSolicitudes %}
+                        <form id="formaSolicitud_{{solicitud.id}}">
+                            <div class="solicitudItem" id={{solicitud.id}} onclick="expandirSolicitud(this);" collapsed="true">
+                                <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+                                    <tr> 
+                                        <td class="boldLabel" 
+                                            colspan="1"
+                                            align="center"
+                                            style="border-bottom: solid 1px;" 
+                                            width="16px">{{loop.index}}
+                                        </td>  
+                                        <td class="boldLabel" 
+                                            colspan="3"
+                                            align="center" id="render_nombreCompletoCliente_{{solicitud.id}}">
+                                                 {{solicitud.id}}
+                                            &nbsp{{solicitud.clienteNombre}}
+                                            &nbsp{{solicitud.clienteApellidoPaterno}}
+                                            &nbsp{{solicitud.clienteApellidoMaterno}}
+                                        </td>   
+                                    </tr>
+                                    <tr>
+                                        <td class="lightLabel" 
+                                            colspan="4"
+                                            align="center"
+                                            id="render_clienteEmpresa_{{solicitud.id}}">{{solicitud.clienteEmpresa}}</td> 
+                                    </tr>
+                                    <tr>     
+                                        <td class="boldSmallLabel"
+                                            colspan="2" 
+                                            align="center">Asesor</td>
+                                        <td class="boldSmallLabel"
+                                            align="center">Contactado</td>
+                                        <td class="boldSmallLabel"
+                                            align="center">Monto</td>    
+                                    </tr>
+                                    <tr>  
+                                        <td class="lightLabel"
+                                            colspan="2" 
+                                            align="center" 
+                                            id="render_asesorNombre_{{solicitud.id}}">{{solicitud.asesorNombre}}</td>
+                                        <td class="lightLabel"
+                                            align="center" 
+                                            id="render_fechaContacto_{{solicitud.id}}">{{solicitud.fechaContacto}}</td>
+                                        <td class="lightLabel"
+                                            align="center" 
+                                            id="render_montoSolicitado_{{solicitud.id}}">
+                                            {{solicitud.montoSolicitado}}</td>    
+                                    </tr>
+                                    <tr>  
+                                        <td class="boldSmallLabel" colspan="2" 
+                                            align="center">Estatus</td>
+                                        <td class="boldSmallLabel" colspan="2" 
+                                            align="center">Crédito Final</td>
+                                    </tr>
+                                    <tr>  
+                                        <td class="lightLabel" colspan="2" 
+                                            align="center"
+                                            id="render_solicitudEstatus_{{solicitud.id}}">{{solicitud.solicitudEstatus}}</td>
+                                         <td class="lightLabel"
+                                            align="center"
+                                            id="render_solicitudNumeroControl_{{solicitud.id}}">
+                                            {%if solicitud.solicitudNumeroControl|replace(" ","") != "" %}
+                                                {{solicitud.solicitudNumeroControl}}
+                                            {%endif%}
+                                            {%if solicitud.solicitudNumeroControl|replace(" ","") == "" %}
+                                                   {{solicitud.producto}} 
+                                            {%endif%}</td>
+                                        <td class="lightLabel"
+                                            align="center"
+                                            id="render_montoAutorizado_{{solicitud.id}}">
+                                             {{solicitud.montoAutorizado}}</td>    
+                                    </tr>
+                                </table>
+                            </div> <!-- FINALIZA <div class="solicitudItem"> -->
+                        
+                            <!--********************************************************-->
+                            <div class="detalleSolicitudItem" id="detalleSolicitud_{{solicitud.id}}">    
+                                <table id="tablaDetalleSolicitud_{{solicitud.id}}" border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">
+                                    {# {{listaCamposFiltro|pprint}} #}
+                                    {%- for campo in listaCamposFiltro -%}
+                                        {%-set campoActual=campo.value-%}
+                                        {%-set asesorSolicitud=solicitud.asesorNombre-%}
+                                        {%-set empresaSolicitud=solicitud.clienteEmpresa-%}
+                                        {%- if campo.voboRenderable=="true" -%}
+                                            <tr>
+
+                                                
+                                                {%- if campo.tipo=="textarea" -%}
+                                                    <td colspan="3" class="boldSmallLabel">
+                                                       {{campo.label}} 
+                                                    </td></tr><tr>
+                                                {%-else-%}
+                                                    <td class="boldSmallLabel" align="right">
+                                                    {{campo.label}}
+                                                {%-endif-%}   
+                                             
+                                                {%- if campo.addToogle == 'false' -%}
+
+                                                    {%- if campo.tipo!="textarea" -%} 
+                                                        <td colspan="2" style="padding-right:16px; ">
+                                                    {%- else -%} 
+                                                        <td colspan="3"> 
+                                                    {%-endif-%}  
+                                                    
+                                                    
+                                                
+                                                        <{{campo.tipo}} id="{{campo.value}}_{{solicitud.id}}"  name="{{campo.value}}" 
+                                                        class="{{campo.class}}"  
+                                                        {%- if campoActual == "listaArchivos"-%}
+                                                            size="{{campo.size}}"
+                                                        {%- endif -%}   
+
+                                                        {%- if campo.tipo == "input" -%}
+                                                            value="{{solicitud[campoActual]}}"
+                                                        {%- endif -%}
+
+                                                        {%- if campo.tipo!="textarea" -%} 
+                                                            style="width:100%;"
+                                                        {%- endif -%}
+
+                                                        {%- if campoActual in user.forbidden-%}
+                                                            disabled="true" 
+                                                        {%- endif-%}
+                                                        
+                                                        
+                                                        {# {%- if campoActual=="asesorNombre"-%} onchange="listaEmpresasUpdate(this,{{solicitud.id}});"{%-endif-%} #}
+
+                                                        {%- if campoActual=="listaArchivos"-%}
+                                                              onchange="mostrarArchivo(this,{{solicitud.id}});"
+                                                        {%- else -%}
+                                                              onchange="updateData(this,{{solicitud.id}});"
+                                                        {%- endif -%}
+
+                                                        {%-if campo.readOnly=="true"-%}
+                                                             readonly="true"
+                                                        {%- endif -%}
+
+                                                        >
+                                                            {%- if campo.tipo=="textarea" -%} 
+                                                                {{solicitud[campoActual]}}
+                                                            {%- endif -%}
+
+                                                            {%- if campo.tipo=="select"-%}
+                                                                 {%- if campoActual=="asesorNombre"-%}
+                                                                    {%-for asignacion in listaEmpresas|sort(attribute='asesor') -%}
+                                                                        
+                                                                            <option value="{{asignacion.asesor}}" 
+                                                                            ownerid="{{asignacion.ownerID}}"
+                                                                                {%-if asignacion.asesor==asesorSolicitud-%} 
+                                                                                   selected="selected"
+                                                                                {%-endif-%} 
+                                                                            >{{asignacion.asesor}}</option>
+                                                                
+                                                                    {%-endfor-%} 
+
+                                                                {%- elif campoActual=="inheritedID" -%}
+                                                                    <option value="" selected="selected"></option>
+                                                                    {%- for usuario in listaUsuarios|sort(attribute='name') -%} 
+                                                                        {%-if usuario.userEstatus== "Activo"-%}  
+                                                                            {%- if usuario.acl=="asesor" -%}
+                                                                                <option value="{{usuario.ownerID}}"
+                                                                                        ownerid="{{usuario.ownerID}}"
+                                                                                        nombreAsesor="{{usuario.name}}"
+                                                                                        {%-if usuario.ownerID == solicitud.ownerID-%}
+                                                                                            selected="selected"
+                                                                                        {%- endif -%}}
+                                                                                >{{usuario.name}}</option> 
+                                                                            {%- endif -%}    
+                                                                        {%-endif-%}
+                                                                    {%-endfor-%} 
+
+                                                                {%- elif campoActual=="clienteEmpresa" -%}
+                                                                    {%- for asignacion in listaEmpresas -%} 
+                                                                       {%- if asignacion.asesor==asesorSolicitud -%}
+                                                                            {%- for empresa in asignacion.empresas|sort() -%}
+                                                                                <option value="{{empresa}}" 
+                                                                                    {%-if empresa==empresaSolicitud-%}
+                                                                                        selected="selected"
+                                                                                    {%-endif-%}
+                                                                                >{{empresa}}
+                                                                                </option>  
+                                                                            {%- endfor-%}
+
+                                                                       {%-endif-%}
+                                                                    {%-endfor-%}
+                                                                {%- elif (campoActual=="clientePagadora") -%}
+                                                                        <option value=""></option>
+                                                                    {%- for pagadora in pagadoras|sort() -%}      
+                                                                        <option value="{{pagadora}}"
+                                                                            {%-if pagadora==solicitud.clientePagadora-%}
+                                                                                selected="selected"
+                                                                            {%-endif-%}
+                                                                        >{{pagadora}}
+                                                                        </option> 
+                                                                    {%-endfor-%}
+                                                                {%- elif (campoActual=="listaArchivos") -%}
+                                                
+                                                                    <!-- en lista archivos -->
+                                                                    {%- for documento in solicitud.documentosLista -%}
+                                                                        <option value="{{documento}}">
+                                                                            {{documento}}
+                                                                        </option>
+                                                                    {%- endfor -%}
+
+                                                                {%-else-%}
+                                                                    {# PARA TODOS LOS DEMAS CAMPOS QUE TRAEN SU optionsList #}
+
+                                                                    {%- for option in campo.optionsList-%}
+                                                                        <option value="{{option}}"
+                                                                            {%-if option == solicitud[campo.value]-%}
+                                                                             selected 
+                                                                            {%- endif-%}
+                                                                        >{{option}}</option>
+                                                                    {%- endfor -%}
+                                                                {%-endif-%} {# Finaliza if de campoActual #}
+
+                                                            {%- endif-%} {# Finaliza if "select" #}
+
+                                                        </{{campo.tipo}}>
+                                                    </td>
+                                                    
+                                                {%- elif campo.addToogle == 'true' -%}
+                                                    <td>
+                                                        <{{campo.tipo}} id="{{campo.value}}_{{solicitud.id}}" name="{{campo.value}}" class="{{campo.class}}" readonly value="{{solicitud[campoActual]}}"
+                                                        ></{{campo.tipo}}>
+                                                    </td>
+                                                    <td align="right" style="padding-right: 6px; width: 54px;">
+                                                        <label class="switch" {%- if campo.value in user.forbidden -%}
+                                                                style="display:none;"
+                                                        {%-endif-%}>
+                                                            <input type="checkbox" id="check_{{campo.value}}_{{solicitud.id}}" name="check_{{campo.value}}_{{solicitud.id}}"
+                                                            onchange="updateDate({{solicitud.id}},{{campo.value}}_{{solicitud.id}},this);"
+                                                            {%-if (solicitud[campoActual]!="") and (solicitud[campoActual] is defined)-%}
+                                                                checked
+                                                            {%-endif-%}
+                                                            > 
+                                                            <span class="slider round"></span> 
+                                                        </label>
+                                                    </td>
+                                                {%- endif -%}
+                                            </tr>
+                                        {%- endif -%}
+                                            {%-if campo.value=="documentos"-%}
+                                                {%- if solicitud[campoActual]!=""-%}
+                                                    <td colspan="3" class="boldSmallLabel" align="center">
+                                                        <input type="button" name="documentos_{{solicitud.id}}"
+                                                        onclick="openWindow('{{solicitud[campoActual]}}');"
+                                                        value="Ver Documentos">
+                                                    </td></tr><tr>
+                                                {%-endif-%}
+                                            {%-endif-%} 
+                                   {%- endfor -%}
+                                  {#  <tr>
+                                       <td colspan=3 valign="middle" align="center">
+                                           <input type="submit" value="Guardar Cambios">
+                                       </td>
+                                   </tr> #}
+                                </table>{# FINALIZA <table border="0" id="tablaDetalleSolicitud"> #} 
+                            </div> <!-- FINALIZA <div class="detalleSolicitudItem"> -->
+
+                                <!--********************************************************-->
+                            
+                        </form>
+                        
+                    {%- endfor -%}
+                    {# <div class="solicitudItem" id="espacioFinal"></div> #}
+                </div>        
+            </div>  <!--Finaliza panel de Solicitudes-->
+
+    
+{%- endblock -%}
+
+
+
+
+ 

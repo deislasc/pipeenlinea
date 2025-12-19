@@ -1,0 +1,224 @@
+{%- extends "base.html" -%}
+{%- block content -%}
+<form enctype = "multipart/form-data" id="pipeLineForm" action="/agendas" method="Post" style="height: calc(100% - 5px);">
+            <div class="panel" style="height: calc(100% - 5px);">
+                <div class="botonera">
+                    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+                    <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                    <input type="hidden" name="viewName" value="{{viewName}}">
+                    <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">
+                      
+                        <tr> 
+                        <td width="40%" align="center">Del</td>  
+                        <td ></td>
+                        <td width="40%" align="center">Al</td>
+                        </tr>
+                        <tr>
+                            <td width="33%" align="center">
+                                <input type="date" class="roundInput" id="fechaInicio" name="fechaInicio" min="2019-01-02"
+                             value="{{formData['fechaInicio']}}"></input>   
+                            </td>  
+                            <td></td>
+                            <td width="33%" align="center">
+                                <input type="date" class="roundFin" id="fechaFin" name="fechaFin" min="2019-01-02"
+                             value="{{formData['fechaFin']}}"></input>     
+                            </td>
+                        </tr>
+                        <td colspan="3" align="center">
+                             <input type="submit" name="action" value="Consultar">
+                        </td>
+                       
+                      
+                    </table>
+                </div>
+
+               
+                <!--********************************************************-->
+                
+                <div class="listadoItems" id="listadoUsuarios" name="listadoUsuarios">
+                    
+                    {# %- for usuario in listaUsuarios|sort(attribute='userName') -% #}
+                    {%- for usuario in listaUsuarios -%}
+                        <form id="formaSolicitud_{{usuario.ownerID}}">
+                            <div class="solicitudItem" id={{usuario.ownerID}} onclick="expandirSolicitud(this);" collapsed="true">
+                                <table border="0px" spacing=0 height="100%" width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td class="lightLabel" 
+                                            colspan="4"
+                                            align="center"> 
+                                        </td> 
+                                    </tr>  
+                                    <tr>  
+                                        <td class="boldLabel" 
+                                            colspan="4"
+                                            align="center">
+                                            &nbsp{{usuario.userName}}
+                                            <br/>
+                                            <label class="lightLabel"></label>
+                                            <br/>
+                                            <label class="lightLabel">{{usuario.puesto}} {{usuario.region}}</label>
+
+                                        </td>  
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td class="lightLabel" 
+                                            colspan="4"
+                                            align="center">
+                                             <label class="lightLabel">{{usuario.userEstatus}}</label>
+                                        </td> 
+                                    </tr>       
+                                </table>
+                            </div> <!-- FINALIZA <div class="solicitudItem"> -->
+                            
+
+
+                            <!--********************************************************-->
+                            <div class="detalleSolicitudItem" id="detalleSolicitud_{{usuario.ownerID}}">    
+                                
+                                {%-for dia in listaCitas[usuario.ownerID]-%}
+                                    <table id="tablaDetalleSolicitud_{{usuario.ownerID}}" 
+                                           border="0" 
+                                           spacing=0 
+                                           cellpadding="0" 
+                                           cellspacing="0"
+                                           width="100%">
+
+                                        <td colspan="4"
+                                            align="center"
+                                            class="boldLabel" 
+                                            style="background:#daff77;">
+                                            {{diasAgenda[dia]}}
+                                        </td>
+                                        <tr/>
+                                        
+                                        {%-for hora in listaCitas[usuario.ownerID][dia]-%}
+                                            
+                                                <td class="lightLabel" align="center" width="20px" 
+                                                    style="background:#daffb3; color: black;  border-bottom: 1px solid #777777;">
+                                                    {{dia}}<br/>
+                                                    {{hora}}</td>
+                                                <td class="lightLabel" colspan="3" align="center"
+                                                    style="background:#daffb3; color: black;  border-bottom: 1px solid #777777;">
+                                                        
+                                                            {{listaCitas[usuario.ownerID][dia][hora]["empresa"]}}
+                                                        
+                                                        <br/>
+                                                        
+                                                            {%-if listaCitas[usuario.ownerID][dia][hora]["actividad"]!=""-%}
+                                                                {{listaCitas[usuario.ownerID][dia][hora]["actividad"]}}
+                                                            {%-else-%}
+                                                                Sin Actividad
+                                                            {%-endif-%}
+                                                             
+                                                </td>
+                                                <td colspan="1" 
+                                                    style="background:#daffb3; color: black; border-bottom: 1px solid #777777;"></td>
+                                                <tr/>
+
+                                            <td colspan="4" 
+                                                style="display:table-cell;">
+                                                
+                                                <form id="{{dia}}_{{hora}}" action="/agendas" method="Post">
+                                                    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+                                                    <input type="hidden" name="userName" value="{{usuario.name}}">
+                                                    <input type="hidden" name="IdUsuarioAgenda" value="{{usuario.ownerID}}">
+                                                    <input type="hidden" name="fecha" value="{{dia}}">
+                                                    <input type="hidden" name="hora" value="{{hora}}">
+                                                    <input type="hidden" name="fechaInicio" value="{{formData['fechaInicio']}}">
+                                                    <input type="hidden" name="fechaFin" value="{{formData['fechaFin']}}">
+                                                    <table border="0" width="100%">
+                                                        {%-for campo in listaCamposFiltro-%}
+                                                            {%-if campo["editRenderable"]=="true"-%}
+                                                                {%-if campo.tipo!="textarea"-%}
+                                                                    <td class="boldSmallLabel" align="right">{{campo.label}}</td>
+                                                                    <td>
+                                                                        <{{campo.tipo}}
+                                                                         name="{{campo.value}}"
+                                                                         class="{{campo.class}}"
+                                                                         {%-if campo.tipo=="input"-%}
+                                                                            value="{{listaCitas[usuario.ownerID][dia][hora][campo.value]}}"
+                                                                         {%-endif-%}
+                                                                        >
+                                                                        {%- if campo.tipo=="select" and campo.value!="empresa"-%}
+                                                                            {%-for option in campo.optionsList-%}
+                                                                                <option  value="{{option}}" 
+                                                                                {%-if option == listaCitas[usuario.ownerID][dia][hora][campo.value]  -%} selected {%-endif-%}>{{option}}</option>
+                                                                            {%-endfor-%}
+                                                                        {%- endif-%}
+                                                                        {%- if campo.tipo=="select" and campo.value=="empresa"-%}
+                                                                            {%- for asignacion in listaEmpresas -%}
+                                                                                {%- if asignacion.asesor==usuario.name or usuario.acl=="gestorCobranza"-%}
+                                                                                        <option value=""></option>
+                                                                                        {%-if usuario.acl=="gestorCobranza"-%}
+                                                                                        <option value="" disabled>{{asignacion.asesor.upper()}}</option>
+                                                                                        {%-endif-%}
+                                                                                        {%- for empresa in asignacion.empresas|sort() -%}
+                                                                                            <option value="{{empresa}}"
+                                                                                                {%-if empresa==listaCitas[usuario.ownerID][dia][hora][campo.value]-%}
+                                                                                                    selected="selected"
+                                                                                                {%-endif-%}
+                                                                                            >{{empresa}}
+                                                                                            </option>
+                                                                                        {%- endfor-%}
+
+                                                                                   {%-endif-%}
+                                                                            {%-endfor-%}
+                                                                        {%- endif-%}
+                                                                        </{{campo.tipo}}>
+                                                                    </td>
+                                                                {%-else-%} {#%-if campo.tipo!="textarea"-%#}
+                                                                    <td class="boldSmallLabel" align="left" colspan="3"> {{campo.label}}</td>
+                                                                    <tr></tr>
+                                                                    <td colspan="3">
+                                                                        <textarea name="{{campo.value}}"
+                                                                                  class="{{campo.class}}">{{listaCitas[usuario.ownerID][dia][hora][campo.value]}}</textarea>
+                                                                    </td>
+                                                                {%-endif-%}  
+                                                                <tr></tr>
+                                                            {%-endif-%}
+                                                        {%-endfor-%}
+                                                        <td colspan="4" align="center">
+                                                            <input type="submit" name="accion" value="Guardar">
+                                                        </td>
+                                                    </table>
+                                                </form>
+                                               
+                                            </td>
+                                            <tr/>
+                                            
+                                        {%-endfor-%}
+                                        
+                                     </table>
+
+                                {%-endfor-%}
+                                  
+                               
+                                            
+                                           
+
+                            
+                                    
+
+                            </div> <!-- FINALIZA <div class="detalleSolicitudItem"> -->
+
+                            <!--********************************************************-->
+                            
+                        </form>
+                            
+
+                    {%- endfor -%}
+                    {# <div class="solicitudItem" id="espacioFinal"></div> #}
+                </div>        
+            </div>  <!--Finaliza panel de Solicitudes-->
+
+
+
+</form>
+    
+{%- endblock -%}
+
+
+
+
+ 

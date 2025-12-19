@@ -1,0 +1,9 @@
+from main import app
+if __name__ == '__main__':
+    # app.run(host='127.0.0.1', port=8080, debug=True)
+    # para que se pueda ver desde una red externa el puerto debe ser 8000
+    app.run()
+    ALLOWED_HOSTS = ['*']
+
+
+

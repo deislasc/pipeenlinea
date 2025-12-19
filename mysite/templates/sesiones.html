@@ -1,0 +1,104 @@
+
+{%- extends "base.html" -%}
+{%- block content -%}
+    
+    <!-- El siguiente Div es para tener un encabezado fijo -->
+    <div style="height:120px; overflow-y: scroll; position: absolute; background-color: #dcdcdc; z-index: 2;">
+        <div class="botoneraLarga">
+                <table  border="0" spacing=0  cellpadding="0" cellspacing="0">
+                    <tr> 
+                    <td></td>    
+                    <td width="150px" align="center">Criterio</td>  
+                    <td ></td>
+                    <td width="150px" align="center">Valor</td>
+                    <td></td> 
+                    </tr>
+                    <tr>
+                        <td></td> 
+                        <td align="center">
+                            <select class="roundInput" id="filtroCriterio" name="filtroCriterio" onchange="limpiarFiltroLogs();">
+                                {%- for campo in listaCamposFiltro|sort(attribute='label') -%}
+                                    {%- if (campo.filterOption=="true")-%}
+                                        <option value="{{campo.value}}">{{campo.label}}</option>
+                                    {%-endif-%}    
+                                {%- endfor -%}
+                            </select>
+                        </td>  
+                        <td></td>
+                        <td  align="center">
+                            <input class="roundInput" id="filtroValor" name="filtroValor" onchange="filtrarLogs(logs,'filtroCriterio',this.value);"></input>
+                        </td>
+                        <td></td> 
+                    </tr>
+                </table>
+               
+            </div>
+        <table  border="1" cellspacing="0" width="100%" id="tablaEncabezadoLogs" bgcolor="#ffffff">
+              <tr style="height: 54px;" bgcolor="#dcdcdc">
+                    <th width="200px">
+                        Usuario
+                    </th>
+                    <th width="200px">
+                        Hora de Ingreso
+                    </th>
+                   <th width="200px">
+                       Estatus
+                   </th>
+               </tr>
+
+                
+            
+        </table>
+    </div>
+    
+   
+    <div id="panelLogs" style="height:calc(100% - 100px); overflow-y: scroll; top: 60px; position: absolute; z-index:1;" >   
+            
+
+        <table  border="1" cellspacing="0" width="100%" id="tablaEncabezadoLogs" bgcolor="#ffffff">
+            <tr style="height: 54px;" bgcolor="#dcdcdc">
+                  <th width="200px">
+                      Usuario
+                  </th>
+                  <th width="200px">
+                      Hora de Ingreso
+                  </th>
+                 <th width="200px">
+                     Estatus
+                 </th>
+             </tr>
+            {%-for log in listaLogs-%}
+                 
+                     <tr id={{log.id}}>
+                          <td>
+                              {{log.usuario}}
+                          </td>
+                          <td>
+                              {{log.ingreso}}
+                          </td>
+                          <td>
+                              {{log.estatus}}
+                          </td>
+                     </tr>
+                 
+             {%- endfor-%}
+        </table>
+           
+       </div>
+
+
+    
+
+            
+
+
+    
+
+
+    
+{%- endblock -%}
+
+
+
+
+ 

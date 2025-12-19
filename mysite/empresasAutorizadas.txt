@@ -1,0 +1,19 @@
+Lista de empresas autorizadas para prueba piloto con prestamos para empleados con antigüedad menor a 6 meses
+
+"empresasAutorizadas":[
+	  	"EXPO MEXICO SANTA FE",
+		"C.A.E",
+		"JALISCO LIMPIO",
+		"JALSA",
+		"JALSA MORISLAN",
+		"JALSA SINDICALIZADOS",
+		"A DE A",
+		"CENTRAL DE ABASTOS",
+		"CHEPRO DE MEXICO SA DE CV",
+		"CONSTRUCTORA DE PROYECTOS VIALES SA DE CV",
+		"HIDROGENO CADEREYTA SAPI DE CV",
+		"IEPI DE MEXICO SA DE CV",
+		"INGESAN SERVICIOS ADMINISTRATIVOS MEXICO SA DE CV",
+		"INGESAN SERVICIOS MEXICO SA DE CV",
+		"PREMOL SA DE CV"
+  	]	

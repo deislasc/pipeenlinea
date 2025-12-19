@@ -1,0 +1,327 @@
+
+{%- extends "base.html" -%}
+{%- block content -%}
+
+    <div class="panelPipeLine" id="panelPipeLine" style="height:100%;">   
+        <div class="botoneraLarga">
+            <form id="pipeLineForm" action="/pipeline" method="Post">
+                    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">    
+                    <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                    <input type="hidden" name="viewName" value="{{viewName}}">
+                <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">   
+                    <tr> 
+                    <td align="center">Desde:</td>  
+                    <td ></td>
+                    <td align="center">Hasta:</td>
+                    <td ></td>
+                    <td align="center">Fecha de Referencia:</td>  
+                    <td ></td>
+                    <td align="center">Producto:</td>
+                    <td ></td>
+                    <td align="center">Frecuencia:</td>
+                    <td ></td> 
+                    <td align="center" rowspan="2">
+                        <input type="submit" value="Consultar">
+                    </td>  
+                    <td align="center" rowspan="2">
+                        <input type="button" value="Ver Solicitudes" onClick="mostrarVisorSolicitudes(this);">
+                    </td>  
+                    <td align="center" rowspan="2">
+                        <input type="button" value="IMPRIMIR" onclick="printElem('listadoPipeLine');">
+                    </td>                   
+                    </tr>
+                    <tr>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fechaInicio" name="fechaInicio" min="2019-01-02"
+                             value="{{formData['fechaInicio']}}"></input>
+                        </td>  
+                        <td></td>
+                        <td  align="center">
+                            <input type="date" class="roundInput" id="fechaFin" name="fechaFin" min="2019-01-02" value="{{formData['fechaFin']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fecha" name="fecha"
+                             min="2019-01-02" value="{{formData['fecha']}}"></input>
+                        </td>  
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="producto" name="producto">
+                                <option value=""></option>
+                                <option value="Adelanto de Nómina"
+                                    {%- if formData['producto']=="Adelanto de Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}
+                                >Adelanto de Nómina</option>
+                                <option value="Nómina"
+                                {%- if formData['producto']=="Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}>Nómina</option>
+                                <option value="Vehículo"
+                                {%- if formData['producto']=="Vehículo" -%}
+                                     selected="true"
+                                    {%- endif-%}>Vehículo</option>
+                                <option value="Seguro"
+                                {%- if formData['producto']=="Seguro" -%}
+                                     selected="true"
+                                    {%- endif-%}>Seguro</option>
+                                <option value="Seguro Independiente"
+                                {%- if formData['producto']=="Seguro Independiente" -%}
+                                     selected="true"
+                                    {%- endif-%}>Seguro Independiente</option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="frecuenia" name="frecuencia">
+                                <option value="1"
+                                {%- if formData['frecuencia']=="1" -%}
+                                     selected="true"
+                                    {%- endif-%}>Fin de Mes</option>
+                                <option value="2"
+                                {%- if formData['frecuencia']=="2" -%}
+                                     selected="true"
+                                    {%- endif-%}>Diario</option>
+                                <option value="3"
+                                {%- if formData['frecuencia']=="3" -%}
+                                     selected="true"
+                                    {%- endif-%}>Mismo día hábil</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+         <div class="listadoPipeLine" id="listadoPipeLine" name="listadoPipeLine">
+            <table style="word-wrap: break-word; 
+                                    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                    background-color:#ffffff;
+                                    text-align: center;
+                                    display: none;" 
+                    border="2" 
+                    cellspacing="0" 
+                    width="100%"
+                    >
+                <tr>
+                    <td width="150px" style="text-align: center; vertical-align: middle;" ><img src="{{ url_for('static', filename='img/Logo_MiPymex.jpg') }}" alt=""
+                        style="width: 140px; height: auto;"></td>
+                    <td>SOLICITUDES EN PROCESO</td>
+                </tr>
+            </table>
+            {%- for pipeline in pipelines -%}
+                 {%- for producto in pipeline.productos -%}
+                     <table border="1" cellspacing="0" 
+                     style="
+                            width: calc(100%);
+                     ">                        
+                        {%-for columna in columnas-%}
+                            <th style="word-wrap: break-word; 
+                                    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                    font-size: 14px;
+                                    font-weight: bold;
+                                    background-color:#8db3e2">
+                            {{columnas[columna]}}
+                            </th>
+                        {%- endfor -%}
+                            <tr>
+                                <td rowspan="{{pipeline.productos[producto]|length *2}}" 
+                                    style="word-wrap: break-word; 
+                                    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                    font-size: 14px;
+                                    font-weight: bold;
+                                    text-align: center;"
+                                    width="132px" 
+                                    >  
+                                    
+                                    {{producto}} 
+                                </td>
+                                <td rowspan="{{pipeline.productos[producto]|length *2}}" 
+                                    style="word-wrap: break-word; 
+                                    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                    font-size: 14px;
+                                    font-weight: bold;
+                                    text-align: center;"
+                                    width="75px" 
+                                    >
+                                    {{pipeline.fecha}}
+                                </td>
+                        {%- for asesor in pipeline.productos[producto] -%}
+                            
+                                 <td rowspan="2" style=" 
+                                           width: 200px; 
+                                           font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                           font-size: 14px;
+                                           font-weight: bold;
+                                           {%- if asesor == 'TOTAL' -%}
+                                            background-color:#000000;
+                                            color:#FFFFFF;
+                                           {%- endif -%}">
+                                 {{asesor}}
+                                </td> 
+                                <td style="word-wrap: break-word; 
+                                           width: 50px; 
+                                           font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                           font-size: 14px;
+                                           font-weight: bold;
+                                           text-align: center;
+                                           {%- if asesor == 'TOTAL' -%}
+                                            background-color:#000000;
+                                            color:#FFFFFF;
+                                            
+                                           {%- endif -%}">
+                                 #
+                                </td> 
+                                {%-for columna in columnas-%}
+                                    {% if loop.index >4 %}
+
+                                    <td style="width: 100px;font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                        font-size: 14px;
+                                        font-weight: bold;
+                                        background-color:#FFFFFF;
+
+                                        {%- if columna == 'ENPROCESO' -%}
+                                            background-color:#FFFF00;
+                                        {%- endif -%}
+                                        {%- if columna == 'FONDEADO' -%}
+                                            background-color:#00FF00;
+                                        {%- endif -%}
+                                        {%- if columna == 'RECHAZADO' -%}
+                                            background-color:#FF0000;
+                                        {%- endif -%}  
+                                        {%- if columna == 'TOTAL' -%}
+                                            background-color:#000000;
+                                            color:#FFFFFF;
+                                        {%- endif -%}
+                                        {%- if asesor == 'TOTAL' -%}
+                                            background-color:#000000;
+                                            color:#FFFFFF;
+                                        {%- endif -%}"
+
+                                        columna="{{columna}}"
+                                        id="{{pipeline.fecha}}_{{producto}}_{{asesor}}_{{columna}}"
+                                        onclick="mostrarDetallePipeLine('{{pipeline.fecha}}','{{producto}}', '{{asesor}}', '{{columna}}')">
+                                         {%- if (columna in pipeline.productos[producto][asesor]) -%}
+                                            {{pipeline.productos[producto][asesor][columna]["numero"]}} 
+                                         {%-else-%}
+                                            0
+                                         {%- endif -%}
+                                    </td>
+                                    {%- endif -%}
+                                {%-endfor-%} 
+                                
+                            </tr>
+                            <tr>
+                                <td style="word-wrap: break-word; 
+                                           width: 50px; 
+                                           font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                           font-size: 14px;
+                                           font-weight: bold;
+                                           text-align: center;
+                                           {%- if asesor == 'TOTAL' -%}
+                                            background-color:#000000;
+                                            color:#FFFFFF;
+                                           {%- endif -%}">
+                                 $
+                                </td> 
+                                {%-for columna in columnas-%}
+                                    {% if loop.index >4 %}
+                                    <td style="width: 100px;font-family: Calibri, Arial, 'Helvetica Neue', Helvetica, sans-serif; 
+                                        font-size: 14px;
+                                        font-weight: bold;
+                                        background-color:#FFFFFF;
+                                        text-align: right;
+                                        {%- if columna == 'ENPROCESO' -%}
+                                            background-color:#FFFF00;
+                                        {%- endif -%}
+                                        {%- if columna == 'FONDEADO' -%}
+                                            background-color:#00FF00;
+                                        {%- endif -%}
+                                        {%- if columna == 'RECHAZADO' -%}
+                                            background-color:#FF0000;
+                                        {%- endif -%}
+                                        {%- if columna == 'TOTAL' -%}
+                                            background-color:#000000;
+                                            color:#FFFFFF;
+                                        {%- endif -%} 
+                                        {%- if asesor == 'TOTAL' -%}
+                                            background-color:#000000;
+                                            color:#FFFFFF;
+                                        {%- endif -%}" 
+                                        
+                                        columna="{{columna}}"
+                                        id="{{pipeline.fecha}}_{{producto}}_{{asesor}}_{{columna}}"
+                                        onclick="mostrarDetallePipeLine('{{pipeline.fecha}}','{{producto}}', '{{asesor}}', '{{columna}}')">
+                                         {%- if (columna in pipeline.productos[producto][asesor]) -%}
+                                            {{pipeline.productos[producto][asesor][columna]["montoSolicitado"]}}
+                                         {%-else-%}
+                                             0.00
+                                         {%- endif -%}
+                                    </td>
+                                    {%- endif -%}
+                                {%-endfor-%}
+                            </tr>
+                        {%- endfor -%}
+
+                         </table>
+                         <br/>
+                 {%- endfor -%}
+            {%- endfor -%}
+
+        </div>
+    </div>
+    
+    <div id="visorSolicitudes" style="visibility: hidden; display: none;">
+        
+        <div class="panelPipeLine" id="panelPipeLine" style="height:300px; width:calc(100% - 350px);">   
+            <div class="listadoPipeLine" id="detallePipeLine" name="detallePipeLine" style="height: 100%">
+
+                <table border="1" cellspacing="0" 
+                 style="table-layout: fixed; 
+                        width: calc(100% - 8px);
+                 ">                        
+                    <th class="encabezadoTabla">Datos</th>
+                    {%-for campo in listaCamposFiltro-%}
+                        {%- if campo.pipeLineRenderable=="true"-%}
+                            <th class="encabezadoTabla">    
+                                {{campo.label}}
+                            </th>
+                        {%-endif-%}
+                    {%-endfor-%}
+                </table>
+            </div>             
+        </div>
+        
+        <div class="panelPipeLine" style="height:300px; width: 330px;">  
+            <table width="100%" >
+                    <tr>
+                        <th class="encabezadoTabla" 
+                            colspan="2"
+                            style="border:2px solid #000000;" 
+                            >SOLICITUD</th>
+                    </tr>
+            </table>
+            <div class="listadoPipeLine" id="listadoPipeLine" name="listadoPipeLine" style="height: 100%">
+                <table>
+                    <tbody id="detalleSolicitud">
+                        
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    
+
+
+    
+{%- endblock -%}
+
+
+
+
+ 

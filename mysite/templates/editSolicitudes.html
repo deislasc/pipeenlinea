@@ -1,0 +1,22 @@
+<div class="panel" id="panel2"> <!-- Panel de detalle para equipos de escritorio-->
+    <div class="listadoItems" id="solicitudEditItem" name="solicitudEditItem" style="height: 100%;">
+        <form id="formaSolicitudEdit"
+            {%- if viewName=="Revision Documental" -%}
+                action="/revisionDocumental" method="Post"
+            {%- endif-%}
+            {%- if viewName=="Analisis de Creditos" -%}
+                action="/analisisCreditos" method="Post"
+            {%- endif-%}
+            {%- if viewName=="PreAnalisis" -%}
+                action="/preAnalisis" method="Post"
+            {%- endif-%}
+            {%- if viewName=="Imprimir Contrato" -%}
+                action="/imprimircontrato" method="Post"
+            {%- endif-%}
+            {%- if viewName=="Agendas" -%}
+                action="/agendas" method="Post"
+            {%- endif-%}
+        >
+        </form>
+    </div>
+</div>

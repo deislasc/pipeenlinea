@@ -1,0 +1,48 @@
+{%- extends "base.html" -%}
+{%- block content -%}
+
+    <div class="panelPipeLine" id="panelACL" style="height:100%; width: 480px;"> 
+        <form id="ACLForm" action="/acl" method="Post" style="height: calc(100% - 60px);">  
+            <div class="botoneraLarga" style="width:100%;">
+                
+                <input type="hidden" name="ownerID" value="{{user['ownerID']}}">    
+                <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                <input type="hidden" name="viewName" value="{{viewName}}">
+                <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">   
+                   
+                    <td align="center" rowspan="2">
+                        <input type="submit" value="Guardar">
+                    </td>                   
+                   
+                </table>
+                
+            </div>
+
+        
+
+                <textarea id="acl"
+                          name="acl" 
+                          style="resize:none;
+                                 height: calc(100% - 16px);
+                                 width: 100%;
+                                 font-size: 16px">
+
+                </textarea>     
+           
+
+        </form>
+
+    </div>
+    
+    <script>
+       document.getElementById("acl").value=JSON.stringify(listaACL, undefined, 4);
+    </script>
+    
+    
+
+
+    
+{%- endblock -%}
+    
+
+     

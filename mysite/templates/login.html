@@ -1,0 +1,68 @@
+{# [START form] #}
+{%- extends "base.html" -%}
+{%- block content -%}
+
+<div class="panelAviso">
+    <center>
+        <table width="250px" cellpadding="6">
+            <tr>
+                <td>
+                    <img src="{{ url_for('static', filename='img/Buzon PLD.png') }}"
+                         width="250px"
+                         height="150px">
+                </td>
+            </tr>
+        </table>
+    </center>
+
+</div>
+
+<div class="panelLogIn" id="panelLogIn"> <!-- Panel de detalle para equipos de escritorio-->
+    <!-- <div class="listadoItems" id="solicitudEditItem" name="solicitudEditItem" style="height: 100%;"> -->
+        <form id="formaLogIn" method="POST" enctype="multipart/form-data">
+        	<table width="100%" cellpadding="6">
+
+
+        		<tr>
+                    {%- if feedback is not defined -%}
+        			<td align="center" style="background: rgb(0,0,75); border-radius: 8px; height: 40px">
+        				<label style="color:#FFFFFF;"> ¿Quién Eres? </label>
+        		    </td>
+                    {%- else -%}
+                    <td align="center" style="background: rgb(150,0,0); border-radius: 8px; height: 40px">
+                        <label style="color:#FFFFFF;"> {{feedback}} </label>
+                    </td>
+                    {%- endif -%}
+        		</tr>
+        		<tr>
+        			<td align="center">
+        				Correo:
+        			</td>
+        		</tr>
+        		<tr>
+        			<td align="center">
+        				<input class="roundInput" type="text" name="username" id="username" style="text-align: center">
+        			</td>
+        		</tr>
+        		<tr>
+        			<td align="center">
+        				Contraseña:
+        			</td>
+        		</tr>
+        		<tr>
+        			<td align="center">
+        				<input autocomplete class="roundInput" type="password" name="password" id="password" style="text-align: center">
+        			</td>
+        		</tr>
+        		<tr>
+        			<td align="center">
+        				<input class="buttonSubmit" type="submit" value="Ingresar">
+        			</td>
+        		</tr>
+        	</table>
+        </form>
+
+    <!-- </div>         -->
+</div>
+{%- endblock -%}
+{# [END form] #}

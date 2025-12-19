@@ -1,0 +1,466 @@
+{%- extends "base.html" -%}
+{%- block content -%}
+	<form id="simuladorForm" action="/simulador" method="Post">
+		 <input type="hidden" name="ownerID" value="{{user['ownerID']}}">    
+         <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+         <input type="hidden" name="viewName" value="{{viewName}}">
+         <input type="hidden" name="antiguedad"  id="antiguedad" value="0">
+		 <table  class="roundtable_encabezado">
+		 	<tr>
+			 	<td align="center" 6style="background: #ffffff" rowspan="2">
+			 		<img src="{{ url_for('static', filename='img/Logo_MiPymex.jpg') }}" alt=""
+                        style="width: 140px; height: auto;">
+			 	</td>
+			 	
+			 	<td align="center" class="titulo_1">
+			 		SOLICITA TU PRÉSTAMO FÁCIL, RÁPIDO Y SEGURO
+			 	 </td>
+		 	</tr>
+		 	<td class="recomendacion">
+		 		Esta aplicación funciona mejor con Google Chrome
+		 	</td>
+		 </table>	
+    
+	    	
+		<div id="panelCotizador" class="roundtable_con_borde_superior">
+			
+			<div class="titulo">
+				Cotiza tu crédito:
+			</div>
+			
+			<center>
+				<div class="row">
+
+					<div class="cell_apartado">
+						Tipo de Cliente:
+					</div>
+					<div class="cell">
+						<select class="roundInput" id="tipoConvenio" name="tipoConvenio" onchange="resetData(this.value);">
+							<option value="internos" selected="true"> Caabsa </option>
+							<option value="externos"> Convenio </option>
+							<option value="auxiliaresCaabsaEagle"> Auxiliar Caabsa Eagle </option>
+							<option value="choferesCaabsaEagle"> Chofer Caabsa Eagle </option>
+						</select>
+					
+					</div>
+				
+				</div>
+
+				<div class="row">
+
+					<div class="cell_apartado">
+						Fecha de ingreso:
+					</div>
+					<div class="cell">
+						
+
+						<input type="date"
+						   name="fechaIngreso" 
+						   id="fechaIngreso"		   
+						   onchange="calculaAntiguedad();
+						   			 submit();" 
+						   class="roundInput" 
+						   max={{responseData['maxDate']}}
+						>	
+						  
+
+					</div>
+					
+				
+				</div>
+				
+	            <div class="row">
+					<div class="cell_apartado">
+						Ingresos mensuales: $ 
+					</div>
+				    <div class="cell">
+						<input type="number" min="1"  id="montoIngresos" name="montoIngresos" onchange="submit();" class="roundInput" value="0">
+				    </div>
+				</div>
+
+				<div class="row">
+					<div class="cell_apartado">
+						 <span>Buró de Crédito:</span> 
+					</div>
+					<div class="cell">						 	
+			 	 		 <input type="radio" 
+			 	 		 		value="bueno"  
+			 	 		 		name="buroCredito" 
+			 	 		 		id="buroBueno" 
+			 	 		 		onchange="submit();" 
+			 	 		 		{%-if responseData['buroCredito']=="bueno" -%}
+			 	 		 			checked="true"
+			 	 		 		{%- endif -%}
+			 	 		 		checked="true"	>
+					 	  	<span id="labelBuroBueno">Bueno</span>
+					     <input type="radio" 
+					     		value="regular" 
+					     		name="buroCredito" 
+					     		id="buroRegular" 
+					     		onchange="submit();"
+					     		{%-if responseData['buroCredito']=="regular" -%}
+			 	 		 			checked="true"
+			 	 		 		{%- endif -%}
+					     		 >
+					     	<span id="labelBuroRegular">Regular</span>			 	 
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="cell_apartado">
+						 <span>Seguro:</span> 
+					</div>
+					<div class="cell">						 	
+			 	 		<input type="radio" 
+			 	 		 		value="25000"  
+			 	 		 		name="seguro" 
+			 	 		 		id="seguro25" 
+			 	 		 		onchange="submit();" 
+			 	 		 		{%-if responseData['seguro']=="25000" -%}
+			 	 		 			checked="true"
+			 	 		 		{%- endif -%}
+			 	 		 		checked="true"	>
+					 	  	<span id="labelSeguro25">$25K</span>
+					 	<input type="radio" 
+			 	 		 		value="50000"  
+			 	 		 		name="seguro" 
+			 	 		 		id="seguro50" 
+			 	 		 		onchange="submit();" 
+			 	 		 		{%-if responseData['seguro']=="50000" -%}
+			 	 		 			checked="true"
+			 	 		 		{%- endif -%}
+			 	 		 		>
+					 	  	<span id="labelSeguro50">$50K</span>
+					 	<input type="radio" 
+			 	 		 		value="75000"  
+			 	 		 		name="seguro" 
+			 	 		 		id="seguro75" 
+			 	 		 		onchange="submit();" 
+			 	 		 		{%-if responseData['seguro']=="75000" -%}
+			 	 		 			checked="true"
+			 	 		 		{%- endif -%}
+			 	 		 		>
+					 	  	<span id="labelSeguro50">$75K</span>
+					 	<input type="radio" 
+			 	 		 		value="100000"  
+			 	 		 		name="seguro" 
+			 	 		 		id="seguro100" 
+			 	 		 		onchange="submit();" 
+			 	 		 		{%-if responseData['seguro']=="100000" -%}
+			 	 		 			checked="true"
+			 	 		 		{%- endif -%}
+			 	 		 		>
+					 	  	<span id="labelSeguro100">$100K</span>
+					     		 	 
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="cell_apartado">
+						 <span>Plazo (en meses):</span> 
+					</div>
+					<div class="cell">	
+					 	
+			 	 		 <input type="radio" value="6"  name="groupPlazo" id="plazo_6" onchange="getRating(value,1)" disabled="true" hidden="true">
+					 	  	<span id="labelPlazo_6" hidden="true">6</span>
+					     <input type="radio" value="12" name="groupPlazo" id="plazo_12" onchange="getRating(value,1)" disabled="true" hidden="true">
+					     	<span id="labelPlazo_12" hidden="true">12</span>
+					     <input type="radio" value="18" name="groupPlazo" id="plazo_18" onchange="getRating(value,1)" disabled="true" hidden="true">
+						    <span id="labelPlazo_18" hidden="true">18</span>
+					     <input type="radio" value="24" name="groupPlazo" id="plazo_24" onchange="getRating(value,1)" disabled="true" hidden="true">
+					     	<span id="labelPlazo_24" hidden="true">24</span>
+					     <input type="radio" value="30" name="groupPlazo" id="plazo_30" onchange="getRating(value,1)" disabled="true" hidden="true">
+					     	<span id="labelPlazo_30" hidden="true" >30</span>
+					     <input type="radio" value="36" name="groupPlazo" id="plazo_36" onchange="getRating(value,1)" disabled="true" hidden="true">
+					     	<span id="labelPlazo_36" hidden="true">36</span>
+					     <input type="radio" value="42" name="groupPlazo" id="plazo_42" onchange="getRating(value,1)" disabled="true" hidden="true">
+					     	<span id="labelPlazo_42" hidden="true">42</span>
+
+					     <span id="plazo" hidden="true"></span>				 	 
+					</div>
+				</div>
+				
+
+				<div class="row">
+					<div class="cell_apartado">
+					    <span>Recibes tu nómina:</span>
+					</div>
+					<div class="cell">
+					   <input type="radio" value="semanal" name="groupFrecuencia"  onchange="getRating(value,2)"> 
+				 	  		<span>semanal</span>
+				 	 	<input type="radio" value="catorcenal" name="groupFrecuencia"  onchange="getRating(value,2)"> 
+				 	  		<span>catorcenal</span>
+				 	 	<input type="radio" value="quincenal" name="groupFrecuencia" onchange="getRating(value,2)" checked="true"> 
+				 	  		<span>quincenal</span>
+				 	 	<input type="radio" value="mensual" name="groupFrecuencia" onchange="getRating(value,2)"> 
+				 	  		<span>mensual</span>
+				     	<br/>
+					 	<span id="frecuencia" name="frecuencia" hidden="true">frecuencia</span> 	
+					</div>
+				</div>
+			</center>
+	    	
+			
+
+			
+				<div class="apartado" style="text-align: center; width: 100%">
+					Puedes solicitar hasta:
+					<span id="montoMaximo" name="montoMaximo">$0</span>
+				</div>
+				
+			
+
+			
+				<div align="center">
+					    <span class="monto_seleccionado">Monto del préstamo:</span> 
+					    <span class="monto_seleccionado"id="monto" name="monto"></span>
+						<br>
+						<span class="pago">Realizarás </span>
+						<span class="pago" name="numPagos" id="numPagos"> 0 </span>
+						<span id="tuPago" class="pago"> pagos quincenales de:</span>
+						<br>
+					   	<span id="pago" name="pago" class="montoPago">$00.00</span>
+					   	<input type="button" onclick="obtenerTablaAmortizacion();" value="Ver Tabla de Amortización">
+				</div>
+			
+
+			<div align="center">
+				    <div class="apartado" style="text-align: center; width: 100%; font-weight: bold">
+				    	 Mueve la barra verde para modificar el monto del préstamo.
+					</div>
+				   
+					<input type="range" min="0" max="0" value="0" step="1000" class="slider_simulador" id="rangoMonto" name="rangoMonto">	
+					
+			</div>
+			
+			
+
+			<div  align="center">
+				
+					<font color="#3333aa">
+						El monto puede variar dependiendo
+						<br>
+						de tu historial crediticio.
+					 	<br>
+					 	<strong> SUJETO A APROBACIÓN DE CRÉDITO</strong>
+					 </font>
+				
+			</div>
+            <center>
+
+            	<div class="apartado" style="text-align: center">
+            			Contáctanos
+            		<br>
+			        	Correo: <a href="mailto:infonomina@mipymex.mx">  
+			        		 			infonomina@mipymex.mx
+			        		 	</a>
+			        		<br>
+       				<br>
+       					Telefono:
+			        		<strong>7590 2100 ext 2149</strong> 
+       			</div>
+
+            </center>   
+			
+		</div>
+
+
+		<div id="panelTablaAmortizacion" class="roundtable_con_borde_superior" hidden="true" >
+        	<table>
+        		<tr>
+        			<td>
+        				<div id="botonCerrar" class="botonCerrar" onclick=" expandirTablaAmortizacion(false);">	Regresar
+						</div>
+        			</td>
+        			<td>
+        				<input type="button" value="Imprimir" onclick="printElemSimulador('divTablaAmortizacion');">
+        			</td>
+        		</tr>
+        	</table>
+    	
+		
+
+        	<div id="divTablaAmortizacion">
+        	</div>
+    	</div>
+        
+       
+
+        <div id="panelContactanos"  class="roundtable_con_borde_superior" hidden="true">
+    	    <br><br>
+    	    <center>
+		    	<iframe 
+		    		    id="frameFormulario"
+		    		    src = "https://docs.google.com/forms/d/e/1FAIpQLSfmyt6qgvDNIloIFSTljhiBK04zTQ6IVopRTt6Y2tXEuT1l6A/viewform?embedded=true" 
+			 	      	width = "90%" 
+			 	     	height= "850" 
+			 	      	frameborder  = "0" 
+			 	      	marginheight = "0" 
+			 	      	marginwidth  = "0"
+			 	      	onload="cambiarAltura();">
+						Cargando…
+				</iframe>
+
+				<div id="datosContacto">
+					    <div class="apartado" style="text-align: center">
+					    	<strong>
+					    		Si lo prefieres, escríbenos o llámanos:
+					    	</strong>   	
+					    </div>	
+			        	<center>
+			        		<div class="apartado" style="text-align: center">
+			        		Correo: <a href="mailto:infonomina@mipymex.mx">  
+			        		 			infonomina@mipymex.mx
+			        		 	   </a>
+			        		<br>
+			        		
+			        		Telefono:
+			        		<strong>7590 2100 ext 2149</strong> 
+			        		</div>
+			        		
+			        	</center>
+			        	<br>	
+			        	<div id="botonCerrar" class="botonCerrar" onclick="cerrarPanelContacto();">	Regresar
+						</div>
+						<br><br>
+			    </div>
+	    		
+		   
+		    	
+
+
+	    	</center>
+
+
+        </div>
+
+    </form>
+
+
+		 
+<script>
+cleanValues();	
+responseData={{responseData|tojson|safe}}
+
+
+
+if (responseData.tipoConvenio == undefined)
+	document.getElementById('tipoConvenio').value="internos";
+else
+	document.getElementById('tipoConvenio').value=responseData.tipoConvenio
+
+if (responseData.fechaIngreso == undefined)
+	document.getElementById('fechaIngreso').valueAsDate = new Date();
+else
+	document.getElementById('fechaIngreso').value = responseData.fechaIngreso;
+
+if(responseData.plazos!=undefined){
+	max=responseData.plazos[responseData.plazos.length-1];
+	verPlazos(max)
+}
+
+if (responseData.tipoConvenio=='choferesCaabsaEagle' ||
+    responseData.tipoConvenio=='auxiliaresCaabsaEagle')
+		document.getElementById("montoIngresos").disabled=true;
+	else
+		document.getElementById("montoIngresos").disabled=false;
+
+if (responseData.antiguedad==undefined)
+	document.getElementById('antiguedad').value = 0;
+else{
+		document.getElementById('antiguedad').value = responseData.antiguedad;
+		if(responseData.antiguedad>0)
+			calculaPagoFlat(responseData,true);
+	}
+
+if (responseData.montoIngresos==undefined)
+	document.getElementById('montoIngresos').value = 0;
+else{
+	if (responseData.montoIngresos>0){
+		document.getElementById('montoIngresos').value = responseData.montoIngresos;
+		calculaPagoFlat(responseData,true);
+	}
+	if (responseData.montoIngresos==0){
+		document.getElementById('montoIngresos').value = 0;
+	}
+
+
+}
+
+
+
+
+if (responseData.montoMax!=undefined && 
+	responseData.montoMax>0)
+  	calculaPagoFlat(responseData,true);
+
+
+
+var sliderMonto = document.getElementById("rangoMonto");
+var outputMonto = document.getElementById("monto");
+outputMonto.innerHTML = numberToCurrency(sliderMonto.value);
+
+sliderMonto.oninput = function() {
+  outputMonto.innerHTML = numberToCurrency(this.value);
+  localStorage.setItem("monto",this.value);
+  if (responseData.montoIngresos!=undefined && responseData.montoIngresos>0){
+  		calculaPagoFlat(responseData,false);
+  }
+  if (responseData.montoMax!=undefined && responseData.montoMax>0){
+  		calculaPagoFlat(responseData,false);
+  }
+  
+}
+
+
+var outputPlazo = document.getElementById("plazo");
+var outputFrecuencia=document.getElementById("frecuencia");
+function getRating(value,idx){
+   if (idx==1) {
+   	   	outputPlazo = document.getElementById("plazo");
+   	   	outputPlazo.innerHTML=value+" meses";
+   	   	localStorage.setItem("plazo",value);
+   }
+   if (idx==2) {
+   		outputFrecuencia=document.getElementById("frecuencia")
+   	   	outputFrecuencia.innerHTML=value;
+       	localStorage.setItem("frecuencia",value);
+       	document.getElementById("numPagos").innerHTML=localStorage.getItem("numero_pagos");
+       	document.getElementById("tuPago").innerHTML=" pagos "+value+"es de:";
+   }   
+
+   if (responseData.montoIngresos!=undefined && responseData.montoIngresos>0)
+  		calculaPagoFlat(responseData,false);
+
+   if (responseData.montoMax!=undefined && responseData.montoMax>0)
+  		calculaPagoFlat(responseData,false);
+  
+}
+
+
+function resetData(value){
+	responseData=[];
+	document.getElementById('fechaIngreso').valueAsDate = new Date();
+	document.getElementById('montoIngresos').value="0";
+	document.getElementById('montoMaximo').innerHTML="0.00";
+	document.getElementById('monto').innerHTML="0.00";
+	document.getElementById('numPagos').innerHTML="0";
+	document.getElementById('pago').innerHTML="0.00";
+	document.getElementById('tuPago').innerHTML="pagos quincenales de:";
+	document.getElementById('rangoMonto').max=0;
+	document.getElementById('rangoMonto').min=0;
+	document.getElementById('rangoMonto').value=0;
+	cleanValues();
+
+	if (value=='choferesCaabsaEagle' ||
+    	value=='auxiliaresCaabsaEagle')
+		document.getElementById("montoIngresos").disabled=true;
+	else
+		document.getElementById("montoIngresos").disabled=false;
+
+}
+
+
+</script>
+ 
+{%- endblock -%}

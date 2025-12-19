@@ -1,0 +1,448 @@
+
+{%- extends "base.html" -%}
+{%- block content -%}
+<form enctype = "multipart/form-data" id="pipeLineForm" action="/controlexpedientes" method="Post">
+    <div style="height:78px; overflow-y: scroll; position: absolute; background-color: #dcdcdc; z-index: 2; width: calc(100% - 16px);">
+        <div class="botoneraLarga">
+            
+                    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+                    <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                    <input type="hidden" name="viewName" value="{{viewName}}">
+
+                <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                    <td align="center">Desde:</td>
+                    <td ></td>
+                    <td align="center">Hasta:</td>
+                    <td ></td>
+                    <td align="center">Producto:</td>
+                    <td ></td>
+                    <td align="center">Region:</td>
+                    <td ></td> 
+                    <td align="center">Asesor:</td>
+                    <td ></td>
+                    <td align="center">Empresa:</td>
+                    <td ></td>
+                    <td align="center">Cliente</td>
+                    <td ></td>
+                    <td align="center">Núm. Control</td>
+                    <td ></td>
+                    <td align="center">Resguardo:</td>
+                    <td ></td>
+
+                    <td align="center" rowspan="2">
+                        <input type="submit" value="Consultar" name="accion" id="accion">
+                        <br/>
+                        <input type="submit" value="Actualizar" name="accion" id="accion">
+                    </td>
+                   
+                    </tr>
+                    <tr>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fechaInicio" name="fechaInicio" min="2019-01-02"
+                             value="{{formData['fechaInicio']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input type="date" class="roundInput" id="fechaFin" name="fechaFin" min="2019-01-02" value="{{formData['fechaFin']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="producto" name="producto">
+                                <option value="General"
+                                {%- if formData['producto']=="" or formData["producot"]=="General" -%}
+                                     selected="true"
+                                {%- endif-%}
+                                {%-if "producto" not in formData-%}
+                                    selected="true"
+                                {%-endif-%}>General</option>
+                                <option value="Nómina"
+                                {%- if formData['producto']=="Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}>Nómina</option>
+                                <option value="Adelanto"
+                                    {%- if formData['producto']=="Adelanto" -%}
+                                     selected="true"
+                                    {%- endif-%}
+                                >Adelanto</option> 
+                                <option value="Vehículo"
+                                {%- if formData['producto']=="Vehículo" -%}
+                                     selected="true"
+                                    {%- endif-%}>CNP</option>
+                               <!--  <option value="Seguro"
+                                {%- if formData['producto']=="Seguro" -%}
+                                     selected="true"
+                                    {%- endif-%}>Seguro</option>
+                                <option value="ARF"
+                                {%- if formData['producto']=="ARF" -%}
+                                     selected="true"
+                                    {%- endif-%}>ARF</option>
+                                <option value="ARR"
+                                {%- if formData['producto']=="ARR" -%}
+                                     selected="true"
+                                    {%- endif-%}>ARR</option>
+                                <option value="CSP"
+                                {%- if formData['producto']=="CSP" -%}
+                                     selected="true"
+                                    {%- endif-%}>CSP</option>
+                                <option value="Factoraje"
+                                {%- if formData['producto']=="Factoraje" -%}
+                                     selected="true"
+                                    {%- endif-%}>Factoraje</option> -->
+                            </select>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="region" name="region">
+                               <option value="General"
+                                {%- if formData['region']=="General" -%}
+                                     selected="true"
+                                {%- endif-%}>General</option> 
+                               <option value="CDMX"
+                                {%- if formData['region']=="CDMX" -%}
+                                     selected="true"
+                                {%- endif-%}>CDMX</option>
+                               <option value="Guadalajara"
+                                {%- if formData['region']=="Guadalajara" -%}
+                                     selected="true"
+                                {%- endif-%}>Guadalajara</option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input class="roundInput" id="asesor" name="asesor"
+                             {%-if 'asesor' in formData-%}
+                                value="{{formData['asesor']}}"
+                             {%-endif-%}>
+                        </td>
+                        <td></td>
+                        
+                        <td  align="center">
+                            <input class="roundInput" name="empresa" id="empresa"
+                             {%-if 'empresa' in formData-%}
+                                value="{{formData['empresa']}}"
+                             {%-endif-%}>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input class="roundInput" name="cliente" id="cliente"
+                             {%-if 'numeroControl' in formData-%}
+                                value="{{formData['cliente']}}"
+                             {%-endif-%}>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input class="roundInput" name="numeroControl" id="numeroControl"
+                             {%-if 'numeroControl' in formData-%}
+                                value="{{formData['numeroControl']}}"
+                             {%-endif-%}>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="estatusResguardo" name="estatusResguardo">
+                               <option value=""></option>
+                               <option value="Boveda"
+                                    {%- if formData["estatusResguardo"]=="Boveda" -%}
+                                         selected="true"
+                                    {%- endif-%}>Boveda</option>
+                               <option value="Comercial"
+                                    {%- if formData["estatusResguardo"]=="Comercial" -%}
+                                         selected="true"
+                                    {%- endif-%}>Comercial</option>
+                               <option value="Riesgos"
+                                    {%- if formData["estatusResguardo"]=="Riesgos" -%}
+                                         selected="true"
+                                    {%- endif-%}>Riesgos</option>             
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <table id="tablaEncabezadoLogs" border="1" width="100%" bgcolor="#dcdcdc">
+                    <th class="boldSmallLabel" >#</th>
+                    <th class="boldSmallLabel" width="80px">Asesor</th>
+                    <th class="boldSmallLabel" width="120px" colspan="1">Expediente</th>
+                    <th class="boldSmallLabel" width="" colspan="1">Resguardado por</th>
+                    <th class="boldSmallLabel" width="" colspan="1">Contrato Impreso</th>
+                    <th class="boldSmallLabel" width="180px" colspan="2">Entregado a Riesgos</th>
+                    <th class="boldSmallLabel" width="180px" colspan="2">Revisado por Riesgos</th>
+                    <th class="boldSmallLabel" width="180px" colspan="2">Devuelto a Comercial</th>
+                    <th class="boldSmallLabel" width="180px" colspan="2">En Bóveda</th>
+                </table>
+           
+        </div>
+
+    </div>
+
+        
+        <div style="height:calc(100% - 100px); overflow-y: scroll; top: 60px; position: absolute; z-index:1; width: calc(100% - 16px);" > 
+            <table id="tablaLogs" border="1" width="100%">
+                <th class="boldSmallLabel" >#</th>
+                <th class="boldSmallLabel" width="80px">Asesor</th>
+                <th class="boldSmallLabel" width="120px" colspan="1">Expediente</th>
+                <th class="boldSmallLabel" width="" colspan="1">Resguardado por</th>
+                <th class="boldSmallLabel" width="" colspan="1">Contrato Impreso</th>
+                <th class="boldSmallLabel" width="180px" colspan="2">Entregado a Riesgos</th>
+                <th class="boldSmallLabel" width="180px" colspan="2">Revisado por Riesgos</th>
+                <th class="boldSmallLabel" width="180px" colspan="2">Devuelto a Comercial</th>
+                <th class="boldSmallLabel" width="180px" colspan="2">En Bóveda</th>
+                <tr/>
+                {%-for solicitud in listaSolicitudes-%}
+                    <td class="boldSmallLabel"
+                        rowspan="3" 
+                        bgcolor="#dcdcdc">
+                        {{loop.index}}
+                    </td>
+                    <td class="lightLabel"
+                        rowspan="2">
+                        {{solicitud['asesorNombre']}}
+                    </td>
+                    <td class="boldSmallLabel"
+                        rowspan="2"
+                        onclick="openWindow('{{solicitud['documentos']}}')"
+                        style="cursor: pointer; 
+                                color: #0000ff;
+                                text-decoration: underline;">  
+                        {%-if solicitud['solicitudNumeroControl']!=""-%}                  
+                            {{solicitud['solicitudNumeroControl']}}
+                            {%-else-%}
+                            {{solicitud['producto']}} 
+                        {%-endif-%}
+                        &nbsp
+                        {{solicitud['montoAutorizado']}}
+                        <br/>
+                        {{solicitud['clienteNombre']|upper}}
+                        {{solicitud['clienteApellidoPaterno']|upper }}
+                        {{solicitud['clienteApellidoMaterno']|upper }}
+                        <br/>
+                        {{solicitud['clienteEmpresa']|upper}}
+                        <br/>
+                        {%- if 'tipoBuroCredito' in solicitud -%}
+                            Tipo Buro: &nbsp {{solicitud['tipoBuroCredito']}}
+                            {%-else-%}
+                                No Consultado
+                        {%-endif-%}
+                        &nbsp / &nbsp
+                        {{solicitud['solicitudEstatus']|upper}} 
+                        
+
+
+                    </td>
+                    <td  rowspan="2"
+                         class="lightLabel" 
+                         align="center"
+                         >
+                        {{solicitud['expedienteResguardoStatus']}}
+                    </td>
+                    <td  rowspan="2"
+                         class="lightLabel" 
+                         align="center"
+                         >
+                         {{solicitud['fechaContratoImpreso']}}
+                     </td>
+                    <td  
+                         class="lightLabel" 
+                         align="center"
+                         style="padding-right: 6px; border-right: none;"
+                         >
+                        <input id="fechaExpedienteRecibidoRiesgos_{{solicitud.id}}" 
+                                name="fechaExpedienteRecibidoRiesgos_{{solicitud.id}}" 
+                                class="roundInput" 
+                                readonly 
+                                value="{{solicitud['fechaExpedienteRecibidoRiesgos']}}"
+                        >
+                    </td>
+                    <td align="right" 
+                        style="padding-right: 6px; width: 54px; border-left: none;">
+                        <label class="switch" {%- if 'fechaExpedienteRecibidoRiesgos' in user.forbidden -%}
+                                style="display:none;"
+                        {%-endif-%}>
+                            <input type="checkbox" id="check_fechaExpedienteRecibidoRiesgos_{{solicitud.id}}" name="check_fechaExpedienteRecibidoRiesgos_{{solicitud.id}}"
+                            onchange="element=document.getElementById('fechaExpedienteRecibidoRiesgos_{{solicitud.id}}');
+                                      updateStatus(this,element);"
+                            {%-if (solicitud['fechaExpedienteRecibidoRiesgos']!="") and (solicitud['fechaExpedienteRecibidoRiesgos'] is defined)-%}
+                                checked
+                            {%-endif-%}
+                            > 
+                            <span class="slider round"></span> 
+                        </label>
+                    </td>
+                                        <td  
+                         class="lightLabel" 
+                         align="center"
+                         style="padding-right: 6px; border-right: none;"
+                         >
+                        <input id="fechaExpedienteRevisadoRiesgos_{{solicitud.id}}" 
+                                name="fechaExpedienteRevisadoRiesgos_{{solicitud.id}}" 
+                                class="roundInput" 
+                                readonly 
+                                value="{{solicitud['fechaExpedienteRevisadoRiesgos']}}"
+                        >
+                    </td>
+                    <td align="right" 
+                        style="padding-right: 6px; width: 54px; border-left: none;">
+                        <label class="switch" {%- if 'fechaExpedienteRevisadoRiesgos' in user.forbidden -%}
+                                style="display:none;"
+                        {%-endif-%}>
+                            <input type="checkbox" id="check_fechaExpedienteRevisadoRiesgos_{{solicitud.id}}" name="check_fechaExpedienteRevisadoRiesgos_{{solicitud.id}}"
+                            onchange="element=document.getElementById('fechaExpedienteRevisadoRiesgos_{{solicitud.id}}');
+                                      updateStatus(this,element);"
+                            {%-if (solicitud['fechaExpedienteRevisadoRiesgos']!="") and (solicitud['fechaExpedienteRevisadoRiesgos'] is defined)-%}
+                                checked
+                            {%-endif-%}
+                            > 
+                            <span class="slider round"></span> 
+                        </label>
+                    </td>
+                                        <td  
+                         class="lightLabel" 
+                         align="center"
+                         style="padding-right: 6px; border-right: none;"
+                         >
+                        <input id="fechaExpedienteDevueltoAComercial_{{solicitud.id}}" 
+                                name="fechaExpedienteDevueltoAComercial_{{solicitud.id}}" 
+                                class="roundInput" 
+                                readonly 
+                                value="{{solicitud['fechaExpedienteDevueltoAComercial']}}"
+                        >
+                    </td>
+                    <td align="right" 
+                        style="padding-right: 6px; width: 54px; border-left: none;">
+                        <label class="switch" {%- if 'fechaExpedienteDevueltoAComercial' in user.forbidden -%}
+                                style="display:none;"
+                        {%-endif-%}>
+                            <input type="checkbox" id="check_fechaExpedienteDevueltoAComercial_{{solicitud.id}}" name="check_fechaExpedienteDevueltoAComercial_{{solicitud.id}}"
+                            onchange="element=document.getElementById('fechaExpedienteDevueltoAComercial_{{solicitud.id}}');
+                                      updateStatus(this,element);"
+                            {%-if (solicitud['fechaExpedienteDevueltoAComercial']!="") and (solicitud['fechaExpedienteDevueltoAComercial'] is defined)-%}
+                                checked
+                            {%-endif-%}
+                            > 
+                            <span class="slider round"></span> 
+                        </label>
+                    </td>
+                                        <td  
+                         class="lightLabel" 
+                         align="center"
+                         style="padding-right: 6px; border-right: none;"
+                         >
+                        <input id="fechaExpedienteResguardadoEnBoveda_{{solicitud.id}}" 
+                                name="fechaExpedienteResguardadoEnBoveda_{{solicitud.id}}" 
+                                class="roundInput" 
+                                readonly 
+                                value="{{solicitud['fechaExpedienteResguardadoEnBoveda']}}"
+                        >
+                    </td>
+                    <td align="right" 
+                        style="padding-right: 6px; width: 54px; border-left: none;">
+                        <label class="switch" {%- if 'fechaExpedienteResguardadoEnBoveda' in user.forbidden -%}
+                                style="display:none;"
+                        {%-endif-%}>
+                            <input type="checkbox" id="check_fechaExpedienteResguardadoEnBoveda_{{solicitud.id}}" name="check_fechaExpedienteResguardadoEnBoveda_{{solicitud.id}}"
+                            onchange="element=document.getElementById('fechaExpedienteResguardadoEnBoveda_{{solicitud.id}}');
+                                      updateStatus(this,element);"
+                            {%-if (solicitud['fechaExpedienteResguardadoEnBoveda']!="") and (solicitud['fechaExpedienteResguardadoEnBoveda'] is defined)-%}
+                                checked
+                            {%-endif-%}
+                            > 
+                            <span class="slider round"></span> 
+                        </label>
+                    </td>
+                    <tr/>
+                    <td colspan="2" align="center">
+                        <input  readonly 
+                                style="border:none; 
+                                       font-size: 12; 
+                                       width: 90%;"
+
+                                id="usuarioExpedienteRecibidoRiesgos_{{solicitud.id}}" 
+
+                                name="usuarioExpedienteRecibidoRiesgos_{{solicitud.id}}" 
+                                value="{{solicitud.usuarioExpedienteRecibidoRiesgos}}"
+                        >
+                    </td>
+                    <td colspan="2" align="center">
+                        <input  readonly 
+                                style="border:none; 
+                                       font-size: 12; 
+                                       width: 90%;"
+
+                                id="usuarioExpedienteRevisadoRiesgos_{{solicitud.id}}" 
+                                name="usuarioExpedienteRevisadoRiesgos_{{solicitud.id}}" 
+                                value="{{solicitud.usuarioExpedienteRevisadoRiesgos}}"
+                        >
+                    </td>
+                    <td colspan="2" align="center">
+                        <input  readonly 
+                                style="border:none; 
+                                       font-size: 12; 
+                                       width: 90%;"
+
+                                id="usuarioExpedienteDevueltoAComercial_{{solicitud.id}}" 
+                                name="usuarioExpedienteDevueltoAComercial_{{solicitud.id}}" 
+                                value="{{solicitud.usuarioExpedienteDevueltoAComercial}}"
+                        >
+                    </td>
+                    <td colspan="2" align="center">
+                        <input  readonly
+                                style="border:none; 
+                                       font-size: 12; 
+                                       width: 90%;"
+
+                                id="usuarioExpedienteResguardadoEnBoveda_{{solicitud.id}}" 
+                                name="usuarioExpedienteResguardadoEnBoveda_{{solicitud.id}}" 
+                                value="{{solicitud.usuarioExpedienteResguardadoEnBoveda}}"
+                        >
+                    </td>
+                    
+                    <tr/>
+                    <td colspan="1" 
+                        class="lightLabel"
+                        style="vertical-align: middle;"
+                        align="right">Comentarios:
+                    </td>
+                    <td colspan="11" 
+                        class="lightLabel">
+                            <input id="comentariosResguardoExpedientes_{{solicitud.id}}"
+                                      name="comentariosResguardoExpedientes_{{solicitud.id}}"
+                                      value="{{solicitud.comentariosResguardoExpedientes}}"
+                                      style=" height: 20px;
+                                              margin-left: 0px;
+                                              margin-right: 0px;
+                                              resize: none;
+                                              width:100%;">
+                        </td>
+                    <tr/>
+                {%-endfor-%}
+             
+            </table>
+            
+           
+        </div>
+ </form>
+
+<script type="text/javascript">
+    ajustarEncabezadosLogs();
+    function updateStatus(check,element){
+        if (check.checked){
+            element.value=formatDate();
+        } else{
+            element.value=""
+        }
+        idElemento=element.id.replace("fecha","usuario")
+        document.getElementById(idElemento).value=user.userName
+    }
+</script>
+
+
+
+
+
+
+
+
+
+{%- endblock -%}
+
+
+
+

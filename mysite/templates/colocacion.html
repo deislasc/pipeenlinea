@@ -1,0 +1,868 @@
+
+{%- extends "base.html" -%}
+{%- block content -%}
+
+    <div class="panelPipeLine" id="panelPipeLine" style="height:100%; width:calc(100vw - 16px)">
+        <div class="botoneraLarga">
+            <form id="pipeLineForm" action="/colocacion" method="Post">
+                    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+                    <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                    <input type="hidden" name="viewName" value="{{viewName}}">
+                <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                    <td align="center">Desde:</td>
+                    <td ></td>
+                    <td align="center">Hasta:</td>
+                    <td ></td>
+                    <td align="center"><!-- Fecha de Referencia: --></td>
+                    <td ></td>
+                    <td align="center"><!-- Producto: --></td>
+                    <td ></td>
+                    <td align="center">Frecuencia:</td>
+                    <td ></td>
+                    <td align="center" rowspan="2">
+                        <input type="submit" value="Graficar" name="accion" id="accion">
+                        <br/>
+                        <input type="submit" value="Tabular" name="accion" id="accion">
+                    </td>
+                    <td align="center" rowspan="2">
+                        <input type="button" value="IMPRIMIR" onclick="printElem('listadoPipeLine');">
+                    </td>
+                    <td ></td>
+                    <td align="center" rowspan="2">
+                        <!-- <button style="display:block;" onclick="document.getElementById('archivoColocacion').click()">Seleccionar "colocacion.csv"</button>
+                        <input type="file" id="archivoColocacion" name="archivoColocacion" style="display:none;"> -->
+
+                    </td>
+
+                    <td align="center" rowspan="2">
+                        <!-- <input type="submit" value="Subir Colocacion.csv" name="accion" id="accion"> -->
+                    </td>
+                    <td align="center" rowspan="2">
+                        <!-- <input type="button" value="Ver Solicitudes" onClick="mostrarVisorSolicitudes(this);"> -->
+                    </td>
+                    <td align="center" rowspan="2">
+                        <!-- <input type="button" value="IMPRIMIR" onclick="printElem('listadoPipeLine');"> -->
+                    </td>
+                    </tr>
+                    <tr>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fechaInicio" name="fechaInicio" min="2019-01-02"
+                             value="{{formData['fechaInicio']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input type="date" class="roundInput" id="fechaFin" name="fechaFin" min="2019-01-02" value="{{formData['fechaFin']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                             <!-- <input type="date" class="roundInput" id="fecha" name="fecha"
+                             min="2019-01-02" value="{{formData['fecha']}}"></input> -->
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                           <!--  <select class="roundInput" id="producto" name="producto">
+                                <option value=""></option>
+                                <option value="Adelanto de Nómina"
+                                    {%- if formData['producto']=="Adelanto de Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}
+                                >Adelanto de Nómina</option>
+                                <option value="Nómina"
+                                {%- if formData['producto']=="Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}>Nómina</option>
+                                <option value="Vehículo"
+                                {%- if formData['producto']=="Vehículo" -%}
+                                     selected="true"
+                                    {%- endif-%}>Vehículo</option>
+                                <option value="Seguro"
+                                {%- if formData['producto']=="Seguro" -%}
+                                     selected="true"
+                                    {%- endif-%}>Seguro</option>
+                                <option value="Seguro Independiente"
+                                {%- if formData['producto']=="Seguro Independiente" -%}
+                                     selected="true"
+                                    {%- endif-%}>Seguro Independiente</option>
+                            </select> -->
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="frecuenia" name="frecuencia">
+                                <option value="1"
+                                {%- if formData['frecuencia']=="1" -%}
+                                     selected="true"
+                                    {%- endif-%}>Diaria</option>
+                                <option value="2"
+                                {%- if formData['frecuencia']=="2" -%}
+                                     selected="true"
+                                    {%- endif-%}>Mensual</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        {%- if accion=="Graficar"-%}
+        <div class="listadoPipeLine">
+            <!-- Aqui va la tabla -->
+            <script type="text/javascript">
+                data=[]
+                // console.log(series)
+                colors=["RGB(255,0,0)",   "RGB(0,255,0)",  "RGB(0,0,255)",
+                        "RGB(0,255,255)", "RGB(255,255,0)","RGB(255,0,255)",
+                        "RGB(50,125,125)", "RGB(125,125,50)","RGB(125,50,125)",
+                        "RGB(125,50,50)",   "RGB(50,125,50)",  "RGB(50,50,125)"]
+            </script>
+            <table style="border: 1px solid #000000;" cellspacing="0" cellpadding="0">
+                {%- for producto in productos -%}
+                        <td colspan="24"
+                            style=  "border: 1px solid #000000;
+                                    text-align: left;
+                                    font-weight: bold;
+                                    color:#ffffff;
+                                    background-color: #000000;">
+                            CREDITOS COLOCADOS - {{producto}}
+                        </td>
+                        <tr>
+                        <td width=100px style="border: 1px solid #000000;
+                                       text-align: center;
+                                       font-weight: bold;
+                                       color:#ffffff;
+                                       background-color: #000088;">
+                            <!-- DIA HABIL -->
+                        </td>
+                        {%- for dia in etiquetas-%}
+                            <td style="border: 1px solid #000000;
+                                       text-align: center;
+                                       font-weight: bold;
+                                       color:#ffffff;
+                                       background-color: #000088;">
+                                {{dia}}
+                            </td>
+                        {%- endfor -%}
+                        <tr>
+
+                        {%- for serie in series -%}
+                            {%- for mes in serie-%}
+                                {%- if producto in serie[mes] -%}
+                                    <td style="border: 1px solid #000000;
+                                           text-align: center;
+                                           font-weight: bold;
+                                           font-size: 12px;
+                                           color:#ffffff;
+                                           background-color: #000088;">
+                                        {{mes}}
+                                    </td>
+                                    {%- for dia in etiquetas-%}
+                                        <script type="text/javascript">
+                                            mes = JSON.parse('{{ mes | tojson }}');
+                                            dia = JSON.parse('{{ dia | tojson }}');
+                                            // console.log(mes+"----"+dia)
+                                        </script>
+
+                                        <td style="border: 1px solid #000000;
+                                                   text-align: center;
+                                                   {%- if('bgcolor' in serie[mes][producto][dia]) -%}
+                                                        background-color: {{serie[mes][producto][dia]['bgcolor']}};
+                                                   {%-endif-%}
+
+                                                   ">
+                                            {%- if dia in serie[mes][producto] -%}
+                                                {{serie[mes][producto][dia]["cuentaAcumulado"]}}
+                                            {%-endif-%}
+                                        </td>
+                                    {%- endfor -%}
+                                    <tr>
+                                {%- endif -%}
+                            {%- endfor -%}
+                        {%- endfor -%}
+
+                        <td colspan=24>
+                            <!-- ESPARIO PARA GRAFICA -->
+                            <canvas  width="240" height="40"
+                                     id="{{producto}}_cuentaAcumuladoGraph"
+                            ></canvas>
+                            <script type="text/javascript">
+                                frecuencia={{formData['frecuencia']}}
+                                nombreProducto = JSON.parse('{{ producto | tojson }}');
+                                nombreElementoGraph=nombreProducto+"_cuentaAcumuladoGraph";
+                                elementoGraph=document.getElementById(nombreElementoGraph).getContext('2d');
+
+                                seriesProducto=[];
+                                labels=[]
+                                for (serie in series)
+                                    {
+                                        for (mes in series[serie])
+                                        {
+                                            nombreSerie=series[serie][mes]['nombre'];
+                                            labels.push(nombreSerie);
+                                            seriesProducto[nombreSerie]=[]
+
+                                            if (frecuencia=="1")
+                                                {
+                                                    for (dia in series[serie][mes][nombreProducto])
+                                                    {
+                                                        valor=[series[serie][mes][nombreProducto][dia]['cuentaAcumulado']]
+                                                        seriesProducto[nombreSerie].push(valor[0])
+                                                    }
+                                                }
+                                            if (frecuencia=="2")
+                                                {
+                                                    for (dia in etiquetas)
+                                                    {
+                                                        if(etiquetas[dia] in series[serie][mes][nombreProducto])
+                                                            {
+                                                                valor=[series[serie][mes][nombreProducto][etiquetas[dia]]['cuentaAcumulado']]
+                                                                seriesProducto[nombreSerie].push(valor[0])
+                                                            }
+                                                    }
+                                                }
+                                        }
+                                    }
+
+                                data=[]
+                                data["labels"]=etiquetas;//labels;
+                                datasets=[]
+                                for (var i=0; i<=Object.keys(seriesProducto).length-1;i++)
+                                    {
+                                        datasets[i]=[];
+                                        datasets[i]["label"]=labels[i];
+                                        datasets[i]["data"]=seriesProducto[labels[i]];
+                                        datasets[i]["borderColor"]=colors[i%12];
+                                        datasets[i]["backgroundColor"]=colors[i%12];
+                                    }
+
+                                // console.log(datasets)
+
+                                data["datasets"]=datasets;
+                                // console.log("CUENTA ACUMULADO")
+                                // console.log(data)
+
+                                // Dibuja la gráfica
+                                new Chart(elementoGraph, {
+                                    type: 'line',
+                                    data: data,
+                                    responsive: true,
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                            },
+                                            title: {
+                                                    display: true,
+                                                    text: 'CRÉDITOS COLOCADOS'
+                                                }
+                                            }
+                                        },
+                                   });
+                            </script>
+                        </td>
+
+                        <tr>
+
+                        <td colspan="24"
+                            style=  "border: 1px solid #000000;
+                                    text-align: left;
+                                    font-weight: bold;
+                                    color:#ffffff;
+                                    background-color: #000000;">
+                                MONTO AUTORIZADO - {{producto}}
+                        </td>
+
+                        <tr>
+
+                        <td style=  "border: 1px solid #000000;
+                                    text-align: center;
+                                    font-weight: bold;
+                                    color:#ffffff;
+                                    background-color: #000088;">
+                            <!-- DIA HABIL-->
+                        </td>
+                        {%- for dia in etiquetas-%}
+                            <td style="border: 1px solid #000000;
+                                       text-align: center;
+                                       font-weight: bold;
+                                       color:#ffffff;
+                                       background-color: #000088;">
+                                {{dia}}
+                            </td>
+                        {%- endfor -%}
+                        <tr>
+
+                        {%- for serie in series -%}
+                            {%- for mes in serie-%}
+                                {%- if producto in serie[mes] -%}
+                                    <td style="border: 1px solid #000000;
+                                           text-align: center;
+                                           font-weight: bold;
+                                           font-size: 12px;
+                                           color:#ffffff;
+                                           background-color: #000088;">
+                                        {{mes}}
+                                    </td>
+                                    {%- for dia in etiquetas-%}
+                                        <td style="border: 1px solid #000000;
+                                                   font-size:9.5px;
+                                                   {%- if('bgcolor' in serie[mes][producto][dia]) -%}
+                                                        background-color: {{serie[mes][producto][dia]['bgcolor']}};
+                                                   {%-endif-%}
+                                                   ">
+                                            {%- if dia in serie[mes][producto] -%}
+                                             {{serie[mes][producto][dia]["montoAutorizadoAcumulado"]}}
+                                            {%- endif -%}
+
+                                        </td>
+                                    {%- endfor -%}
+                                    <tr>
+                                {%- endif -%}
+                            {%- endfor -%}
+                        {%- endfor -%}
+
+                        <td colspan=24>
+                            <!-- ESPARIO PARA GRAFICA -->
+                            <canvas  width="240" height="40"
+                                     id="{{producto}}_montoAutorizadoAcumuladoGraph"
+                            ></canvas>
+                            <script type="text/javascript">
+                                frecuencia={{formData['frecuencia']}}
+                                nombreProducto = JSON.parse('{{ producto | tojson }}');
+                                nombreElementoGraph=nombreProducto+"_montoAutorizadoAcumuladoGraph";
+                                elementoGraph=document.getElementById(nombreElementoGraph).getContext('2d');
+
+                                seriesProducto=[];
+                                labels=[]
+                                for (serie in series)
+                                    {
+                                        for (mes in series[serie])
+                                        {
+                                            nombreSerie=series[serie][mes]['nombre'];
+                                            labels.push(nombreSerie);
+                                            seriesProducto[nombreSerie]=[]
+
+                                            if (frecuencia=="1")
+                                                {
+                                                    for (dia in series[serie][mes][nombreProducto])
+                                                    {
+                                                        valor=[series[serie][mes][nombreProducto][dia]['montoAutorizadoAcumulado']][0]
+                                                        number = Number(valor.replace(/[^0-9.-]+/g,""));
+                                                        seriesProducto[nombreSerie].push(number)
+                                                    }
+                                                }
+                                            if (frecuencia=="2")
+                                                {
+                                                    for (dia in etiquetas)
+                                                    {
+                                                        if(etiquetas[dia] in series[serie][mes][nombreProducto])
+                                                            {
+                                                                valor=[series[serie][mes][nombreProducto][etiquetas[dia]]['montoAutorizadoAcumulado']][0]
+                                                                if(valor !== undefined)
+                                                                    {
+                                                                        number = Number(valor.replace(/[^0-9.-]+/g,""));
+                                                                        seriesProducto[nombreSerie].push(number)
+                                                                    }
+                                                            }
+                                                    }
+                                                }
+
+                                            // for (dia in series[serie][mes][nombreProducto])
+                                            // {
+                                            //     valor=[series[serie][mes][nombreProducto][dia]['montoAutorizadoAcumulado']][0]
+                                            //     number = Number(valor.replace(/[^0-9.-]+/g,""));
+                                            //     seriesProducto[nombreSerie].push(number)
+
+                                            // }
+                                        }
+                                    }
+
+                                data=[]
+                                data["labels"]=etiquetas;//labels;
+                                datasets=[]
+                                for (var i=0; i<=Object.keys(seriesProducto).length-1;i++)
+                                    {
+                                        datasets[i]=[];
+                                        datasets[i]["label"]=labels[i];
+                                        datasets[i]["data"]=seriesProducto[labels[i]];
+                                        datasets[i]["borderColor"]=colors[i%12];
+                                        datasets[i]["backgroundColor"]=colors[i%12];
+                                    }
+
+                                // console.log(datasets)
+
+                                data["datasets"]=datasets;
+                                // console.log("MONTO AUTORIZADO ACUMULADO")
+                                // console.log(data)
+
+                                // Dibuja la gráfica
+                                new Chart(elementoGraph, {
+                                    type: 'line',
+                                    data: data,
+                                    responsive: true,
+                                    options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        title: {
+                                                display: true,
+                                                text: 'MONTO AUTORIZADO ACUMULADO'
+                                            }
+                                        }
+                                    },
+                                   });
+                            </script>
+                        </td><tr>
+
+                        <td colspan="24"
+                            style=  "border: 1px solid #000000;
+                                    text-align: left;
+                                    font-weight: bold;
+                                    color:#ffffff;
+                                    background-color: #000000;">
+                                MONTO TRANSFERENCIA - {{producto}}
+                        </td>
+
+                        <tr>
+
+                        <td style=  "border: 1px solid #000000;
+                                    text-align: center;
+                                    font-weight: bold;
+                                    color:#ffffff;
+                                    background-color: #000088;">
+                            <!-- DIA HABIL -->
+                        </td>
+                        {%- for dia in etiquetas-%}
+                            <td style="border: 1px solid #000000;
+                                       text-align: center;
+                                       font-weight: bold;
+                                       color:#ffffff;
+                                       background-color: #000088;">
+                                {{dia}}
+                            </td>
+                        {%- endfor -%}
+                        <tr>
+
+                        {%- for serie in series -%}
+                            {%- for mes in serie-%}
+                                {%- if producto in serie[mes] -%}
+                                    <td style="border: 1px solid #000000;
+                                           text-align: center;
+                                           font-weight: bold;
+                                           font-size: 12px;
+                                           color:#ffffff;
+                                           background-color: #000088;">
+                                        {{mes}}
+                                    </td>
+                                    {%- for dia in etiquetas-%}
+                                        <td style="border: 1px solid #000000;
+                                                    font-size:9.5px;
+                                                    {%- if('bgcolor' in serie[mes][producto][dia]) -%}
+                                                        background-color: {{serie[mes][producto][dia]['bgcolor']}};
+                                                    {%-endif-%}
+                                                  ">
+                                            {%- if dia in serie[mes][producto] -%}
+                                             {{serie[mes][producto][dia]["montoTransferenciaAcumulado"]}}
+                                            {%- endif -%}
+
+                                        </td>
+                                    {%- endfor -%}
+                                    <tr>
+                                {%- endif -%}
+                            {%- endfor -%}
+                        {%- endfor -%}
+
+                        <td colspan=24>
+                            <!-- ESPARIO PARA GRAFICA -->
+                            <canvas  width="240" height="40"
+                                     id="{{producto}}_montoTransferenciaAcumuladoGraph"
+                            ></canvas>
+                            <script type="text/javascript">
+                                frecuencia={{formData['frecuencia']}}
+                                nombreProducto = JSON.parse('{{ producto | tojson }}');
+                                nombreElementoGraph=nombreProducto+"_montoTransferenciaAcumuladoGraph";
+                                elementoGraph=document.getElementById(nombreElementoGraph).getContext('2d');
+
+                                seriesProducto=[];
+                                labels=[]
+                                for (serie in series)
+                                    {
+                                        for (mes in series[serie])
+                                        {
+                                            nombreSerie=series[serie][mes]['nombre'];
+                                            labels.push(nombreSerie);
+                                            seriesProducto[nombreSerie]=[]
+
+                                            if (frecuencia=="1")
+                                                {
+                                                    for (dia in series[serie][mes][nombreProducto])
+                                                    {
+                                                        valor=[series[serie][mes][nombreProducto][dia]['montoTransferenciaAcumulado']][0]
+                                                        number = Number(valor.replace(/[^0-9.-]+/g,""));
+                                                        seriesProducto[nombreSerie].push(number)
+                                                    }
+                                                }
+                                            if (frecuencia=="2")
+                                                {
+                                                    for (dia in etiquetas)
+                                                    {
+                                                        if(etiquetas[dia] in series[serie][mes][nombreProducto])
+                                                            {
+                                                                valor=[series[serie][mes][nombreProducto][etiquetas[dia]]['montoTransferenciaAcumulado']][0]
+                                                                if(valor !== undefined)
+                                                                    {
+                                                                        number = Number(valor.replace(/[^0-9.-]+/g,""));
+                                                                        seriesProducto[nombreSerie].push(number)
+                                                                    }
+                                                            }
+                                                    }
+                                                }
+                                            // for (dia in series[serie][mes][nombreProducto])
+                                            // {
+                                            //     valor=[series[serie][mes][nombreProducto][dia]['montoTransferenciaAcumulado']][0]
+                                            //     number = Number(valor.replace(/[^0-9.-]+/g,""));
+                                            //     seriesProducto[nombreSerie].push(number)
+                                            // }
+                                        }
+                                    }
+
+
+                                data=[]
+                                data["labels"]=etiquetas;//labels;
+                                datasets=[]
+                                for (var i=0; i<=Object.keys(seriesProducto).length-1;i++)
+                                    {
+                                        datasets[i]=[];
+                                        datasets[i]["label"]=labels[i];
+                                        datasets[i]["data"]=seriesProducto[labels[i]];
+                                        datasets[i]["borderColor"]=colors[i%12];
+                                        datasets[i]["backgroundColor"]=colors[i%12];
+                                    }
+
+                                // console.log(datasets)
+
+                                data["datasets"]=datasets;
+                                // console.log("MONTO TRANSFERENCIA ACUMULADO")
+                                // console.log(data)
+
+                                // Dibuja la gráfica
+                                new Chart(elementoGraph, {
+                                    type: 'line',
+                                    data: data,
+                                    responsive: true,
+                                    options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        title: {
+                                                display: true,
+                                                text: 'MONTO TRANSFERENCIA ACUMULADO'
+                                            }
+                                        }
+                                    },
+                                   });
+                            </script>
+                        </td><tr>
+
+                {%- endfor -%}
+            </table>
+
+
+
+
+        </div>
+        {%- endif -%}
+
+        {%- if accion=="Tabular"-%}
+        <div class="listadoPipeLine" id='listadoPipeLine'>
+            <table border="1"  cellspacing="0" cellpadding="0" width="98%">
+                <th colspan="6"
+                    style="background: black;
+                           color:white;">RESUMEN POR PRODUCTO</th>
+                <tr/>
+                <th rowspan="2"
+                    style="background: lightblue;">PRODUCTO</th>
+                <th colspan="5"
+                    style="background: lightblue;">TOTAL</th>
+                <tr/>
+                <th style="background: lightblue;">CREDITOS</th>
+                <th style="background: lightblue;">AUTORIZADO</th>
+                <th style="background: lightblue;">TRANSFERENCIA</th>
+                <th style="background: lightblue;">COMISIONES</th>
+                <th style="background: lightblue;">SEGUROS FINANCIADOS</th>
+                <tr/>
+
+                {%- for producto in series -%}
+                    {%-if producto != "Seguro" and producto!="Total"-%}
+                    <td align="right">{{producto}}</td>
+                    <td align="right">{{series[producto]['Total']['totalCreditos']}}</td>
+                    <td align="right">{{"${:,.2f}".format(series[producto]['Total']['montoTotal'])}}</td>
+                    <td align="right">{{"${:,.2f}".format(series[producto]['Total']['montoTotalTransferencia'])}}</td>
+                    <td align="right">{{"${:,.2f}".format(series[producto]['Total']['montoTotalComisiones'])}}</td>
+                    <td align="right">{{"${:,.2f}".format(series[producto]['Total']['montoTotalSegurosFinanciados'])}}</td>
+                    <tr/>
+                    {%- endif -%}
+                    {%-if producto == "Total" -%}
+                    <td align="right" style="background:steelblue; color:white;">{{producto}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{series[producto]['Total']['totalCreditos']}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotal'])}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotalTransferencia'])}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotalComisiones'])}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotalSegurosFinanciados'])}}</td>
+                    <tr/>
+                    {%- endif -%}
+                {%- endfor -%}
+            </table>
+            <br>
+
+
+            <table border="1"  cellspacing="0" cellpadding="0" width="98%">
+                <th colspan="21"
+                    style="background: black;
+                           color:white;">RESUMEN POR ASESOR / PRODUCTO</th>
+                <tr/>
+                <th rowspan="2" style="background: lightblue;">ASESOR</th>
+                {%- for producto in series -%}
+                    {%-if producto!="Total" -%}
+                        {%-if producto!="Seguro" -%}
+                            <th align="center" colspan="7" style="background: lightblue;"> {{producto}}</th>
+                        {%- endif -%}
+                        {%-if producto=="Seguro" -%}
+                            <th align="center" colspan="6" style="background: lightblue;"> {{producto}}</th>
+                        {%- endif -%}
+
+
+                    {%-endif-%}
+                {%- endfor -%}
+
+                <tr/>
+                {%- for producto in series -%}
+                    {%-if producto!="Total" and producto!="Seguro" -%}
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">Creditos</th>
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">Autorizado</th>
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">Transferencia</th>
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">Nuevos</th>
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">% #Nuevos</th>
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">% $Nuevos</th>
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">Comisiones</th>
+                    {%- endif -%}
+                {%-  endfor -%}
+
+
+                {%- for seguro in seguros-%}
+                    <th colspan="1" style="background: lightblue; font-size: 12px;">{{"{:,.0f}".format((seguro|int)/1000)}}K</th>
+                {%- endfor -%}
+                <th colspan="1" style="background: lightblue; font-size: 12px;">Total</th>
+                <th colspan="1" style="background: lightblue; font-size: 12px; ">Financiado</th>
+                <tr/>
+
+                {%- for asesor in listaAsesores-%}
+                    <td align="right">{{asesor}}</td>
+                    {%- for producto in series -%}
+                        {%-if producto!="Total" and producto!="Seguro"-%}
+                            <td align="center">{{series[producto][asesor]['totalCreditos']}}</td>
+                            <td align="right">{{"${:,.2f}".format(series[producto][asesor]['montoTotal'])}}</td>
+                            <td align="right">{{"${:,.2f}".format(series[producto][asesor]['montoTotalTransferencia'])}}</td>
+                            <td align="center">
+                                {{series[producto][asesor]['totalCreditosNuevos']}}
+                            </td>
+                            <td align="right">
+                            {%- if series[producto][asesor]['totalCreditosNuevos']>0-%}
+                                {{
+                                    "{:,.2f}%".format((series[producto][asesor]['totalCreditosNuevos']/series[producto][asesor]['totalCreditos'])*100)
+                                }}
+                            {%- else -%}
+                                {{
+                                    "{:,.2f}%".format(0)
+                                }}
+
+                            {%- endif -%}
+                            </td>
+                            <td align="right">
+                             {%- if series[producto][asesor]['montoTotalTransferenciaNuevos']>0-%}
+                                {{
+                                    "{:,.2f}%".format((series[producto][asesor]['montoTotalTransferenciaNuevos']/series[producto][asesor]['montoTotalTransferencia'])*100)
+                                }}
+                            {%- else -%}
+                                {{
+                                    "{:,.2f}%".format(0)
+                                }}
+                            {%- endif -%}
+                            </td>
+                            <td align="right">{{"${:,.2f}".format(series[producto][asesor]['montoTotalComisiones'])}}</td>
+                        {%-endif-%}
+                    {%- endfor -%}
+                    {%- for seguro in seguros -%}
+                        <td align="right">{{series['Seguro'][asesor][seguro]}}</td>
+                    {%- endfor -%}
+                    <td align="right">{{series['Seguro'][asesor]['totalSeguros']}}</td>
+                    <td align="right">
+                            {%- if series['Nómina'][asesor]['montoTotalSegurosFinanciados']>0-%}
+                                {{
+                                    "${:,.2f}".format(series['Nómina'][asesor]['montoTotalSegurosFinanciados'])
+                                }}
+                            {%- else -%}
+                                {{
+                                    "${:,.2f}".format(0)
+                                }}
+
+                            {%- endif -%}
+                    </td>
+
+                    <tr/>
+                {%- endfor -%}
+                <td align="right" style="background:steelblue; color:white;">Total</td>
+                {%- for producto in series -%}
+                        {%-if  producto!="Total" and producto!="Seguro"-%}
+                            <td align="center" style="background:steelblue; color:white;"> {{series[producto]['Total']['totalCreditos']}}</td>
+                            <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotal'])}}</td>
+                            <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotalTransferencia'])}}</td>
+                            <td align="center" style="background:steelblue; color:white;"> {{series[producto]['Total']['totalCreditosNuevos']}}</td>
+                            <td align="right" style="background:steelblue; color:white;">
+                            {%- if series[producto]['Total']['totalCreditosNuevos']>0-%}
+                                {{
+                                    "{:,.2f}%".format((1-(series[producto]['Total']['totalCreditosNuevos']/series[producto]['Total']['totalCreditos']))*100)
+                                }}
+                            {%- else -%}
+                                {{
+                                    "{:,.2f}%".format(0)
+                                }}
+
+                            {%- endif -%}
+                            </td>
+                            <td align="right" style="background:steelblue; color:white;">
+                             {%- if series[producto]['Total']['montoTotalTransferenciaNuevos']>0-%}
+                                {{
+                                    "{:,.2f}%".format((1-(series[producto]['Total']['montoTotalTransferenciaNuevos']/series[producto]['Total']['montoTotalTransferencia']))*100)
+                                }}
+                            {%- else -%}
+                                {{
+                                    "{:,.2f}%".format(0)
+                                }}
+                            {%- endif -%}
+                            </td>
+                            
+                            <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotalComisiones'])}}</td>
+                        {%-endif-%}
+                {%- endfor -%}
+
+                {%- for seguro in seguros -%}
+                     <td align="right" style="background:steelblue; color:white;">{{series['Total']['Total'][seguro]}}</td>
+                {%- endfor -%}
+                <td align="right" style="background:steelblue; color:white;">{{series['Total']['Total']['totalSeguros']}}</td>
+                 <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series['Nómina']['Total']['montoTotalSegurosFinanciados'])}}</td>
+            </table>
+
+
+            <br>
+            <table border="1"  cellspacing="0" cellpadding="0" width="98%">
+                <th colspan="14"
+                    align="center"
+                    style="background: black;
+                           color:white;">DETALLE POR CLIENTE</th>
+                <tr/>
+                {%- for asesor in listaAsesores  -%}
+                    <th colspan="10"
+                        align="left"
+                        style="background: navy;
+                               color: white;
+                    ">{{asesor}}</th>
+                    <tr/>
+                    <th style="background:lightblue; font-size: 12px;">#</th>
+                    <th style="background:lightblue; font-size: 12px;">PRODUCTO</th>
+                    <th style="background:lightblue; font-size: 12px;">CONTRATO <br/> IMPRESO</th>
+                    <th style="background:lightblue; font-size: 12px;">NUM <br/> CONTROL</th>
+                    <th style="background:lightblue; font-size: 12px;">CLIENTE</th>
+                    <th style="background:lightblue; font-size: 12px;">MONTO <br/> AUTORIZADO</th>
+                    <th style="background:lightblue; font-size: 12px;">MONTO <br/> TRANSFERIDO</th>
+                    <th style="background:lightblue; font-size: 12px;">COMISION</th>
+                    <th style="background:lightblue; font-size: 12px;">SEGURO <br/> FINANCIADO</th>
+                    <th style="background:lightblue; font-size: 12px;">SEGURO</th>
+
+                    <tr/>
+                    {%-for producto in productos-%}
+                        {%- if producto != "Seguro" -%}
+
+                            {%- for solicitud in series[producto][asesor]["solicitudes"] -%}
+                                <td>{{loop.index}}</td>
+                                <td style="font-size:13px;">{{solicitud["PRODUCTO"].replace("Adelanto de Nómina","Adelanto")}}</td>
+                                <td>{{solicitud["FECHA CONTRATO IMPRESO"]}}</td>
+                                <td>{{solicitud["NUM CONTROL"]}}</td>
+                                <td>{{solicitud["CLIENTE"]}}</td>
+                                <td align="right">{{"${:,.2f}".format(solicitud["MONTO AUTORIZADO"]|float)}}</td>
+                                {%- if producto != "Seguro"-%}
+                                    <td align="right">{{"${:,.2f}".format(solicitud["MONTO TRANSFERENCIA"]|float)}}</td>
+                                    <td align="right">{{"${:,.2f}".format(solicitud["COMISION"]|float)}}</td>
+                                    <td align="right">{{"${:,.2f}".format(solicitud["SEGURO FINANCIADO"]|float)}}</td>
+                                    {%- if producto != "Adelanto de Nómina"-%}
+                                        <td align="right">{{"{:,.0f}".format((solicitud["SEGURO"]|int)/1000)}}K</td>
+                                    {%- endif -%}
+                                {%- endif -%}
+
+                                <tr/>
+                            {%- endfor -%}
+
+                            
+                            <td colspan="5"
+                                align="right"
+                                style="background: steelblue;
+                                       color:white;">Total {{producto.replace("Adelanto de Nómina","Adelanto")}}:</td>
+
+                            <td colspan="1"
+                                align="right"
+                                style="background: steelblue;
+                                       color:white;">{{"${:,.2f}".format(series[producto][asesor]['montoTotal'])}}</td>
+
+                            <td colspan="1"
+                                align="right"
+                                style="background: steelblue;
+                                       color:white;">{{"${:,.2f}".format(series[producto][asesor]['montoTotalTransferencia'])}}</td>
+                            <td colspan="1"
+                                align="right"
+                                style="background: steelblue;
+                                       color:white;">{{"${:,.2f}".format(series[producto][asesor]['montoTotalComisiones'])}}</td>
+                            <td colspan="1"
+                                align="right"
+                                style="background: steelblue;
+                                       color:white;">{{"${:,.2f}".format(series[producto][asesor]['montoTotalSegurosFinanciados'])}}</td>
+
+
+                            <td colspan="1"
+                                align="right"
+                                style="background: steelblue;
+                                       color:white;"></td>
+                            </td>
+                        {%- endif -%}
+                        <tr>
+
+                    {%-endfor-%}
+                    <td colspan="10">
+                        <br/>
+                    </td>
+                    <tr/>
+
+                {%-endfor-%}
+
+            </table>
+        </div>
+        {%- endif -%}
+    </div>
+
+
+
+
+
+
+
+
+
+
+{%- endblock -%}
+
+
+
+

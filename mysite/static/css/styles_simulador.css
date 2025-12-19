@@ -1,0 +1,255 @@
+body{
+	background: #ffffff;
+}
+
+
+.slidecontainer {
+ 			 width: 75%;
+		}
+
+		.slider_simulador {
+			-webkit-appearance: none;
+  			width: 75%;
+  			height: 14px;
+  			border-radius: 7px;
+  			background: #888888;
+  		
+  			outline:  none;
+  			opacity: .65;
+  			-webkit-transition: .2s;
+  			transition: opacity .2s;
+		}
+
+		.slider_simulador:hover {
+			opacity: 1;
+		}
+
+		.slider_simulador::-webkit-slider-thumb {
+		  	-webkit-appearance: none;
+		  	appearance: none;
+		  	border: solid 1px #00ff00;
+		  	width: 10px;
+		  	height: 30px;
+		  	border-radius: 5px;
+		  	background: #22aa22;
+		  	cursor: pointer;
+		  	opacity: .90;
+		}
+
+		.slider_simulador::-moz-range-thumb {
+			width: 10px;
+		  	height: 30px;
+		  	border-radius: 5px;
+		  	border: solid 1px #00ff00;
+		  	background: #22aa22;
+		  	cursor: pointer;
+		  	opacity: .90;
+		}
+
+.roundinput{
+	border-radius: 0px;
+	text-align: center;
+	border-right: none;
+	border-left: none;
+	border-top: none;
+	border-bottom: 2px solid #dddddd;
+	font:  18px Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	font-weight: bold;
+	align-content: center;
+	width: 90%;
+
+}	
+
+table.roundtable_encabezado{
+	border-radius: 5px;
+	border:solid 1px #cccccc;
+	border-top: solid 6px #0000aa;
+	width: 100%;
+	border-spacing: 8px;
+	height: 100px;	
+}
+
+table.roundtable{
+	border-radius: 5px;
+	border:solid 1px #cccccc;
+	width: 100%;
+	height: 100%;
+	border-spacing: 10px;
+}
+table.roundtable_con_borde_superior{
+	border-radius: 5px;
+	border:solid 1px #cccccc;
+	border-top: solid 8px #0000ff;
+	width: 100%;
+	height: 100%;
+	border-spacing: 8px;
+}
+
+.titulo{
+	
+	font: 34px  Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	border-spacing: 0px;
+	padding: 0px;
+	vertical-align: bottom;
+}
+
+.titulo_1{
+	
+	font: 24px  Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	border-spacing: 0px;
+	padding: 0px;
+	vertical-align: bottom;
+	font-weight: bold;
+}
+.apartado{
+	font: 20px Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	text-align: right;
+	border-spacing: 10px;
+	padding: 8px;
+}
+
+.monto_seleccionado{
+	font: 20px Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	font-weight: bold;
+}
+
+.pago{
+	font: 16px Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	font-weight: bold;
+	color: #888888;
+}
+.montoPago{
+	font: 16px Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	font-weight: bold;
+	font-size: 24px;
+	color: #888888;
+}
+
+.recomendacion{
+	text-align: center;
+	font-weight: bold;
+	font-size: 12px;
+	color:#888888;
+	opacity: 0.65;
+
+}
+
+div.roundtable {
+	position: relative;
+    display: table;
+    border-radius: 5px;
+	border:solid 1px #cccccc;
+	width: 100%;
+	height: 100%;
+	border-spacing: 10px;
+	overflow-y: auto;
+	top: 8px;
+    }
+
+div.roundtable_con_borde_superior{
+	/*position: fixed;*/
+	position: relative;
+	border-radius: 5px;
+	border:solid 1px #cccccc;
+	border-top: solid 8px #0000ff;
+	width: 100%;
+	height: 570px;
+	-webkit-overflow-scrolling: touch;
+    /*overflow-y: scroll;*/
+	overflow-y: auto;
+	overflow-x: hidden;
+	border-spacing: 8px;	
+	top: 4px;
+}
+
+
+div.row  {
+    display: table-row;
+    }
+
+div.cell {
+    display: table-cell;
+    /*float: left;*/
+    min-width: 10px;
+    height: 100%;
+    vertical-align: middle;
+    }
+
+div.cell_titulo{
+	display: table-cell;
+	font: 34px  Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	border-spacing: 0px;
+	padding: 0px;
+}
+
+div.cell_apartado{
+	display: table-cell;
+	font: 16px Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	text-align: right;
+	border-spacing: 10px;
+	padding: 8px;
+	width: 30%;
+}
+
+div.titulo{
+	font: 34px  Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	border-spacing: 0px;
+	padding: 0px;
+}
+
+div.apartado{
+	font: 16px Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	text-align: right;
+	border-spacing: 10px;
+	padding: 8px;
+}
+
+div.panelFlotante{
+	position: absolute;
+	width: 100%;
+	top: 112px;
+	left:4px;
+	opacity: 1;
+	background: #ffffff;
+}
+
+
+div.botonCerrar{
+	display: block;
+	position: relative;
+	background: #ffcccc;
+	font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	color:#000000;
+	border: 4px solid #ff0000;
+	height: 24px;
+	border-radius: 12px;
+    text-align: center;
+    cursor:pointer;
+    vertical-align: middle;
+    line-height: 24px;
+    font-weight: bold;
+    font-size: 18px;
+    width: 120px;
+}
+
+
+
+
+
+
+div.botonContactanos{
+	position: relative;
+	background: #99ff99;
+	font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+	color:#444444;
+	border: 4px solid #00ff00;
+	height: 24px;
+	border-radius: 12px;
+    text-align: center;
+    cursor:pointer;
+    vertical-align: middle;
+    line-height: 24px;
+    font-weight: bold;
+    font-size: 18px;
+    width: 120px;
+}

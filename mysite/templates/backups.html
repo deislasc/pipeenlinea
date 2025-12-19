@@ -1,0 +1,35 @@
+{%- extends "base.html" -%}
+{%- block content -%}
+    <div class="listadoItems" id="listadoSolicitudes" name="listadoSolicitudes" style="width:350px;">
+        <table>
+            {% for archivo in backups%}
+                <tr>
+                    <td>
+                        <form method='Post' action='/backups'>
+                            <input type="hidden" name="backup" value="{{archivo}}">  
+                            <input type="hidden" name="ownerID" value="{{user['ownerID']}}">    
+                            <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                            <input type="hidden" name="viewName" value="{{viewName}}">
+                            <input type="submit" value="{{archivo}}" style="width:100%" class="roundInput"> 
+                        </form>
+                    </td>
+                    <td>
+                        <form method='Post' action='/backups'>
+                            <input type="hidden" name="delete" value="{{archivo}}">  
+                            <input type="hidden" name="ownerID" value="{{user['ownerID']}}">    
+                            <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                            <input type="hidden" name="viewName" value="{{viewName}}">
+                            <input type="submit" value="Eliminar" class="roundInput" style="width:100%; color:#f00;" >
+                        </form>
+                    </td>  
+                </tr>
+            {%endfor%}     
+        </table>
+    </div>
+        
+{%- endblock -%}
+
+
+
+
+ 

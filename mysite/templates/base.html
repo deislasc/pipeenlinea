@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<!-- 2020/04/01
+ Autor: MARES CANALES FROYLAN DAVID
+ email: fdavmares@hotmail.com; fdavmares@gmail.com; fmares@mipymex.mx-->
+ <html lang="es">
+ <head>
+    <title>PipeEnLinea</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- Static Files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_simulador.css') }}">
+    {%-if listaEmpresas is defined -%}
+        <script> asignaciones={{listaEmpresas|tojson|safe}} </script>
+    {%-endif-%}
+    {%-if pagadoras is defined -%}
+        <script> pagadoras={{pagadoras|tojson|safe}} </script>
+    {%-endif-%}
+
+    {%-if listaSolicitudes is defined -%}
+        <script> solicitudes={{listaSolicitudes|tojson|safe}} </script>
+    {%-endif-%}
+    {%-if listaUsuarios is defined -%}
+        <script> usuarios={{listaUsuarios|tojson|safe}} </script>
+    {%-endif-%}
+    {%-if listaAsesores is defined -%}
+        <script> asesores={{listaAsesores|tojson|safe}} </script>
+    {%-endif-%}
+    {%-if listaCamposFiltro is defined -%}
+        <script> filtros={{listaCamposFiltro|tojson|safe}} </script>
+    {%-endif-%}
+    {%- if listaLogs is defined -%}
+        <script> logs={{listaLogs|tojson|safe}}</script>
+    {%-endif-%}
+
+    <script> message=""</script>
+    {%- if message is defined -%}
+        <script> message="{{message}}"</script>
+    {%-endif-%}
+
+    {%-if user is defined -%}
+        <script> user={{user|tojson|safe}}</script>
+
+        {%-if user!="undefined"-%}
+            <script> forbidden={{user.forbidden|tojson|safe}} </script>
+        {%-endif-%}
+    {%-endif-%}
+
+
+
+    {%-if lastUpdated is defined  -%}
+       {%- if lastUpdated!="null" -%}
+            <script> lastUpdated="{{lastUpdated}}" </script>
+       {%-endif-%}
+    {%-endif-%}
+
+    {%-if backups is defined  -%}
+       {%- if backups!="null" -%}
+            <script> backups={{backups|tojson|safe}} </script>
+       {%-endif-%}
+    {%-endif-%}
+
+
+
+    {%-if feedback is defined  -%}
+        <script> feedback="{{feedback}}"</script>
+    {%-endif-%}
+
+    {%- if scorecards is defined -%}
+        <script> scorecards={{scorecards|tojson|safe}}</script>
+    {%- endif -%}
+
+    {%- if pipelines is defined -%}
+        <script> pipelines={{pipelines|tojson|safe}}</script>
+    {%- endif -%}
+
+    {%- if series is defined -%}
+        <script> series={{series|tojson|safe}}</script>
+    {%- endif -%}
+
+    {%- if etiquetas is defined -%}
+        <script> etiquetas={{etiquetas|tojson|safe}}</script>
+    {%- endif -%}
+
+    {%- if productos is defined -%}
+        <script> productos={{productos|tojson|safe}}</script>
+    {%- endif -%}
+
+    {%- if seguros is defined -%}
+        <script> seguros={{seguros|tojson|safe}}</script>
+    {%- endif -%}
+
+    {%- if accion is defined-%}
+        <script> accion="{{accion}}"</script>
+    {%- endif -%}
+
+
+    {%- if viewName is defined -%}
+        <script> viewName="{{viewName}}" </script>
+    {%- endif -%}
+
+    {%-if headers is defined-%}
+         <script> headers={{headers|tojson|safe}} </script>
+    {%- endif-%}
+
+    {%-if listaRegistros is defined-%}
+         <script> reporte={{listaRegistros|tojson|safe}} </script>
+    {%- endif-%}
+
+
+    {%-if listaACL is defined-%}
+        <script>listaACL={{listaACL|tojson|safe}}</script>
+    {%- endif-%}
+
+    {%-if camposUnicos is defined-%}
+        <script>camposUnicos={{camposUnicos|tojson|safe}}</script>
+    {%- endif-%}
+
+    {%- if feedbackalert is defined -%}
+        <script>feedbackalert={{feedbackalert|tojson|safe}}</script>
+        <script>
+
+            if ( feedbackalert.includes("|") ){
+                alertas=feedbackalert.split("|")
+                for (alerta in alertas) {
+                         alert(alertas[alerta])
+                        }
+                }
+            else{
+                    if (feedbackalert!="")
+                        alert(feedbackalert);
+                }
+        </script>
+    {%- endif -%}
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jsFunctionsFrontEnd.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/functions_simulador.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js">
+
+    </script>
+
+
+</head>
+
+<style type="text/css">
+
+
+</style>
+
+
+
+<script>
+$(document).ready(function () {
+
+
+
+    if( viewName=="Logs"){
+         ajustarEncabezadosLogs();
+    }
+
+    if( viewName=="Reporte de Ventas"){
+        ajustarEncabezadosReporteCSV();
+    }
+
+    if( viewName=="Seguimiento Diario"){
+        ajustarEncabezadosReporteCSV();
+    }
+
+    if( viewName=="Visitas"){
+        ajustarEncabezadosReporteCSV();
+    }
+
+    if( message!=""){
+
+        if(viewName="Solicitudes"){
+            cadena=""
+            if(message="Valores Inválidos."){
+                cadena=message+"\nVuelva a capturar la solicitud."
+            }
+            alert(cadena);
+            $("#btnmenuSolicitudes").click();
+        }
+
+    }
+
+
+
+    $(function(){
+                  $('#updateDataFrame').load(function()
+                   {
+                        var frameDoc=document.getElementById('updateDataFrame').contentWindow.document;
+                        var newData=document.getElementById('updateDataFrame').contentWindow.responseData;
+                        var views={
+                                    "Solicitudes":"#btnmenuSolicitudes",
+                                    "Contactados":"#btnmenuContactados",
+                                    "Entregados a Riesgos":"#btnmenuEntregadosaRiesgos",
+                                    "Autorización Riesgos" :"#btnmenuAutorizacionRiesgos",
+                                    "Autorización DG" :"#btnmenuAutorizacionDG",
+                                    "Solicitar VoBo":"#btnmenuSolicitarVoBos",
+                                    "Imprimir Contrato":"#btnmenuImprimirContrato",
+                                    "Firmar Contrato":"#btnmenuFirmarContrato",
+                                    "Por Fondear":"#btnmenuPorFondear",
+                                    "Fondeados":"#btnmenuFondeados",
+                                    "Rechazados":"#btnmenuRechazados",
+                                    "Cancelados por el Cliente":"#btnmenuCanceladoPorElCliente",
+                                    "Cancelados por Cartera":"#btnmenuCanceladosPorCartera",
+                                    "Empresas":"#btnmenuEmpresas",
+                                    "Usuarios":"#btnmenuUsuarios",
+                                    "Operaciones Internas Preocupantes":"#btnmenuOIP",
+                                    "CLABES":"#btnmenuClabes",
+                                    "Cobranza":"#btnmenuCobranza",
+                                    "Historico":"#btnmenuHistorico",
+                                    "Asignaciones":"#btnmenuAsignaciones",
+                                    "Analisis de Creditos":"#btnmenuAnalisisCreditos",
+                                    "Revision Documental":"#btnmenuRevisionDocumental",
+                                    "Pre Analisis":"#btnmenuPreAnalisis",
+                                    "Transferencias":"#btnmenuTransferencias",
+                                    "Agendas":"#btnmenuAgendas"
+                                  };
+                        if(newData!=null){
+                            var id=newData["id"];
+                            {%- if listaSolicitudes is defined -%}
+                                var selected=document.getElementById("windowInfo").getAttribute("selected");
+                                var lastUpdated = "lastUpdated"+views[viewName].slice(4);
+                                document.getElementById(lastUpdated).value=selected;
+                            {%- endif -%}
+
+                            {%- if listaEmpresas is defined and viewName=="Empresas" -%}
+                                var selected=document.getElementById("windowInfo").getAttribute("selected");
+                                var lastUpdated = "lastUpdated"+views[viewName].slice(4);
+                                document.getElementById(lastUpdated).value=selected;
+                            {%- endif -%}
+
+                            {%- if listaUsuarios is defined and viewName=="Usuarios" -%}
+                                var selected=document.getElementById("windowInfo").getAttribute("selected");
+                                var lastUpdated = "lastUpdated"+views[viewName].slice(4);
+                                document.getElementById(lastUpdated).value=selected;
+                            {%- endif -%}
+
+                            {%- if listaUsuarios is defined and viewName=="Asignaciones" -%}
+
+                                var selected=document.getElementById("windowInfo").getAttribute("selected");
+                                var lastUpdated = "lastUpdated"+views[viewName].slice(4);
+                                document.getElementById(lastUpdated).value=selected;
+                            {%- endif -%}
+
+
+                            {%- if listaSolicitudes is defined and viewName=="Operaciones Internas Preocupantes" -%}
+                                var selected=document.getElementById("windowInfo").getAttribute("selected");
+                                var lastUpdated = "lastUpdated"+views[viewName].slice(4);
+                                document.getElementById(lastUpdated).value=selected;
+                            {%- endif -%}
+
+                            {%- if listaUsuarios is defined and viewName=="Agendas" -%}
+
+                                var selected=document.getElementById("windowInfo").getAttribute("selected");
+                                var lastUpdated = "lastUpdated"+views[viewName].slice(4);
+                                document.getElementById(lastUpdated).value=selected;
+                            {%- endif -%}
+
+
+                            $(views[viewName]).click();
+                        }
+
+                   });
+                });
+
+    $(function(){
+                  $('#updateArrayFrame').load(function()
+                   {
+                        var frameDoc=document.getElementById('updateArrayFrame').contentWindow.document;
+                        var newData=document.getElementById('updateArrayFrame').contentWindow.responseData;
+                        var views={
+                                    "Solicitudes":"#btnmenuSolicitudes",
+                                    "Contactados":"#btnmenuContactados",
+                                    "Entregados a Riesgos":"#btnmenuEntregadosaRiesgos",
+                                    "Autorización Riesgos" :"#btnmenuAutorizacionRiesgos",
+                                    "Solicitar VoBo":"#btnmenuSolicitarVoBos",
+                                    "Autorización DG" :"#btnmenuAutorizacionDG",
+                                    "Imprimir Contrato":"#btnmenuImprimirContrato",
+                                    "Firmar Contrato":"#btnmenuFirmarContrato",
+                                    "Por Fondear":"#btnmenuPorFondear",
+                                    "Fondeados":"#btnmenuFondeados",
+                                    "Rechazados":"#btnmenuRechazados",
+                                    "Cancelados por el Cliente":"#btnmenuCanceladoPorElCliente",
+                                    "Cancelados por Cartera":"#btnmenuCanceladosPorCartera",
+                                    "Empresas":"#btnmenuEmpresas",
+                                    "Usuarios":"#btnmenuUsuarios",
+                                    "Operaciones Internas Preocupantes":"#btnmenuOIP",
+                                    "CLABES":"#btnmenuClabes",
+                                    "Cobranza":"#btnmenuCobranza",
+                                    "Historico":"#btnmenuHistorico",
+                                    "Asignaciones":"#btnmenuAsignaciones",
+                                    "Analisis de Creditos":"#btnmenuAnalisisCreditos",
+                                    "Pre Analisis":"#btnmenuPreAnalisis",
+                                    "Revision Documental":"#btnmenuRevisionDocumental",
+                                    "Transferencias":"#btnmenuTransferencias",
+                                    "Agendas":"#btnmenuAgendas"
+                                  };
+                        if(newData!=null){
+                            // console.log(newData);
+                            $(views[viewName]).click();
+                        }
+
+                   });
+                });
+
+}); // $(document).ready(function ()
+
+
+
+</script>
+
+
+<body id="body" onload="getWindowDim(this);
+                        displayLastUpdated();"
+                onresize="getWindowDim(this);">
+  <div id="windowInfo" selected="null"></div>
+
+  <!--Navbar-->
+  <div>
+      <div class="panviewNavBar">
+        {{viewName}}
+        <div class="loggedUser">
+            <div class="boldSmallLabel">
+                {%- if feedback !=""-%}
+                 <font color="#FF0000">
+                    {{feedback}}
+                 </font>
+                {%- endif-%}
+                {{user["userName"]}}
+            </div>
+        </div>
+    </div>
+</div>
+<!--/.Navbar-->
+
+
+
+<!-- Toogle Menu Button -->
+<div class="toogleButton" id="mainMenuButton" name="mainMenuButton" onclick="showHideMainMenu();">
+</div>
+<!-- Toogle Menu -->
+
+{%- if user !="undefined" -%}
+    <form action="/geoLocalizar" method="Post">
+        <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+        <button type="submit">
+            <img
+                class="locationButton"
+                id="locationButton"
+                name="locationButton"
+                src="{{ url_for('static', filename='img/location.png') }}"
+            >
+        </button>
+    </form>
+{%- endif -%}
+
+
+<div class="pagebody">
+    <!-- Toogle Menu -->
+    <div class="toogleMenu" id="mainMenu" name="mainMenu">
+        {% for item in menu %}
+            {% if not item.value in user.forbidden %}
+                <form action="{{item.url}}" method="{{item.method}}">
+                    <div class="menuItem">
+                        {%- if item.url!="/" -%}
+                            <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+                            <input type="hidden" name="lastUpdated{{item.value}}" id="lastUpdated{{item.value}}" value="null">
+                        {%- endif -%}
+                            <button  class="menuLabel" type="submit" id="btn{{item.value}}">{{item.name}}</button>
+                    </div>
+                </form>
+            {%endif%}
+        {% endfor %}
+    </div>
+    <!-- Toogle Menu -->
+
+    <div class="container" id="contenedor1">
+      {% block content %}{% endblock %}
+    </div>
+
+    <div class="container" id="contenedor2" style="display:none">
+        {%- if viewName=="Solicitudes" or
+                viewName=="Contactados" or
+                viewName=="Entregados a Riesgos" or
+                viewName=="Solicitar VoBo" or
+                viewName=="Autorización Riesgos" or
+                viewName=="Firmar Contrato" or
+                viewName=="Imprimir Contrato" or
+                viewName=="Por Fondear" or
+                viewName=="Fondeados" or
+                viewName=="Rechazados" or
+                viewName=="Cancelados por el Cliente" or
+                viewName=="Cancelados por Cartera" or
+                viewName=="Autorización DG" or
+                viewName=="Usuarios" or
+                viewName=="Perfil de Usuario" or
+                viewName=="Empresas" or
+                viewName=="Operaciones Internas Preocupantes" or
+                viewName=="CLABES" or
+                viewName=="Cobranza" or
+                viewName=="Historico"or
+                viewName=="Asignaciones" or
+                viewName=="PreAnalisis" or
+                viewName=="Analisis de Creditos" or
+                viewName=="Revision Documental" or
+                viewName=="Reporte de Texto" or
+                viewName=="Transferencias" or
+                viewName=="Agendas"
+                -%}
+            {%- include 'editSolicitudes.html' -%}
+        {%- endif -%}
+    </div>
+
+    <div class="fillContainer" id="contenedor3" style="display:none;">
+        {%- if viewName=="Solicitudes" or
+               viewName=="Contactados" or
+               viewName=="Entregados a Riesgos" or
+               viewName=="Solicitar VoBo" or
+               viewName=="Autorización Riesgos" or
+               viewName=="Firmar Contrato" or
+               viewName=="Imprimir Contrato" or
+               viewName=="Por Fondear" or
+               viewName=="Fondeados" or
+               viewName=="Rechazados" or
+               viewName=="Cancelados por el Cliente" or
+               viewName=="Cancelados por Cartera" or
+               viewName=="Autorización DG" or
+               viewName=="Usuarios" or
+               viewName=="Perfil de Usuario" or
+               viewName=="Empresas" or
+               viewName=="Operaciones Internas Preocupantes" or
+               viewName=="CLABES" or
+               viewName=="Cobranza" or
+               viewName=="Historico" or
+               viewName=="Asignaciones" or
+               viewName=="PreAnalisis" or
+               viewName=="Analisis de Creditos" or
+               viewName=="Revision Documental" or
+               viewName=="Reporte de Texto" or
+               viewName=="Transferencias" or
+               viewName=="Agendas"
+               -%}
+             {%- include 'fileViewer.html' -%}
+        {%- endif -%}
+
+    </div>
+
+    <div class="fillHorizontalContainer" id="contenedor4" style="display: none;">
+        <div class="fillPanel" id="fillPanel">
+        </div>
+    </div>
+
+</div> <!--pagebody-->
+
+    <div class="updateDataDiv" name="updateDataDiv" id="updateDataDiv">
+        <iframe src="updateData" id="updateDataFrame" style="height: calc(100% - 4px); width: calc(100% - 4px); border:none"></iframe>
+
+    </div>
+    <div class="updateDataDiv" name="updateArrayDiv" id="updateArrayDiv">
+        <iframe src="updateArray" id="updateArrayFrame" style="height: calc(100% - 4px); width: calc(100% - 4px); border:none"></iframe>
+    </div>
+
+    <div class="updateDataDiv" name="messageDiv" id="messageDiv">
+        <center>
+            <label class="message" id="message"></label>
+        </center>
+    </div>
+
+</body>
+</html>

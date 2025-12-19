@@ -1,0 +1,180 @@
+
+{%- extends "base.html" -%}
+{%- block content -%}
+<form enctype = "multipart/form-data" id="pipeLineForm" action="/logs" method="Post">
+    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+    <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+    <input type="hidden" name="viewName" value="{{viewName}}">
+    
+    <!-- El siguiente Div es para tener un encabezado fijo -->
+    <div style="height:120px; overflow-y: scroll; position: absolute; background-color: #dcdcdc; z-index: 2;">
+
+        <div class="botoneraLarga">
+                <table  border="0" spacing=0  cellpadding="0" cellspacing="0">
+                    <tr> 
+                    <td align="center">Desde:</td>
+                    <td ></td>
+                    <td align="center">Hasta:</td>
+                    <td ></td>  
+                    <td width="150px" align="center">Criterio</td>  
+                    <td ></td>
+                    <td width="150px" align="center">Valor</td>
+                    <td></td> 
+                    <td align="center" rowspan="2">
+                        <input type="submit" value="Consultar" name="accion" id="accion">
+                    </td>
+                    </tr>
+                    <tr>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fechaInicio" name="fechaInicio" min="2019-01-02"
+                             value="{{formData['fechaInicio']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input type="date" class="roundInput" id="fechaFin" name="fechaFin" min="2019-01-02" value="{{formData['fechaFin']}}"></input>
+                        </td>
+                        <td></td>
+                        <td align="center">
+                            <select class="roundInput" id="filtroCriterio" name="filtroCriterio" onchange="limpiarFiltroLogs();">
+                                {%- for campo in listaCamposFiltro|sort(attribute='label') -%}
+                                    {%- if (campo.filterOption=="true")-%}
+                                        <option value="{{campo.value}}">{{campo.label}}</option>
+                                    {%-endif-%}    
+                                {%- endfor -%}
+                            </select>
+                        </td>  
+                        <td></td>
+                        <td  align="center">
+                            <input class="roundInput" id="filtroValor" name="filtroValor" onchange="filtrarLogs(logs,'filtroCriterio',this.value);"></input>
+                        </td>
+                        <td></td> 
+                    </tr>
+                </table>
+               
+            </div>
+        <table  border="1" cellspacing="0" width="100%" id="tablaEncabezadoLogs" bgcolor="#dcdcdc">
+                <tr style="height: 54px;">
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        Objeto
+                    </th>
+                   <th>
+                       Acción
+                   </th>
+                   <th>
+                       Momento
+                   </th>
+                   <th>
+                       Usuario
+                   </th>
+                   <th>
+                       Número de Control
+                   </th>
+                    <th>
+                      Nombre del Cliente
+                   </th>
+                   <th>
+                      Campo
+                   </th>
+                   <th>
+                      De
+                   </th>
+                   <th>
+                      A
+                   </th>
+               </tr>
+        </table>
+    </div>
+    
+   
+    <div id="panelLogs" style="height:calc(100% - 100px); overflow-y: scroll; top: 120px; position: absolute; z-index:1;" >   
+            
+
+            <table id="tablaLogs" border="1" cellspacing="0">
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                       Objeto
+                    </th>
+                    <th>
+                        Acción
+                    </th>
+                    <th>
+                        Momento
+                    </th>
+                    <th>
+                        Usuario
+                    </th>
+                    <th>
+                        Número de Control
+                    </th>
+                    <th>
+                        Nombre del Cliente
+                    </th>
+                    <th>
+                        Campo
+                    </th>
+                    <th>
+                        De
+                    </th>
+                    <th>
+                        A
+                    </th>
+                </tr>
+               {%-for log in listaLogs-%}
+                   {%- if log.Objeto=="Solicitudes" -%}
+                       <tr id={{log.id}}>
+                            <td>
+                                {{log.id}}
+                            </td>
+                            <td>
+                                {{log.Objeto}}
+                            </td>
+                            <td>
+                                {{log.accion}}
+                            </td>
+                            <td>
+                                {{log.timeStamp}}
+                            </td>
+                            <td>
+                                {{log.userName}}  
+                            </td>
+                            <td>
+                                {{log.solicitudNumeroControl}}     
+                            </td>
+                            <td>
+                                {{log.clienteNombre}}
+                           </td>
+                           {%-if log.accion!="agregar" and log.Objeto=="Solicitudes"-%}
+                               <td>
+                                    {{log.logData.field|replace(",","<br/>")|safe}} 
+                               </td>
+                               <td style="word-break: break-all;">
+                                    {{log.logData.oldValue|replace(",","<br/>")|safe}}  
+                               </td>
+                               <td style="word-break: break-all;">
+                                    {{log.logData.value|replace(",","<br/>")|safe}} 
+                               </td>
+                            {%-elif log.accion=="agregar" and log.Objeto=="Solicitudes"-%}
+                                <td colspan="3">
+                                    {{log.logData| replace(",",",<br/>")| replace("{","")| replace("}","")| replace("'","")| safe}}
+                                </td>
+                            {%- endif -%}
+                       </tr>
+                    {%- endif -%}
+               {%- endfor-%}
+           </table>
+           
+       </div>  
+
+</form> 
+{%- endblock -%}
+
+
+
+
+ 

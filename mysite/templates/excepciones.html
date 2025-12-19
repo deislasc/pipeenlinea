@@ -1,0 +1,381 @@
+
+{%- extends "base.html" -%}
+{%- block content -%}
+
+    <div class="panelPipeLine" id="panelPipeLine" style="height:100%; width:calc(100vw - 16px)">
+        <div class="botoneraLarga">
+            <form id="pipeLineForm" action="/cumplimiento" method="Post">
+                    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+                    <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                    <input type="hidden" name="viewName" value="{{viewName}}">
+                <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                    <td align="center">Desde:</td>
+                    <td ></td>
+                    <td align="center">Hasta:</td>
+                    <td ></td>
+                    <td align="center"><!-- Fecha de Referencia: --></td>
+                    <td ></td>
+                    <td align="center"><!-- Producto: --></td>
+                    <td ></td>
+                    <td align="center">Frecuencia:</td>
+                    <td ></td>
+                    <td align="center" rowspan="2">
+                        <input type="submit" value="Excepciones a Políticas" name="accion" id="accion"> 
+                        <input type="submit" value="Expedientes Faltantes" name="accion" id="accion">
+                        <input type="button" value="IMPRIMIR" onclick="printElem('listadoPipeLine');">
+                    </td>
+                    <td ></td>
+                    <td align="center" rowspan="2">
+                        <!-- <button style="display:block;" onclick="document.getElementById('archivoColocacion').click()">Seleccionar "colocacion.csv"</button>
+                        <input type="file" id="archivoColocacion" name="archivoColocacion" style="display:none;"> -->
+
+                    </td>
+
+                    <td align="center" rowspan="2">
+                        <!-- <input type="submit" value="Subir Colocacion.csv" name="accion" id="accion"> -->
+                    </td>
+                    <td align="center" rowspan="2">
+                        <!-- <input type="button" value="Ver Solicitudes" onClick="mostrarVisorSolicitudes(this);"> -->
+                    </td>
+                    <td align="center" rowspan="2">
+                        <!-- <input type="button" value="IMPRIMIR" onclick="printElem('listadoPipeLine');"> -->
+                    </td>
+                    </tr>
+                    <tr>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fechaInicio" name="fechaInicio" min="2019-01-02"
+                             value="{{formData['fechaInicio']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input type="date" class="roundInput" id="fechaFin" name="fechaFin" min="2019-01-02" value="{{formData['fechaFin']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                             <!-- <input type="date" class="roundInput" id="fecha" name="fecha"
+                             min="2019-01-02" value="{{formData['fecha']}}"></input> -->
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                           <!--  <select class="roundInput" id="producto" name="producto">
+                                <option value=""></option>
+                                <option value="Adelanto de Nómina"
+                                    {%- if formData['producto']=="Adelanto de Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}
+                                >Adelanto de Nómina</option>
+                                <option value="Nómina"
+                                {%- if formData['producto']=="Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}>Nómina</option>
+                                <option value="Vehículo"
+                                {%- if formData['producto']=="Vehículo" -%}
+                                     selected="true"
+                                    {%- endif-%}>Vehículo</option>
+                                <option value="Seguro"
+                                {%- if formData['producto']=="Seguro" -%}
+                                     selected="true"
+                                    {%- endif-%}>Seguro</option>
+                                <option value="Seguro Independiente"
+                                {%- if formData['producto']=="Seguro Independiente" -%}
+                                     selected="true"
+                                    {%- endif-%}>Seguro Independiente</option>
+                            </select> -->
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="frecuenia" name="frecuencia">
+                                <option value="1"
+                                {%- if formData['frecuencia']=="1" -%}
+                                     selected="true"
+                                    {%- endif-%}>Diaria</option>
+                                <option value="2"
+                                {%- if formData['frecuencia']=="2" -%}
+                                     selected="true"
+                                    {%- endif-%}>Mensual</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        
+
+        {%- if accion=="Excepciones a Políticas"-%}
+        <div class="listadoPipeLine" id='listadoPipeLine'>
+            <table border="1"  cellspacing="0" cellpadding="0" width="98%">
+                <th colspan="1"
+                    style="background: white;
+                           color:black;">EXCEPCIONES EN CRÉDITOS OTORGADOS DESDE EL  {{formData.fechaInicio}} AL {{formData.fechaFin}}</th>
+                <th colspan="1"
+                    style="background: white;
+                           color:black;">Fecha de Emisión: {{formData.fechaReporte}}</th>
+            </table>
+            <table border="1"  cellspacing="0" cellpadding="0" width="98%">
+                <th colspan="9"
+                    style="background: black;
+                           color:white;">RESUMEN POR PRODUCTO</th>
+                <tr/>
+                <th rowspan="2"
+                    style="background: lightblue;">PRODUCTO</th>
+                <tr/>
+                <th style="background: lightblue;">CREDITOS</th>
+                <th style="background: lightblue;">AUTORIZADO</th>
+                <th style="background: lightblue;">TRANSFERENCIA</th>
+                <th style="background: lightblue;">COMISIONES</th>
+                <th style="background: lightblue;">SEGUROS FINANCIADOS</th>
+                <th style="background: lightblue;">EXPEDIENTES FALTANTES</th>
+                <th style="background: lightblue;">EXCEPCIONES A POLITICAS</th>
+                <th style="background: lightblue;">EXPEDIENTES CON EXCEPCION</th>
+                <tr/>
+
+                {%- for producto in series -%}
+                    {%-if producto != "Seguro" and producto!="Total"-%}
+                    <td align="right">{{producto}}</td>
+                    <td align="right">{{series[producto]['Total']['totalCreditos']}}</td>
+                    <td align="right">{{"${:,.2f}".format(series[producto]['Total']['montoTotal'])}}</td>
+                    <td align="right">{{"${:,.2f}".format(series[producto]['Total']['montoTotalTransferencia'])}}</td>
+                    <td align="right">{{"${:,.2f}".format(series[producto]['Total']['montoTotalComisiones'])}}</td>
+                    <td align="right">{{"${:,.2f}".format(series[producto]['Total']['montoTotalSegurosFinanciados'])}}</td>
+                    <td align="right">{{series[producto]['Total']['expedientesComercial']}}</td>
+                    <td align="right">{{series[producto]['Total']['totalExcepciones']}}
+                    </td>
+                    <td align="right">{{series[producto]['Total']['totalExpedientesConExcepcion']}}
+                    </td>
+                    <tr/>
+                    {%- endif -%}
+                    {%-if producto == "Total" -%}
+                    <td align="right" style="background:steelblue; color:white;">{{producto}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{series[producto]['Total']['totalCreditos']}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotal'])}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotalTransferencia'])}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotalComisiones'])}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotalSegurosFinanciados'])}}</td>
+                    <td align="right" style="background:steelblue; color:white;">{{series[producto]['Total']['expedientesComercial']}}</td>
+                    <td align="right" style="background:steelblue; color:white;">
+                        {{series[producto]['Total']['totalExcepciones']}}</td>
+                    <td align="right" style="background:steelblue; color:white;">
+                        {{series[producto]['Total']['totalExpedientesConExcepcion']}}</td>
+                    <tr/>
+
+                    {%- endif -%}
+                {%- endfor -%}
+            </table>
+            <br>
+
+
+            <table border="1"  cellspacing="0" cellpadding="0" width="98%">
+                <th colspan="9"
+                    style="background: black;
+                           color:white;">RESUMEN POR ASESOR / PRODUCTO</th>
+                <tr/>
+                <th rowspan="2" style="background: lightblue;">ASESOR</th>
+                {%- for producto in series -%}
+                    {%-if producto!="Total" -%}
+                        {%-if producto!="Seguro" -%}
+                            <th align="center" colspan="4" style="background: lightblue;"> {{producto}}</th>
+                        {%- endif -%}
+                    {%-endif-%}
+                {%- endfor -%}
+                           
+
+                <tr/>
+                {%- for producto in series -%}
+                    {%-if producto!="Total" and producto!="Seguro" -%}
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">Creditos</th>
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">Autorizado</th>
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">Expedientes Faltantes</th>
+                        <th colspan="1" style="background: lightblue; font-size: 12px;">Excepciones a Políticas</th>
+                    {%- endif -%}
+                {%-  endfor -%}
+
+                <tr/>
+
+                {%- for asesor in listaAsesores-%}
+                    <td align="right">{{asesor}}</td>
+                    {%- for producto in series -%}
+                        {%- set contadorExcepcionesTotal= namespace(value=0) -%}
+                        {%-if producto!="Total" and producto!="Seguro"-%}
+                            <td align="center">{{series[producto][asesor]['totalCreditos']}}</td>
+                            <td align="right">{{"${:,.2f}".format(series[producto][asesor]['montoTotal'])}}</td>
+                            <td align="center">{{series[producto][asesor]['expedientesComercial']}}</td>
+                            <td align="center">
+                                {%- set contadorExcepciones= namespace(value=0) -%}
+                                {%- for solicitud in series[producto][asesor]["solicitudes"] -%}
+                                    {%-if solicitud["excepcionDocumentada1"]!=""-%}
+                                        {%- set contadorExcepciones.value = contadorExcepciones.value + 1 -%}
+                                    {%- endif -%}
+                                    {%-if solicitud["excepcionDocumentada2"]!=""-%}
+                                        {%- set contadorExcepciones.value = contadorExcepciones.value + 1 -%}
+                                    {%- endif -%}
+                                    {%-if solicitud["excepcionDocumentada3"]!=""-%}
+                                        {%- set contadorExcepciones.value = contadorExcepciones.value + 1 -%}
+                                    {%- endif -%}
+                                {%- endfor -%} 
+                                {{contadorExcepciones.value}}
+                                
+                            </td>    
+                        {%-endif-%}
+                    {%- endfor -%}
+                    
+                    
+
+                    <tr/>
+                {%- endfor -%}
+                <td align="right" style="background:steelblue; color:white;">Total</td>
+                {%- for producto in series -%}
+                        {%-if  producto!="Total" and producto!="Seguro"-%}
+                            <td align="center" style="background:steelblue; color:white;"> {{series[producto]['Total']['totalCreditos']}}</td>
+                            <td align="right" style="background:steelblue; color:white;">{{"${:,.2f}".format(series[producto]['Total']['montoTotal'])}}</td>
+                            <td align="center" style="background:steelblue; color:white;">{{series[producto]['Total']['expedientesComercial']}}</td>
+                            <td align="center" style="background:steelblue; color:white;">
+                                {{series[producto]['Total']['totalExcepciones']}}
+                            </td>
+                            
+                        {%-endif-%}
+                {%- endfor -%}
+            </table>
+
+
+            <br>
+            <table border="1"  cellspacing="0" cellpadding="0" width="98%">
+                <th colspan="14"
+                    align="center"
+                    style="background: black;
+                           color:white;">DETALLE POR CLIENTE</th>
+                <tr/>
+                {%- for asesor in listaAsesores  -%}
+                    <th colspan="10"
+                        align="left"
+                        style="background: navy;
+                               color: white;
+                    ">{{asesor}}</th>
+                    <tr/>
+                    <th style="background:lightblue; font-size: 12px;">#</th>
+                    <th style="background:lightblue; font-size: 12px;">PRODUCTO</th>
+                    <th style="background:lightblue; font-size: 12px;">CONTRATO <br/> IMPRESO</th>
+                    <th style="background:lightblue; font-size: 12px;">NUM <br/> CONTROL</th>
+                    <th style="background:lightblue; font-size: 12px;">CLIENTE</th>
+                    <th style="background:lightblue; font-size: 12px;">MONTO <br/> AUTORIZADO</th>
+                    <th style="background:lightblue; font-size: 12px;">EXPEDIENTE <br/> FALTANTE</th>
+                    <th style="background:lightblue; font-size: 12px;">EXCEPCIONES <br/> APLICADAS</th>
+                    <th style="background:lightblue; font-size: 12px;">TIPOS DE <br/>EXCEPCIONES <br/> APLICADAS</th>
+                    <tr/>
+                    {%-for producto in productos-%}
+                    {%- set contadorExpedientesFaltantes= namespace(value=0) -%}
+                    {%- set contadorExcepciones= namespace(value=0) -%}
+                        {%- if producto != "Seguro" -%}
+
+                            {%- for solicitud in series[producto][asesor]["solicitudes"] -%}
+                                <td>{{loop.index}}</td>
+                                <td style="font-size:13px;">{{solicitud["PRODUCTO"].replace("Adelanto de Nómina","Adelanto")}}</td>
+                                <td>{{solicitud["FECHA CONTRATO IMPRESO"]}}</td>
+                                <td>{{solicitud["NUM CONTROL"]}}</td>
+                                <td>{{solicitud["CLIENTE"]}}</td>
+                                <td align="right">{{"${:,.2f}".format(solicitud["MONTO AUTORIZADO"]|float)}}</td>
+                                {%- if producto != "Seguro"-%}
+                                    <td align="center">
+                                        {%- if solicitud["expedienteResguardoStatus"]=="Comercial" -%}
+                                        {%- set contadorExpedientesFaltantes.value= contadorExpedientesFaltantes.value + 1 -%}
+                                        Sí
+                                        {%- else -%}
+                                        No
+                                        {%- endif -%}
+                                    </td>
+
+                                    <td align="center">
+                                        {%- set contador=0 -%}
+                                        {%-if solicitud["excepcionDocumentada1"]!=""-%}
+                                            {%- set contador= contador + 1 -%}
+                                            {%- set contadorExcepciones.value = contadorExcepciones.value + 1 -%}
+                                        {%- endif -%}
+                                        {%-if solicitud["excepcionDocumentada2"]!=""-%}
+                                            {%- set contador= contador + 1 -%}
+                                            {%- set contadorExcepciones.value = contadorExcepciones.value + 1 -%}
+                                        {%- endif -%}
+                                        {%-if solicitud["excepcionDocumentada3"]!=""-%}
+                                            {%- set contador= contador + 1 -%}
+                                            {%- set contadorExcepciones.value = contadorExcepciones.value + 1 -%}
+                                        {%- endif -%}
+                                        {{ contador}}
+                                    </td>
+
+                                    <td>
+                                        
+                                            {%-if solicitud["excepcionDocumentada1"]!=""-%}
+                                                {{ solicitud["excepcionDocumentada1"] }}
+                                                <br/>      
+                                            {%- endif -%}
+                                            {%-if solicitud["excepcionDocumentada2"]!=""-%}
+                                                {{ solicitud["excepcionDocumentada2"] }}
+                                                <br/>      
+                                            {%- endif -%}
+                                            {%-if solicitud["excepcionDocumentada3"]!=""-%}
+                                                {{ solicitud["excepcionDocumentada3"] }}
+                                                <br/>      
+                                            {%- endif -%}
+                                        
+                                       
+                                    </td>
+                                   
+                                {%- endif -%}
+
+                                <tr/>
+                            {%- endfor -%}
+
+                            
+                            <td colspan="5"
+                                align="right"
+                                style="background: steelblue;
+                                       color:white;">Total {{producto.replace("Adelanto de Nómina","Adelanto")}}:</td>
+
+                            <td colspan="1"
+                                align="right"
+                                style="background: steelblue;
+                                       color:white;">{{"${:,.2f}".format(series[producto][asesor]['montoTotal'])}}</td>
+
+                            <td colspan="1"
+                                align="center"
+                                style="background: steelblue;
+                                       color:white;">{{contadorExpedientesFaltantes.value}}</td>
+                            <td colspan="1"
+                                align="center"
+                                style="background: steelblue;
+                                       color:white;">{{contadorExcepciones.value}}</td>
+                            <td colspan="1"
+                                align="right"
+                                style="background: steelblue;
+                                       color:white;"></td>
+                            </td>
+                        {%- endif -%}
+                        <tr>
+
+                    {%-endfor-%}
+                    <td colspan="10">
+                        <br/>
+                    </td>
+                    <tr/>
+
+                {%-endfor-%}
+
+            </table>
+        </div>
+        {%- endif -%}
+    </div>
+
+
+
+
+
+
+
+
+
+
+{%- endblock -%}
+
+
+
+

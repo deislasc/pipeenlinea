@@ -1,0 +1,204 @@
+
+{%- extends "base.html" -%}
+{%- block content -%}
+
+    <div class="panelPipeLine" id="panelPipeLine" style="height:100%; width:calc(100vw - 16px)">
+        <div class="botoneraLarga">
+            <form enctype = "multipart/form-data" id="pipeLineForm" action="/cosechas" method="Post">
+                    <input type="hidden" name="ownerID" value="{{user['ownerID']}}">
+                    <input type="hidden" name="inheritedID"  id="inheritedID"value="">
+                    <input type="hidden" name="viewName" value="{{viewName}}">
+
+                <table border="0px" spacing=0 width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                    <td align="center">Desde:</td>
+                    <td ></td>
+                    <td align="center">Hasta:</td>
+                    <td ></td>
+                    <td align="center"><!-- Fecha de Referencia: --></td>
+                    <td ></td>
+                    <td align="center">Producto:</td>
+                    <td ></td>
+                    <td align="center">Mostrar:</td>
+                    <td ></td>
+                    <td align="center" rowspan="2">
+                        <!-- <input type="submit" value="Graficar" name="accion" id="accion">
+                        <br/> -->
+                        <input type="submit" value="Tabular Periodo/Otorgamiento" name="accion" id="accion">
+                        <br/>
+                        <input type="submit" value="Tabular Otorgamiento/Periodo" name="accion" id="accion">
+                    </td>
+                    <td align="center" rowspan="2">
+                        <!-- <input type="submit" value="Graficar" name="accion" id="accion">
+                        <br/> -->
+                        <input type="submit" value="csv Periodo/Otorgamiento" name="accion" id="accion">
+                        <br/>
+                        <input type="submit" value="csv Otorgamiento/Periodo" name="accion" id="accion">
+                    </td>
+                    <td align="center" rowspan="2">
+                        <input type="button" id="botonSeleccionaArchivo" value="Selecciona *.csv" onclick="document.getElementById('archivo').click();" />
+                        <input type="file" style="display:none;" id="archivo" name="archivo"/>
+                        <br/>
+                        <input type = "submit" value = "Subir Ahora" />   
+                    </td>
+                   
+
+                    <td align="center" rowspan="2">
+                        <!-- <input type="submit" value="Subir Colocacion.csv" name="accion" id="accion"> -->
+                    </td>
+                    <td align="center" rowspan="2">
+                        <!-- <input type="button" value="Ver Solicitudes" onClick="mostrarVisorSolicitudes(this);"> -->
+                    </td>
+                    <td align="center" rowspan="2">
+                        <!-- <input type="button" value="IMPRIMIR" onclick="printElem('listadoPipeLine');"> -->
+                    </td>
+                    </tr>
+                    <tr>
+                        <td  align="center">
+                             <input type="date" class="roundInput" id="fechaInicio" name="fechaInicio" min="2019-01-02"
+                             value="{{formData['fechaInicio']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <input type="date" class="roundInput" id="fechaFin" name="fechaFin" min="2019-01-02" value="{{formData['fechaFin']}}"></input>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                             <!-- <input type="date" class="roundInput" id="fecha" name="fecha"
+                             min="2019-01-02" value="{{formData['fecha']}}"></input> -->
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="producto" name="producto">
+                                <option value="General"
+                                {%- if formData['producto']=="" or formData["producot"]=="General" -%}
+                                     selected="true"
+                                {%- endif-%}
+                                {%-if "producto" not in formData-%}
+                                    selected="true"
+                                {%-endif-%}>General</option>
+                                <option value="Nómina"
+                                {%- if formData['producto']=="Nómina" -%}
+                                     selected="true"
+                                    {%- endif-%}>Nómina</option>
+                                <option value="Adelanto"
+                                    {%- if formData['producto']=="Adelanto" -%}
+                                     selected="true"
+                                    {%- endif-%}
+                                >Adelanto</option> 
+                                <option value="CNP"
+                                {%- if formData['producto']=="CNP" -%}
+                                     selected="true"
+                                    {%- endif-%}>CNP</option>
+                                <option value="Seguro"
+                                {%- if formData['producto']=="Seguro" -%}
+                                     selected="true"
+                                    {%- endif-%}>Seguro</option>
+                                <option value="ARF"
+                                {%- if formData['producto']=="ARF" -%}
+                                     selected="true"
+                                    {%- endif-%}>ARF</option>
+                                <option value="ARR"
+                                {%- if formData['producto']=="ARR" -%}
+                                     selected="true"
+                                    {%- endif-%}>ARR</option>
+                                <option value="CSP"
+                                {%- if formData['producto']=="CSP" -%}
+                                     selected="true"
+                                    {%- endif-%}>CSP</option>
+                                <option value="Factoraje"
+                                {%- if formData['producto']=="Factoraje" -%}
+                                     selected="true"
+                                    {%- endif-%}>Factoraje</option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td  align="center">
+                            <select class="roundInput" id="contenidoTipo" name="contenidoTipo">
+                                <option value="Total Vencido"
+                                {%- if formData['contenidoTipo']=="Total Vencido" -%}
+                                     selected="true"
+                                    {%- endif-%}>Total Vencido</option>
+                                <option value="Capital Vencido"
+                                {%- if formData['contenidoTipo']=="Capital Vencido" -%}
+                                     selected="true"
+                                    {%- endif-%}>Capital Vencido</option>
+                                <option value="Interes Vencido"
+                                {%- if formData['contenidoTipo']=="Interes Vencido" -%}
+                                     selected="true"
+                                    {%- endif-%}>Interes Vencido</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        {%- if accion=="Graficar"-%}
+        <div class="listadoPipeLine">
+           
+        </div>
+        {%- endif -%}
+
+        {%- if "Tabular" or "csv" in accion -%}
+        <div class="listadoPipeLine">
+            <table border="1" width="100%">
+                {%- if accion == "Tabular Periodo/Otorgamiento" -%}
+                    <th>PERÍODO</th>
+                    <th>OTORGAMIENTO</th>
+                {%-endif-%}
+                {%- if accion == "Tabular Otorgamiento/Periodo" -%}
+                    <th>OTORGAMIENTO</th>
+                    <th>PERÍODO</th>                    
+                {%-endif-%}
+                <th>COLOCACION</th>
+                {%-for bucket in reporte.buckets -%}
+                    <th>{{bucket}}</th>
+                {%-endfor -%}
+                <tr/>
+                {%-for row in reporte.renglones-%}
+                    <td>
+                        {{row}}
+                    </td>
+                    {%-for mes in reporte.renglones[row]-%}
+                        <td>
+                          {{mes}}  
+                        </td>
+                        <td align="right">
+                            {%-if "Monto Colocacion" in reporte.renglones[row][mes] -%}
+                                {{"${:,.2f}".format(reporte.renglones[row][mes]["Monto Colocacion"])}} 
+                            {%-endif-%}
+                           
+                            
+                        </td>
+                        {%-for bucket in reporte.renglones[row][mes][formData["contenidoTipo"]]-%}
+                            <td align="right">
+                                {{"${:,.2f}".format(reporte.renglones[row][mes][formData["contenidoTipo"]][bucket])}}
+                            </td>
+                        {%-endfor-%}
+                        <tr/>
+                        <td></td>
+                    {%-endfor-%}
+                    <tr/>
+
+                {%-endfor-%}
+            </table>
+           
+        </div>
+        {%- endif -%}
+    </div>
+
+
+
+
+
+
+
+
+
+
+{%- endblock -%}
+
+
+
+
