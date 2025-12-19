@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
@@ -86,7 +84,7 @@ services:
       DATABASE_URL: postgresql://pipeenlinea_user:${DB_PASSWORD:-changeme123}@postgres:5432/pipeenlinea
       ENCRYPTION_KEY_PATH: /app/secret.key
     volumes:
-      - ./mysite/working:/app/working:ro
+      - ./working:/app/working:ro  # Corregido: working/ está en la raíz
       - ./secret.key:/app/secret.key:ro
       - ./migration_logs:/app/logs
     depends_on:
