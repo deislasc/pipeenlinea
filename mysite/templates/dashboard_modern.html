@@ -1,0 +1,370 @@
+{% extends "base_modern.html" %}
+
+{% block title %}Dashboard - PipeEnLinea{% endblock %}
+
+{% block content_title %}Dashboard{% endblock %}
+{% block content_subtitle %}Vista general del sistema de créditos{% endblock %}
+
+{% block header_actions %}
+<div class="d-flex gap-2">
+    <button class="btn-modern btn-outline-modern" onclick="location.reload()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Actualizar
+    </button>
+    <button class="btn-modern btn-primary-modern" onclick="location.href='/solicitudes/nueva'">
+        <i class="bi bi-plus-circle"></i>
+        Nueva Solicitud
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- ========== ESTADÍSTICAS PRINCIPALES ========== -->
+<div class="stats-grid">
+    <div class="stat-card" style="border-left-color: var(--primary-color);">
+        <div class="stat-label">Total Solicitudes</div>
+        <div class="stat-value">1,234</div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>12% vs mes anterior</span>
+        </div>
+    </div>
+
+    <div class="stat-card" style="border-left-color: var(--secondary-color);">
+        <div class="stat-label">Aprobadas</div>
+        <div class="stat-value">856</div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>8% tasa de aprobación</span>
+        </div>
+    </div>
+
+    <div class="stat-card" style="border-left-color: var(--warning-color);">
+        <div class="stat-label">En Proceso</div>
+        <div class="stat-value">245</div>
+        <div class="stat-trend">
+            <i class="bi bi-clock"></i>
+            <span>Pendientes de revisión</span>
+        </div>
+    </div>
+
+    <div class="stat-card" style="border-left-color: var(--accent-color);">
+        <div class="stat-label">Monto Fondeado</div>
+        <div class="stat-value">$12.5M</div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>15% vs mes anterior</span>
+        </div>
+    </div>
+</div>
+
+<!-- ========== GRID DE CONTENIDO ========== -->
+<div class="row g-4 mb-4">
+    <!-- Solicitudes Recientes -->
+    <div class="col-lg-8">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <div>
+                    <h3 class="card-title-modern">Solicitudes Recientes</h3>
+                    <p class="card-subtitle-modern">Últimas 5 solicitudes ingresadas</p>
+                </div>
+                <a href="/solicitudes" class="btn-modern btn-outline-modern btn-sm">
+                    Ver todas
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table-modern">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Empresa</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>#1234</strong></td>
+                            <td>Juan Pérez García</td>
+                            <td>CAABSA</td>
+                            <td>$50,000</td>
+                            <td><span class="badge-modern badge-success">Aprobado</span></td>
+                            <td>19 Dic 2024</td>
+                            <td>
+                                <button class="btn btn-sm btn-link" title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-link" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#1233</strong></td>
+                            <td>María López Sánchez</td>
+                            <td>Transportes del Norte</td>
+                            <td>$75,000</td>
+                            <td><span class="badge-modern badge-warning">En Revisión</span></td>
+                            <td>19 Dic 2024</td>
+                            <td>
+                                <button class="btn btn-sm btn-link">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-link">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#1232</strong></td>
+                            <td>Carlos Ramírez Torres</td>
+                            <td>Comercializadora XYZ</td>
+                            <td>$30,000</td>
+                            <td><span class="badge-modern badge-info">Propuesta</span></td>
+                            <td>18 Dic 2024</td>
+                            <td>
+                                <button class="btn btn-sm btn-link">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-link">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#1231</strong></td>
+                            <td>Ana Martínez Cruz</td>
+                            <td>Grupo Industrial ABC</td>
+                            <td>$100,000</td>
+                            <td><span class="badge-modern badge-danger">Rechazado</span></td>
+                            <td>18 Dic 2024</td>
+                            <td>
+                                <button class="btn btn-sm btn-link">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-link">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#1230</strong></td>
+                            <td>Roberto González Flores</td>
+                            <td>MIPYMEX</td>
+                            <td>$45,000</td>
+                            <td><span class="badge-modern badge-success">Fondeado</span></td>
+                            <td>17 Dic 2024</td>
+                            <td>
+                                <button class="btn btn-sm btn-link">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-link">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tareas Pendientes -->
+    <div class="col-lg-4">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h3 class="card-title-modern">Tareas Pendientes</h3>
+            </div>
+
+            <div class="list-group list-group-flush">
+                <div class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Revisión Documental</div>
+                        <small class="text-muted">15 solicitudes pendientes</small>
+                    </div>
+                    <span class="badge bg-danger rounded-pill">15</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Autorización DG</div>
+                        <small class="text-muted">8 solicitudes en espera</small>
+                    </div>
+                    <span class="badge bg-warning rounded-pill">8</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Contratos por Imprimir</div>
+                        <small class="text-muted">12 contratos listos</small>
+                    </div>
+                    <span class="badge bg-info rounded-pill">12</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Fondeos Pendientes</div>
+                        <small class="text-muted">5 transferencias por realizar</small>
+                    </div>
+                    <span class="badge bg-success rounded-pill">5</span>
+                </div>
+            </div>
+
+            <div class="p-3">
+                <a href="/tareas" class="btn btn-primary w-100">
+                    <i class="bi bi-list-check me-2"></i>
+                    Ver todas las tareas
+                </a>
+            </div>
+        </div>
+
+        <!-- Actividad Reciente -->
+        <div class="card-modern mt-4">
+            <div class="card-header-modern">
+                <h3 class="card-title-modern">Actividad Reciente</h3>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item p-3 border-bottom">
+                    <div class="d-flex gap-3">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-success d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="bi bi-check text-white"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-0 fw-semibold">Solicitud aprobada</p>
+                            <small class="text-muted">Juan Pérez - #1234</small>
+                            <div class="text-muted small">Hace 5 minutos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item p-3 border-bottom">
+                    <div class="d-flex gap-3">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-info d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="bi bi-file-earmark text-white"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-0 fw-semibold">Nueva solicitud</p>
+                            <small class="text-muted">María López - #1233</small>
+                            <div class="text-muted small">Hace 15 minutos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item p-3">
+                    <div class="d-flex gap-3">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="bi bi-clock text-white"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-0 fw-semibold">Documento pendiente</p>
+                            <small class="text-muted">Carlos Ramírez - #1232</small>
+                            <div class="text-muted small">Hace 1 hora</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== GRÁFICAS ========== -->
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h3 class="card-title-modern">Solicitudes por Mes</h3>
+            </div>
+            <canvas id="solicitudesChart"></canvas>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h3 class="card-title-modern">Distribución por Estado</h3>
+            </div>
+            <canvas id="estadosChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ===== GRÁFICA DE SOLICITUDES POR MES =====
+    const ctxSolicitudes = document.getElementById('solicitudesChart').getContext('2d');
+    new Chart(ctxSolicitudes, {
+        type: 'line',
+        data: {
+            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            datasets: [{
+                label: 'Solicitudes',
+                data: [65, 78, 90, 81, 96, 105, 98, 110, 115, 120, 125, 134],
+                borderColor: 'rgb(37, 99, 235)',
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // ===== GRÁFICA DE ESTADOS =====
+    const ctxEstados = document.getElementById('estadosChart').getContext('2d');
+    new Chart(ctxEstados, {
+        type: 'doughnut',
+        data: {
+            labels: ['Aprobadas', 'En Proceso', 'Rechazadas', 'Fondeadas'],
+            datasets: [{
+                data: [856, 245, 88, 45],
+                backgroundColor: [
+                    'rgb(16, 185, 129)',
+                    'rgb(245, 158, 11)',
+                    'rgb(239, 68, 68)',
+                    'rgb(37, 99, 235)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

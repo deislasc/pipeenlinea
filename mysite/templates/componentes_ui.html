@@ -1,0 +1,441 @@
+{% extends "base_modern.html" %}
+
+{% block title %}Componentes UI - PipeEnLinea{% endblock %}
+
+{% block content_title %}Biblioteca de Componentes{% endblock %}
+{% block content_subtitle %}Todos los componentes del sistema de diseño en un solo lugar{% endblock %}
+
+{% block content %}
+<!-- ========== COLORES ========== -->
+<div class="card-modern mb-4">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern">Paleta de Colores</h3>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-2">
+            <div class="p-4 text-white text-center rounded" style="background: var(--primary-color);">
+                <strong>Primary</strong>
+                <div class="small mt-2">#2563eb</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-4 text-white text-center rounded" style="background: var(--secondary-color);">
+                <strong>Success</strong>
+                <div class="small mt-2">#10b981</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-4 text-white text-center rounded" style="background: var(--warning-color);">
+                <strong>Warning</strong>
+                <div class="small mt-2">#f59e0b</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-4 text-white text-center rounded" style="background: var(--danger-color);">
+                <strong>Danger</strong>
+                <div class="small mt-2">#ef4444</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-4 text-white text-center rounded" style="background: var(--info-color);">
+                <strong>Info</strong>
+                <div class="small mt-2">#0ea5e9</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="p-4 text-white text-center rounded" style="background: var(--accent-color);">
+                <strong>Accent</strong>
+                <div class="small mt-2">#f59e0b</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== BOTONES ========== -->
+<div class="card-modern mb-4">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern">Botones</h3>
+    </div>
+
+    <div class="d-flex flex-wrap gap-3">
+        <button class="btn-modern btn-primary-modern">
+            <i class="bi bi-plus-circle"></i>
+            Primario
+        </button>
+
+        <button class="btn-modern btn-secondary-modern">
+            <i class="bi bi-check"></i>
+            Secundario
+        </button>
+
+        <button class="btn-modern btn-outline-modern">
+            <i class="bi bi-arrow-clockwise"></i>
+            Outline
+        </button>
+
+        <button class="btn-modern btn-primary-modern" disabled>
+            Deshabilitado
+        </button>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="d-flex flex-wrap gap-3">
+        <button class="btn btn-primary">
+            <i class="bi bi-save"></i>
+            Bootstrap Primary
+        </button>
+
+        <button class="btn btn-success">
+            <i class="bi bi-check-circle"></i>
+            Bootstrap Success
+        </button>
+
+        <button class="btn btn-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            Bootstrap Warning
+        </button>
+
+        <button class="btn btn-danger">
+            <i class="bi bi-trash"></i>
+            Bootstrap Danger
+        </button>
+
+        <button class="btn btn-info">
+            <i class="bi bi-info-circle"></i>
+            Bootstrap Info
+        </button>
+    </div>
+</div>
+
+<!-- ========== BADGES ========== -->
+<div class="card-modern mb-4">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern">Badges</h3>
+    </div>
+
+    <div class="d-flex flex-wrap gap-3 align-items-center">
+        <span class="badge-modern badge-success">
+            <i class="bi bi-check-circle"></i>
+            Aprobado
+        </span>
+
+        <span class="badge-modern badge-warning">
+            <i class="bi bi-clock"></i>
+            Pendiente
+        </span>
+
+        <span class="badge-modern badge-danger">
+            <i class="bi bi-x-circle"></i>
+            Rechazado
+        </span>
+
+        <span class="badge-modern badge-info">
+            <i class="bi bi-info-circle"></i>
+            En Revisión
+        </span>
+
+        <span class="badge-modern badge-primary">
+            <i class="bi bi-star"></i>
+            Nuevo
+        </span>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="d-flex flex-wrap gap-3 align-items-center">
+        <span class="badge bg-success">Bootstrap Success</span>
+        <span class="badge bg-warning text-dark">Bootstrap Warning</span>
+        <span class="badge bg-danger">Bootstrap Danger</span>
+        <span class="badge bg-info">Bootstrap Info</span>
+        <span class="badge bg-primary">Bootstrap Primary</span>
+        <span class="badge bg-secondary">Bootstrap Secondary</span>
+    </div>
+</div>
+
+<!-- ========== ALERTS ========== -->
+<div class="card-modern mb-4">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern">Alerts</h3>
+    </div>
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <strong>¡Éxito!</strong> La operación se completó correctamente.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong>Advertencia:</strong> Revisa los datos antes de continuar.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-x-circle-fill me-2"></i>
+        <strong>Error:</strong> No se pudo completar la operación.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <strong>Información:</strong> Hay 5 solicitudes pendientes de revisión.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</div>
+
+<!-- ========== FORMS ========== -->
+<div class="card-modern mb-4">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern">Formularios</h3>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group-modern">
+                <label class="form-label-modern">Nombre Completo</label>
+                <input type="text" class="form-input-modern" placeholder="Ej: Juan Pérez García">
+            </div>
+
+            <div class="form-group-modern">
+                <label class="form-label-modern">Correo Electrónico</label>
+                <input type="email" class="form-input-modern" placeholder="correo@ejemplo.com">
+            </div>
+
+            <div class="form-group-modern">
+                <label class="form-label-modern">Empresa</label>
+                <select class="form-select-modern">
+                    <option>Seleccionar empresa...</option>
+                    <option>CAABSA</option>
+                    <option>MIPYMEX</option>
+                    <option>Transportes del Norte</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group-modern">
+                <label class="form-label-modern">Monto Solicitado</label>
+                <input type="number" class="form-input-modern" placeholder="50000">
+            </div>
+
+            <div class="form-group-modern">
+                <label class="form-label-modern">Plazo (meses)</label>
+                <input type="number" class="form-input-modern" placeholder="12">
+            </div>
+
+            <div class="form-group-modern">
+                <label class="form-label-modern">Comentarios</label>
+                <textarea class="form-input-modern" rows="3" placeholder="Escribe aquí..."></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== TABLES ========== -->
+<div class="card-modern mb-4">
+    <div class="card-header-modern">
+        <div>
+            <h3 class="card-title-modern">Tablas</h3>
+            <p class="card-subtitle-modern">Ejemplo de tabla moderna</p>
+        </div>
+    </div>
+
+    <table class="table-modern">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Empresa</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>#1001</strong></td>
+                <td>Juan Pérez García</td>
+                <td>CAABSA</td>
+                <td>$50,000.00</td>
+                <td><span class="badge-modern badge-success">Aprobado</span></td>
+                <td>
+                    <button class="btn btn-sm btn-link" title="Ver"><i class="bi bi-eye"></i></button>
+                    <button class="btn btn-sm btn-link" title="Editar"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-link text-danger" title="Eliminar"><i class="bi bi-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>#1002</strong></td>
+                <td>María López Sánchez</td>
+                <td>MIPYMEX</td>
+                <td>$75,000.00</td>
+                <td><span class="badge-modern badge-warning">Pendiente</span></td>
+                <td>
+                    <button class="btn btn-sm btn-link"><i class="bi bi-eye"></i></button>
+                    <button class="btn btn-sm btn-link"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-link text-danger"><i class="bi bi-trash"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>#1003</strong></td>
+                <td>Carlos Ramírez Torres</td>
+                <td>Transportes del Norte</td>
+                <td>$30,000.00</td>
+                <td><span class="badge-modern badge-danger">Rechazado</span></td>
+                <td>
+                    <button class="btn btn-sm btn-link"><i class="bi bi-eye"></i></button>
+                    <button class="btn btn-sm btn-link"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-link text-danger"><i class="bi bi-trash"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ========== STAT CARDS ========== -->
+<div class="card-modern mb-4">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern">Tarjetas de Estadísticas</h3>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card" style="border-left-color: var(--primary-color);">
+            <div class="stat-label">Total Usuarios</div>
+            <div class="stat-value">2,543</div>
+            <div class="stat-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>18% vs mes anterior</span>
+            </div>
+        </div>
+
+        <div class="stat-card" style="border-left-color: var(--secondary-color);">
+            <div class="stat-label">Tasa de Aprobación</div>
+            <div class="stat-value">68%</div>
+            <div class="stat-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>+5%</span>
+            </div>
+        </div>
+
+        <div class="stat-card" style="border-left-color: var(--warning-color);">
+            <div class="stat-label">En Revisión</div>
+            <div class="stat-value">124</div>
+            <div class="stat-trend">
+                <i class="bi bi-dash"></i>
+                <span>Sin cambios</span>
+            </div>
+        </div>
+
+        <div class="stat-card" style="border-left-color: var(--danger-color);">
+            <div class="stat-label">Rechazados</div>
+            <div class="stat-value">43</div>
+            <div class="stat-trend negative">
+                <i class="bi bi-arrow-down"></i>
+                <span>-12%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== ICONOS ========== -->
+<div class="card-modern mb-4">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern">Iconos Bootstrap Icons</h3>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-2 text-center">
+            <i class="bi bi-house-door" style="font-size: 2rem;"></i>
+            <div class="small mt-2">house-door</div>
+        </div>
+        <div class="col-md-2 text-center">
+            <i class="bi bi-file-earmark-text" style="font-size: 2rem;"></i>
+            <div class="small mt-2">file-earmark-text</div>
+        </div>
+        <div class="col-md-2 text-center">
+            <i class="bi bi-people" style="font-size: 2rem;"></i>
+            <div class="small mt-2">people</div>
+        </div>
+        <div class="col-md-2 text-center">
+            <i class="bi bi-building" style="font-size: 2rem;"></i>
+            <div class="small mt-2">building</div>
+        </div>
+        <div class="col-md-2 text-center">
+            <i class="bi bi-graph-up" style="font-size: 2rem;"></i>
+            <div class="small mt-2">graph-up</div>
+        </div>
+        <div class="col-md-2 text-center">
+            <i class="bi bi-calculator" style="font-size: 2rem;"></i>
+            <div class="small mt-2">calculator</div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== PROGRESS BARS ========== -->
+<div class="card-modern mb-4">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern">Progress Bars</h3>
+    </div>
+
+    <div class="mb-3">
+        <div class="d-flex justify-content-between mb-1">
+            <span>Aprobadas</span>
+            <span>75%</span>
+        </div>
+        <div class="progress" style="height: 8px;">
+            <div class="progress-bar bg-success" style="width: 75%"></div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="d-flex justify-content-between mb-1">
+            <span>En Proceso</span>
+            <span>45%</span>
+        </div>
+        <div class="progress" style="height: 8px;">
+            <div class="progress-bar bg-warning" style="width: 45%"></div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="d-flex justify-content-between mb-1">
+            <span>Rechazadas</span>
+            <span>15%</span>
+        </div>
+        <div class="progress" style="height: 8px;">
+            <div class="progress-bar bg-danger" style="width: 15%"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== TOAST DEMO ========== -->
+<div class="card-modern">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern">Toast Notifications</h3>
+    </div>
+
+    <div class="d-flex flex-wrap gap-3">
+        <button class="btn btn-success" onclick="showToast('Operación exitosa', 'success')">
+            <i class="bi bi-check-circle"></i>
+            Toast Success
+        </button>
+
+        <button class="btn btn-danger" onclick="showToast('Error en la operación', 'danger')">
+            <i class="bi bi-x-circle"></i>
+            Toast Error
+        </button>
+
+        <button class="btn btn-warning" onclick="showToast('Advertencia importante', 'warning')">
+            <i class="bi bi-exclamation-triangle"></i>
+            Toast Warning
+        </button>
+
+        <button class="btn btn-info" onclick="showToast('Información útil', 'info')">
+            <i class="bi bi-info-circle"></i>
+            Toast Info
+        </button>
+    </div>
+</div>
+{% endblock %}
