@@ -20,10 +20,10 @@ echo "📦 Creando backup en: $BACKUP_DIR"
 echo ""
 
 # Backup de working directory
-if [ -d "mysite/working" ]; then
+if [ -d "working" ]; then
     echo "1. Copiando archivos JSON..."
-    cp -r mysite/working "$BACKUP_DIR/"
-    echo "   ✅ mysite/working/ → $BACKUP_DIR/working/"
+    cp -r working "$BACKUP_DIR/"
+    echo "   ✅ working/ → $BACKUP_DIR/working/"
 fi
 
 # Backup de secret.key
@@ -90,7 +90,7 @@ echo "Tamaño: $backup_size"
 echo ""
 echo "Para restaurar:"
 echo "  tar -xzf ${BACKUP_DIR}.tar.gz"
-echo "  cp -r ${BACKUP_DIR}/working/* mysite/working/"
+echo "  cp -r ${BACKUP_DIR}/working/* working/"
 echo "  cp ${BACKUP_DIR}/secret.key ."
 echo ""
 echo "⚠️  IMPORTANTE: Guarda este archivo en un lugar seguro!"

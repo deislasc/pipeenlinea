@@ -41,7 +41,7 @@ services:
       - "8000:8000"
     volumes:
       - ./mysite/uploads:/app/uploads
-      - ./mysite/working:/app/working_backup  # Backup de JSONs
+      - ./working:/app/working_backup  # Backup de JSONs
       - ./secret.key:/app/secret.key:ro
       - ./logs:/app/logs
     depends_on:
