@@ -1,93 +1,292 @@
-# Pipeenlinea
+# PipeEnLinea
 
+Sistema de gestión de créditos para PyMEs con arquitectura moderna basada en PostgreSQL y Docker.
 
+## 🚀 Inicio Rápido (Automático)
 
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.caabsa.com/infraestructura/pipeenlinea.git
-git branch -M main
-git push -uf origin main
+```bash
+./start.sh
 ```
 
-## Integrate with your tools
+Este script **automáticamente**:
+- ✅ Verifica que Docker esté instalado y corriendo
+- ✅ Crea el archivo `.env` si no existe
+- ✅ Verifica archivos necesarios (secret.key, JSONs)
+- ✅ Detiene servicios previos si existen
+- ✅ Inicia PostgreSQL y espera a que esté listo
+- ✅ Crea el esquema de base de datos si es necesario
+- ✅ Construye e inicia la aplicación Flask
+- ✅ Verifica que todo esté funcionando
+- ✅ Muestra estadísticas y comandos útiles
 
-- [ ] [Set up project integrations](https://gitlab.caabsa.com/infraestructura/pipeenlinea/-/settings/integrations)
+**Sin intervención manual** - Solo ejecuta `./start.sh` y todo arranca automáticamente.
 
-## Collaborate with your team
+## 📋 Prerequisitos
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- Docker Desktop instalado y corriendo
+- Archivo `secret.key` en la raíz del proyecto (para desencriptar JSONs)
+- Archivos JSON en el directorio `working/` (si vas a migrar datos)
 
-## Test and Deploy
+## 🌐 Acceso al Sistema
 
-Use the built-in continuous integration in GitLab.
+Una vez iniciado:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- **Aplicación Web**: http://localhost:8000
+- **PostgreSQL**: localhost:5432
+- **pgAdmin** (opcional): `docker-compose --profile dev up -d pgadmin` → http://localhost:5050
 
-***
+## 📊 Comandos Útiles
 
-# Editing this README
+### Ver logs en tiempo real
+```bash
+docker-compose logs -f
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Ver logs solo de la app
+```bash
+docker-compose logs -f app
+```
 
-## Suggestions for a good README
+### Conectar a PostgreSQL
+```bash
+docker-compose exec postgres psql -U pipeenlinea_user -d pipeenlinea
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### Detener servicios
+```bash
+docker-compose down
+```
 
-## Name
-Choose a self-explaining name for your project.
+### Reiniciar servicios
+```bash
+docker-compose restart
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### Migrar datos desde JSON (Prueba - Dry Run)
+```bash
+docker-compose --profile migrate run --rm migration --dry-run
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### Migrar datos desde JSON (Real)
+```bash
+docker-compose --profile migrate run --rm migration
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## 🏗️ Arquitectura
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```
+pipeenlinea/
+├── mysite/              # Aplicación Flask
+│   ├── static/          # CSS, JS, imágenes
+│   │   └── css/
+│   │       └── modern-theme.css  # Sistema de diseño moderno
+│   ├── templates/       # Templates HTML
+│   │   ├── base_modern.html      # Base moderna con Bootstrap 5.3
+│   │   ├── dashboard_modern.html # Dashboard ejemplo
+│   │   └── componentes_ui.html   # Librería de componentes
+│   ├── database.py      # Módulo de conexión PostgreSQL
+│   └── ...
+├── database/            # Esquemas SQL
+│   ├── schema.sql       # Definición de tablas
+│   └── indexes.sql      # Índices optimizados
+├── working/             # JSONs encriptados (backup)
+├── docker-compose.yml   # Orquestación de servicios
+├── Dockerfile           # Imagen de la aplicación
+├── start.sh             # Script de inicio automático ⭐
+└── migrate_to_postgres.py  # Script de migración
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## 🎨 Frontend Moderno
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+El sistema incluye un diseño moderno y profesional:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- **Bootstrap 5.3** con componentes actualizados
+- **Sistema de diseño** profesional estilo Fintech
+- **Totalmente responsive** (mobile-first)
+- **Paleta de colores** consistente y accesible
+- **Chart.js 4.x** para visualizaciones
+- **Bootstrap Icons** integrados
+- **Sidebar colapsable** con menú hamburguesa
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Ver documentación completa en: `FRONTEND_DESIGN_SYSTEM.md`
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## 🗄️ Base de Datos
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### PostgreSQL 15
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+10 tablas principales:
+- `usuarios` - Usuarios del sistema
+- `empresas` - Empresas solicitantes
+- `solicitudes` - Solicitudes de crédito (tabla principal)
+- `logs` - Registro de auditoría
+- `cosechas` - Información agrícola
+- `geolocalizaciones` - Ubicaciones
+- `acl` - Control de acceso
+- `agendas` - Agenda de actividades
+- `pagadoras` - Entidades pagadoras
+- `operaciones_internas_preocupantes` - Alertas
 
-## License
-For open source projects, say how it is licensed.
+### Características
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- ✅ Más de 40 índices optimizados
+- ✅ Foreign keys y constraints
+- ✅ Campos JSONB para flexibilidad
+- ✅ Triggers para updated_at
+- ✅ Connection pooling (2-20 conexiones)
+
+## 🔄 Migración de Datos
+
+El sistema incluye migración completa desde JSONs encriptados:
+
+```bash
+# 1. Verificación pre-migración
+./pre_migration_check.sh
+
+# 2. Backup automático
+./backup_before_migration.sh
+
+# 3. Prueba (Dry-Run)
+docker-compose --profile migrate run --rm migration --dry-run
+
+# 4. Migración real
+docker-compose --profile migrate run --rm migration
+```
+
+Documentación completa: `README_MIGRACION.md`
+
+## 🔐 Seguridad
+
+- ✅ Encriptación Fernet para JSONs
+- ✅ Variables de entorno para credenciales
+- ✅ `.gitignore` protege datos sensibles
+- ✅ Connection pooling seguro
+- ✅ SQL parametrizado (previene SQL injection)
+
+## 🐳 Docker
+
+### Servicios
+
+- **postgres**: PostgreSQL 15 Alpine
+- **app**: Aplicación Flask con Gunicorn (4 workers)
+- **pgadmin** (opcional): Interfaz web para PostgreSQL
+- **migration** (one-time): Contenedor de migración
+
+### Volúmenes persistentes
+
+- `postgres_data`: Datos de PostgreSQL
+- `./uploads`: Archivos subidos
+- `./working`: Backup de JSONs
+- `./logs`: Logs de la aplicación
+
+## 📚 Documentación
+
+- `README.md` - Este archivo (inicio rápido)
+- `README_MIGRACION.md` - Guía completa de migración
+- `QUICK_START.md` - Guía de 5 minutos
+- `ESTRUCTURA_PROYECTO.md` - Estructura del proyecto
+- `FRONTEND_DESIGN_SYSTEM.md` - Sistema de diseño UI
+
+## 🆘 Troubleshooting
+
+### PostgreSQL no inicia
+```bash
+docker-compose logs postgres
+# Verificar que el puerto 5432 esté libre
+lsof -i :5432
+```
+
+### Aplicación no responde
+```bash
+docker-compose logs -f app
+# Verificar variables de entorno
+cat .env
+```
+
+### Error de desencriptación
+```bash
+# Verificar que secret.key sea el correcto
+ls -la secret.key
+```
+
+### Limpiar todo y empezar de cero
+```bash
+docker-compose down -v --remove-orphans
+docker system prune -f
+./start.sh
+```
+
+## 🔧 Variables de Entorno (.env)
+
+```env
+# PostgreSQL
+DB_HOST=postgres
+DB_PORT=5432
+DB_NAME=pipeenlinea
+DB_USER=pipeenlinea_user
+DB_PASSWORD=tu_password_seguro
+
+# Flask
+FLASK_ENV=development
+SECRET_KEY=tu_secret_key_generado
+
+# pgAdmin (opcional)
+PGADMIN_EMAIL=admin@pipeenlinea.com
+PGADMIN_PASSWORD=admin123
+```
+
+## 📈 Stack Tecnológico
+
+### Backend
+- Python 3.9
+- Flask 2.3.3
+- PostgreSQL 15
+- psycopg2 (SQL raw, sin ORM)
+- Gunicorn
+- Cryptography (Fernet)
+
+### Frontend
+- Bootstrap 5.3
+- jQuery 3.7.1
+- Chart.js 4.x
+- Bootstrap Icons
+- CSS Custom Properties
+
+### DevOps
+- Docker & Docker Compose
+- PostgreSQL Alpine
+- Nginx (producción)
+
+## 🚀 Despliegue en Azure
+
+Para producción en Azure Database for PostgreSQL:
+
+1. Crear Azure Database for PostgreSQL
+2. Configurar variables de entorno en `.env`:
+   ```env
+   AZURE_DB_HOST=your-server.postgres.database.azure.com
+   AZURE_DB_USER=your-user@your-server
+   AZURE_DB_PASSWORD=your-password
+   AZURE_DB_SSLMODE=require
+   ```
+3. Ejecutar migración
+4. Desplegar contenedor de la app
+
+Documentación completa: `README_MIGRACION.md` (sección Azure)
+
+## 📝 Licencia
+
+Privado - MiPymex
+
+## 👥 Soporte
+
+Para preguntas o problemas, contactar al equipo de desarrollo.
+
+---
+
+**¿Listo para empezar?** Solo ejecuta:
+
+```bash
+./start.sh
+```
+
+¡Todo lo demás es automático! 🚀
