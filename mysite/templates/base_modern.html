@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<!--
+============================================================================
+PIPEENLINEA - MODERN UI
+============================================================================
+Sistema moderno de gestión de créditos
+Versión: 2.0 - PostgreSQL
+Última actualización: 2024-12-19
+============================================================================
+-->
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sistema de Gestión de Créditos - Pipeenlinea">
+    <meta name="author" content="Pipeenlinea">
+
+    <title>{% block title %}PipeEnLinea{% endblock %}</title>
+
+    <!-- ===== FONTS ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- ===== FAVICON ===== -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/Logo_MiPymex.jpg') }}">
+
+    <!-- ===== CSS MODERNO ===== -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-theme.css') }}">
+
+    <!-- Bootstrap 5.3 (opcional, para componentes adicionales) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+
+    <!-- Chart.js 4.x (actualizado) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+
+    <!-- CSS específico de simulador (si aplica) -->
+    {% if include_simulador_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_simulador.css') }}">
+    {% endif %}
+
+    <!-- ===== DATA INJECTION ===== -->
+    {% if listaEmpresas is defined %}
+        <script>const asignaciones = {{ listaEmpresas|tojson|safe }};</script>
+    {% endif %}
+
+    {% if pagadoras is defined %}
+        <script>const pagadoras = {{ pagadoras|tojson|safe }};</script>
+    {% endif %}
+
+    {% if listaSolicitudes is defined %}
+        <script>const solicitudes = {{ listaSolicitudes|tojson|safe }};</script>
+    {% endif %}
+
+    {% if listaUsuarios is defined %}
+        <script>const usuarios = {{ listaUsuarios|tojson|safe }};</script>
+    {% endif %}
+
+    {% if listaAsesores is defined %}
+        <script>const asesores = {{ listaAsesores|tojson|safe }};</script>
+    {% endif %}
+
+    {% if listaCamposFiltro is defined %}
+        <script>const filtros = {{ listaCamposFiltro|tojson|safe }};</script>
+    {% endif %}
+
+    {% if listaLogs is defined %}
+        <script>const logs = {{ listaLogs|tojson|safe }};</script>
+    {% endif %}
+
+    {% if user is defined %}
+        <script>
+            const user = {{ user|tojson|safe }};
+            {% if user != "undefined" %}
+            const forbidden = {{ user.forbidden|tojson|safe }};
+            {% endif %}
+        </script>
+    {% endif %}
+
+    {% if message is defined %}
+        <script>const message = "{{ message }}";</script>
+    {% endif %}
+
+    {% if lastUpdated is defined and lastUpdated != "null" %}
+        <script>const lastUpdated = "{{ lastUpdated }}";</script>
+    {% endif %}
+
+    {% if backups is defined and backups != "null" %}
+        <script>const backups = {{ backups|tojson|safe }};</script>
+    {% endif %}
+
+    {% if feedback is defined %}
+        <script>const feedback = "{{ feedback }}";</script>
+    {% endif %}
+
+    {% if scorecards is defined %}
+        <script>const scorecards = {{ scorecards|tojson|safe }};</script>
+    {% endif %}
+
+    {% if pipelines is defined %}
+        <script>const pipelines = {{ pipelines|tojson|safe }};</script>
+    {% endif %}
+
+    {% if series is defined %}
+        <script>const series = {{ series|tojson|safe }};</script>
+    {% endif %}
+
+    {% if etiquetas is defined %}
+        <script>const etiquetas = {{ etiquetas|tojson|safe }};</script>
+    {% endif %}
+
+    {% if productos is defined %}
+        <script>const productos = {{ productos|tojson|safe }};</script>
+    {% endif %}
+
+    {% if seguros is defined %}
+        <script>const seguros = {{ seguros|tojson|safe }};</script>
+    {% endif %}
+
+    {% if accion is defined %}
+        <script>const accion = "{{ accion }}";</script>
+    {% endif %}
+
+    {% if viewName is defined %}
+        <script>const viewName = "{{ viewName }}";</script>
+    {% endif %}
+
+    {% if headers is defined %}
+        <script>const headers = {{ headers|tojson|safe }};</script>
+    {% endif %}
+
+    {% if listaRegistros is defined %}
+        <script>const reporte = {{ listaRegistros|tojson|safe }};</script>
+    {% endif %}
+
+    {% if listaACL is defined %}
+        <script>const listaACL = {{ listaACL|tojson|safe }};</script>
+    {% endif %}
+
+    {% if camposUnicos is defined %}
+        <script>const camposUnicos = {{ camposUnicos|tojson|safe }};</script>
+    {% endif %}
+
+    <!-- ===== CUSTOM CSS BLOCK ===== -->
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- ========== NAVBAR MODERNA ========== -->
+    <nav class="modern-navbar" id="mainNavbar">
+        <button class="navbar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+            <div class="hamburger" id="hamburgerIcon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+
+        <a href="/" class="navbar-brand">
+            <img src="{{ url_for('static', filename='img/Logo_MiPymex.jpg') }}" alt="Logo">
+            <span>PipeEnLinea</span>
+        </a>
+
+        <div class="d-flex align-items-center gap-3 ms-auto">
+            <!-- Notificaciones -->
+            <div class="dropdown">
+                <button class="btn btn-link text-white position-relative" type="button" id="notificationsDropdown" data-bs-toggle="dropdown">
+                    <i class="bi bi-bell fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        3
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="notificationsDropdown">
+                    <li><h6 class="dropdown-header">Notificaciones</h6></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-check-circle text-success me-2"></i>Solicitud aprobada</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-clock text-warning me-2"></i>Pendiente revisión</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-info-circle text-info me-2"></i>Nuevo mensaje</a></li>
+                </ul>
+            </div>
+
+            <!-- Usuario -->
+            <div class="dropdown">
+                <button class="btn btn-link text-white d-flex align-items-center gap-2" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle fs-5"></i>
+                    {% if user is defined and user != "undefined" %}
+                    <span class="d-none d-md-inline">{{ user.name }}</span>
+                    {% else %}
+                    <span class="d-none d-md-inline">Usuario</span>
+                    {% endif %}
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+                    <li><a class="dropdown-item" href="/configuracion"><i class="bi bi-gear me-2"></i>Configuración</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== SIDEBAR MODERNA ========== -->
+    <aside class="modern-sidebar" id="mainSidebar">
+        <div class="sidebar-menu">
+            <!-- Sección Principal -->
+            <div class="menu-section-title">Principal</div>
+
+            <div class="menu-item">
+                <a href="/" class="menu-link">
+                    <i class="bi bi-house-door menu-icon"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/solicitudes" class="menu-link">
+                    <i class="bi bi-file-earmark-text menu-icon"></i>
+                    <span>Solicitudes</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/pipeline" class="menu-link">
+                    <i class="bi bi-funnel menu-icon"></i>
+                    <span>Pipeline</span>
+                </a>
+            </div>
+
+            <!-- Sección Análisis -->
+            <div class="menu-section-title">Análisis</div>
+
+            <div class="menu-item">
+                <a href="/analisis" class="menu-link">
+                    <i class="bi bi-graph-up menu-icon"></i>
+                    <span>Análisis Crediticio</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/scorecard" class="menu-link">
+                    <i class="bi bi-clipboard-data menu-icon"></i>
+                    <span>Scorecard</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/simulador" class="menu-link">
+                    <i class="bi bi-calculator menu-icon"></i>
+                    <span>Simulador</span>
+                </a>
+            </div>
+
+            <!-- Sección Gestión -->
+            <div class="menu-section-title">Gestión</div>
+
+            <div class="menu-item">
+                <a href="/empresas" class="menu-link">
+                    <i class="bi bi-building menu-icon"></i>
+                    <span>Empresas</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/usuarios" class="menu-link">
+                    <i class="bi bi-people menu-icon"></i>
+                    <span>Usuarios</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/cobranza" class="menu-link">
+                    <i class="bi bi-cash-stack menu-icon"></i>
+                    <span>Cobranza</span>
+                </a>
+            </div>
+
+            <!-- Sección Reportes -->
+            <div class="menu-section-title">Reportes</div>
+
+            <div class="menu-item">
+                <a href="/ventas" class="menu-link">
+                    <i class="bi bi-bar-chart menu-icon"></i>
+                    <span>Reporte de Ventas</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/cosechas" class="menu-link">
+                    <i class="bi bi-pie-chart menu-icon"></i>
+                    <span>Cosechas</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/historico" class="menu-link">
+                    <i class="bi bi-clock-history menu-icon"></i>
+                    <span>Histórico</span>
+                </a>
+            </div>
+
+            <!-- Sección Sistema -->
+            <div class="menu-section-title">Sistema</div>
+
+            <div class="menu-item">
+                <a href="/logs" class="menu-link">
+                    <i class="bi bi-journal-text menu-icon"></i>
+                    <span>Logs</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/acl" class="menu-link">
+                    <i class="bi bi-shield-lock menu-icon"></i>
+                    <span>Permisos (ACL)</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="main-content" id="mainContent">
+        <!-- Page Header -->
+        {% block page_header %}
+        <div class="card-header-modern mb-4">
+            <div>
+                <h1 class="card-title-modern">{% block content_title %}Dashboard{% endblock %}</h1>
+                <p class="card-subtitle-modern">{% block content_subtitle %}Vista general del sistema{% endblock %}</p>
+            </div>
+            <div>
+                {% block header_actions %}{% endblock %}
+            </div>
+        </div>
+        {% endblock %}
+
+        <!-- Alerts -->
+        {% if feedbackalert is defined and feedbackalert %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle me-2"></i>
+            {{ feedbackalert }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endif %}
+
+        <!-- Main Content -->
+        {% block content %}
+        <div class="card-modern">
+            <p>Contenido por defecto. Extiende este template y define tu bloque de contenido.</p>
+        </div>
+        {% endblock %}
+    </main>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <!-- Bootstrap Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery 3.7.1 (actualizado) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- JavaScript legacy (compatibilidad) -->
+    <script src="{{ url_for('static', filename='js/jsFunctionsFrontEnd.js') }}"></script>
+
+    {% if include_simulador_js %}
+    <script src="{{ url_for('static', filename='js/functions_simulador.js') }}"></script>
+    {% endif %}
+
+    <!-- Modern JavaScript -->
+    <script>
+        // ===== SIDEBAR TOGGLE =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('mainSidebar');
+            const mainContent = document.getElementById('mainContent');
+            const hamburger = document.getElementById('hamburgerIcon');
+
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+                mainContent.classList.toggle('sidebar-open');
+                hamburger.classList.toggle('open');
+            });
+
+            // ===== NAVBAR SCROLL EFFECT =====
+            const navbar = document.getElementById('mainNavbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // ===== ACTIVE MENU ITEM =====
+            const currentPath = window.location.pathname;
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            menuLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+
+            // ===== FEEDBACK ALERTS =====
+            {% if feedbackalert is defined and feedbackalert %}
+            if ("{{ feedbackalert }}".includes("|")) {
+                const alertas = "{{ feedbackalert }}".split("|");
+                alertas.forEach(alerta => {
+                    if (alerta.trim()) {
+                        showToast(alerta.trim());
+                    }
+                });
+            } else {
+                if ("{{ feedbackalert }}" !== "") {
+                    showToast("{{ feedbackalert }}");
+                }
+            }
+            {% endif %}
+        });
+
+        // ===== TOAST NOTIFICATION FUNCTION =====
+        function showToast(message, type = 'info') {
+            const toastHtml = `
+                <div class="toast align-items-center text-bg-${type} border-0 position-fixed bottom-0 end-0 m-3" role="alert" style="z-index: 9999;">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+            const toastElement = document.body.lastElementChild;
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN'
+            }).format(amount);
+        }
+
+        function formatDate(dateString) {
+            return new Intl.DateTimeFormat('es-MX', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }).format(new Date(dateString));
+        }
+
+        function formatDateTime(dateString) {
+            return new Intl.DateTimeFormat('es-MX', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).format(new Date(dateString));
+        }
+    </script>
+
+    <!-- ===== CUSTOM JAVASCRIPT BLOCK ===== -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
