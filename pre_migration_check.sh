@@ -56,16 +56,16 @@ echo ""
 
 # 2. Verificar archivos JSON principales
 echo "2. Verificando archivos JSON encriptados..."
-check_file "mysite/working/users.json" "true"
-check_file "mysite/working/empresas.json" "true"
-check_file "mysite/working/solicitudes.json" "true"
-check_file "mysite/working/logs.json" "true"
-check_file "mysite/working/cosechas.json" "false"
-check_file "mysite/working/geolocations.json" "false"
-check_file "mysite/working/acl.json" "false"
-check_file "mysite/working/agendas.json" "false"
-check_file "mysite/working/pagadoras.json" "false"
-check_file "mysite/working/roips.json" "false"
+check_file "working/users.json" "true"
+check_file "working/empresas.json" "true"
+check_file "working/solicitudes.json" "true"
+check_file "working/logs.json" "true"
+check_file "working/cosechas.json" "false"
+check_file "working/geolocations.json" "false"
+check_file "working/acl.json" "false"
+check_file "working/agendas.json" "false"
+check_file "working/pagadoras.json" "false"
+check_file "working/roips.json" "false"
 echo ""
 
 # 3. Verificar .env
@@ -128,7 +128,7 @@ echo ""
 
 # 7. Test de desencriptación (opcional)
 echo "7. Test de desencriptación (opcional)..."
-if [ -f "secret.key" ] && [ -f "mysite/working/users.json" ]; then
+if [ -f "secret.key" ] && [ -f "working/users.json" ]; then
     python3 -c "
 from cryptography.fernet import Fernet
 import json
@@ -138,7 +138,7 @@ try:
         key = f.read()
     fernet = Fernet(key)
 
-    with open('mysite/working/users.json', 'rb') as f:
+    with open('working/users.json', 'rb') as f:
         encrypted = f.read()
 
     decrypted = fernet.decrypt(encrypted)

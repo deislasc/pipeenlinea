@@ -31,7 +31,7 @@ from database import initialize_pool, execute_query, execute_many, check_databas
 # CONFIGURACIÓN
 # ============================================================================
 
-WORKING_DIR = "mysite/working"
+WORKING_DIR = "working"
 SECRET_KEY_PATH = os.getenv('ENCRYPTION_KEY_PATH', 'secret.key')
 
 # Mapeo de archivos JSON a tablas
