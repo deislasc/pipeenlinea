@@ -41,8 +41,7 @@ except Exception as e:
 # Mapeo de archivos JSON a tablas PostgreSQL
 # ============================================================================
 FILE_TO_TABLE_MAP = {
-    # TEMPORALMENTE COMENTADO: Solo 7 de 66 usuarios migraron, falta tu usuario
-    # 'working/users.json': 'usuarios',
+    'working/users.json': 'usuarios',
     'working/empresas.json': 'empresas',
     'working/solicitudes.json': 'solicitudes',
     'working/logs.json': 'logs',
