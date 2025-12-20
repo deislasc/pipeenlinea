@@ -20,11 +20,21 @@ import routes_analisis as analisis
 
 # Importar módulo de database PostgreSQL
 try:
-    from database import execute_query, get_db_cursor
+    from database import execute_query, get_db_cursor, initialize_pool
     POSTGRES_AVAILABLE = True
+    # Inicializar pool de conexiones al importar el módulo
+    print("🔌 Inicializando pool de conexiones PostgreSQL...")
+    if not initialize_pool():
+        print("⚠️  No se pudo inicializar pool de PostgreSQL, usando JSON")
+        POSTGRES_AVAILABLE = False
+    else:
+        print("✅ Pool de conexiones PostgreSQL inicializado correctamente")
 except ImportError:
     POSTGRES_AVAILABLE = False
     print("⚠️  Módulo database.py no encontrado, usando solo JSON")
+except Exception as e:
+    POSTGRES_AVAILABLE = False
+    print(f"⚠️  Error inicializando PostgreSQL: {e}, usando JSON")
 
 
 # ============================================================================
