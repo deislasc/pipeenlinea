@@ -72,7 +72,12 @@ row_count=$(docker compose exec -T postgres psql -U pipeenlinea_user -d pipeenli
 if [ "$row_count" -eq "0" ]; then
     echo -e "${YELLOW}⚠️  No hay datos. Ejecutando migración...${NC}"
 
+    # Reconstruir imagen de migración (por si hubo cambios)
+    echo "Reconstruyendo imagen de migración..."
+    docker compose build migration
+
     # Ejecutar migración
+    echo "Iniciando proceso de migración..."
     docker compose --profile migrate run --rm migration
 
     # Verificar migración

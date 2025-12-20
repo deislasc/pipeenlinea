@@ -34,6 +34,6 @@ RUN mkdir -p /app/mysite /app/logs && \
 # Hacer script ejecutable
 RUN chmod +x /app/migrate_to_postgres.py
 
-# Por defecto, ejecutar migración
+# Por defecto, ejecutar migración completa
 ENTRYPOINT ["python", "/app/migrate_to_postgres.py"]
-CMD ["--help"]
+CMD []
