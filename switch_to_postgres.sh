@@ -27,20 +27,20 @@ echo ""
 echo -e "${BLUE}[1/5]${NC} Verificando prerequisitos..."
 
 # Verificar que PostgreSQL esté corriendo
-if ! docker-compose ps | grep -q "postgres.*Up"; then
+if ! docker compose ps | grep -q "postgres.*Up"; then
     echo -e "${RED}❌ PostgreSQL no está corriendo${NC}"
-    echo "Ejecuta primero: ./start.sh"
+    echo "Ejecuta primero: docker compose up -d"
     exit 1
 fi
 
 echo -e "${GREEN}✅ PostgreSQL está corriendo${NC}"
 
 # Verificar que los datos estén migrados
-row_count=$(docker-compose exec -T postgres psql -U pipeenlinea_user -d pipeenlinea -t -c "SELECT COUNT(*) FROM usuarios;" 2>/dev/null | xargs || echo "0")
+row_count=$(docker compose exec -T postgres psql -U pipeenlinea_user -d pipeenlinea -t -c "SELECT COUNT(*) FROM usuarios;" 2>/dev/null | xargs || echo "0")
 
 if [ "$row_count" -eq "0" ]; then
     echo -e "${RED}❌ No hay datos migrados en PostgreSQL${NC}"
-    echo "Ejecuta primero: docker-compose --profile migrate run --rm migration"
+    echo "Ejecuta primero: docker compose --profile migrate run --rm migration"
     exit 1
 fi
 
@@ -88,15 +88,15 @@ echo -e "${BLUE}[4/5]${NC} Reconstruyendo contenedores Docker..."
 
 # Detener servicios
 echo "Deteniendo servicios..."
-docker-compose down
+docker compose down
 
 # Reconstruir la imagen de la app
 echo "Reconstruyendo imagen de la aplicación..."
-docker-compose build app
+docker compose build app
 
 # Iniciar servicios
 echo "Iniciando servicios..."
-docker-compose up -d
+docker compose up -d
 
 # ============================================================================
 # PASO 5: Verificar que la aplicación esté funcionando
@@ -118,7 +118,7 @@ for i in {1..30}; do
     if [ $i -eq 30 ]; then
         echo ""
         echo -e "${YELLOW}⚠️  La aplicación no responde aún${NC}"
-        echo "Ver logs: docker-compose logs -f app"
+        echo "Ver logs: docker compose logs -f app"
         break
     fi
 done
@@ -144,7 +144,7 @@ echo "   • Aplicación Web: http://localhost:8000"
 echo "   • PostgreSQL: localhost:5432"
 echo ""
 echo -e "${CYAN}📊 Estadísticas de datos:${NC}"
-docker-compose exec -T postgres psql -U pipeenlinea_user -d pipeenlinea -c "
+docker compose exec -T postgres psql -U pipeenlinea_user -d pipeenlinea -c "
     SELECT
         'usuarios' as tabla, COUNT(*) as registros FROM usuarios
     UNION ALL
@@ -166,5 +166,5 @@ echo ""
 read -p "¿Deseas ver los logs de la aplicación? (s/n): " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Ss]$ ]]; then
-    docker-compose logs -f app
+    docker compose logs -f app
 fi
