@@ -102,7 +102,7 @@ def reloadJSONData(fileName):
 
             # Query para obtener todos los registros de la tabla
             query = f"SELECT * FROM {table_name}"
-            results = execute_query(query, fetch_all=True)
+            results = execute_query(query, fetch=True)
 
             if results and len(results) > 0:
                 # Convertir a lista de diccionarios (formato compatible)

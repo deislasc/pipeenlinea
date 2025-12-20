@@ -39,7 +39,7 @@ services:
       - "8000:8000"
     volumes:
       - ./mysite/uploads:/app/uploads
-      - ./working:/app/working:ro  # JSONs encriptados (solo lectura)
+      - ./working:/app/working  # JSONs encriptados (lectura/escritura para logs)
       - ./secret.key:/app/secret.key:ro
       - ./logs:/app/logs
     depends_on:
