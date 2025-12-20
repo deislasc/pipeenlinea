@@ -93,6 +93,39 @@ def decrypt_file(encrypted_data):
 
 
 # ============================================================================
+# Funciones de conversión de datos
+# ============================================================================
+def convert_postgres_to_json_compatible(data):
+    """
+    Convierte datos de PostgreSQL a formato compatible con JSON.
+    - datetime → string ISO format
+    - date → string YYYY-MM-DD
+    - Decimal → float
+    - None → mantener None (se convierte a null en JSON)
+    """
+    from decimal import Decimal
+
+    converted = []
+    for row in data:
+        new_row = {}
+        for key, value in row.items():
+            if isinstance(value, datetime):
+                # Convertir datetime a string ISO
+                new_row[key] = value.isoformat() if value else ""
+            elif isinstance(value, Decimal):
+                # Convertir Decimal a float
+                new_row[key] = float(value) if value else 0.0
+            elif value is None:
+                # None se mantiene (será null en JSON)
+                new_row[key] = ""
+            else:
+                # Otros tipos se mantienen igual
+                new_row[key] = value
+        converted.append(new_row)
+    return converted
+
+
+# ============================================================================
 # FUNCIÓN HÍBRIDA: Lee de PostgreSQL primero, JSON como fallback
 # ============================================================================
 def reloadJSONData(fileName):
@@ -117,6 +150,10 @@ def reloadJSONData(fileName):
             if results and len(results) > 0:
                 # Convertir a lista de diccionarios (formato compatible)
                 data = [dict(row) for row in results]
+
+                # Convertir tipos de PostgreSQL a tipos compatibles con JSON
+                data = convert_postgres_to_json_compatible(data)
+
                 print(f"✅ Leídos {len(data)} registros de PostgreSQL ({table_name})")
 
                 # Agregar header vacío al inicio (compatibilidad con código legacy)
