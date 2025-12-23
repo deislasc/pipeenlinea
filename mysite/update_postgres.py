@@ -278,9 +278,7 @@ def reloadJSONData(fileName):
 
                 print(f"✅ Leídos {len(data)} registros de PostgreSQL ({table_name})")
 
-                # Agregar header vacío al inicio (compatibilidad con código legacy)
-                data.insert(0, {})
-
+                # NO agregar header vacío - el JSON original no lo tiene
                 return data
             else:
                 print(f"⚠️  No hay datos en PostgreSQL para {table_name}, usando JSON...")
