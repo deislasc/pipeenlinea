@@ -1,197 +1,223 @@
-{# Modern Login Page - PipeEnLinea #}
+{# [START form] #}
 {%- extends "base.html" -%}
 {%- block content -%}
 
 <style>
-/* Login-specific styles */
-.login-wrapper {
+/* Ocultar elementos de navegación en login */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.panviewNavBar,
+.toogleButton,
+.locationButton,
+.toogleMenu,
+.pagebody > .container {
+    display: none !important;
+}
+
+/* Login container - ocupa toda la pantalla */
+#contenedor1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+    margin: 0;
+    padding: 1rem;
 }
 
 .login-card {
-    background: var(--color-white);
-    border-radius: var(--border-radius-2xl);
-    box-shadow: var(--shadow-2xl);
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     width: 100%;
-    max-width: 440px;
+    max-width: 420px;
     overflow: hidden;
-    animation: fadeIn var(--transition-slow) ease-out;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .login-header {
-    background: var(--color-primary-gradient);
-    padding: var(--spacing-2xl);
+    background: white;
+    padding: 2rem;
     text-align: center;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .login-logo {
-    width: 250px;
+    width: 200px;
     max-width: 100%;
     height: auto;
-    margin-bottom: var(--spacing-lg);
-    border-radius: var(--border-radius-lg);
-    background: var(--color-white);
-    padding: var(--spacing-md);
+    margin-bottom: 1rem;
 }
 
 .login-title {
-    color: var(--color-white);
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-bold);
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin: 0;
 }
 
 .login-body {
-    padding: var(--spacing-2xl);
+    padding: 2rem;
+}
+
+.login-alert {
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
 }
 
 .login-form .form-group {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 1.25rem;
 }
 
 .login-form .form-label {
-    color: var(--color-gray-700);
-    font-weight: var(--font-weight-medium);
-    margin-bottom: var(--spacing-sm);
     display: block;
+    color: #374151;
+    font-weight: 500;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
 }
 
-.login-form .form-control {
+.login-form .form-input {
     width: 100%;
-    padding: var(--spacing-md);
-    font-size: var(--font-size-base);
-    border: 2px solid var(--color-gray-300);
-    border-radius: var(--border-radius-md);
-    transition: all var(--transition-base);
-    text-align: center;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: #1f2937;
+    background: white;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    transition: all 0.2s;
+    box-sizing: border-box;
 }
 
-.login-form .form-control:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+.login-form .form-input:focus {
     outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.login-form .form-input::placeholder {
+    color: #9ca3af;
 }
 
 .login-form .btn-submit {
     width: 100%;
-    padding: var(--spacing-md) var(--spacing-xl);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-white);
-    background: var(--color-primary-gradient);
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     border: none;
-    border-radius: var(--border-radius-md);
+    border-radius: 8px;
     cursor: pointer;
-    transition: all var(--transition-base);
-    margin-top: var(--spacing-md);
+    transition: all 0.2s;
+    margin-top: 0.5rem;
 }
 
 .login-form .btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
 }
 
 .login-form .btn-submit:active {
     transform: translateY(0);
 }
 
-.login-alert {
-    margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-radius: var(--border-radius-md);
-    font-weight: var(--font-weight-medium);
-    text-align: center;
-    animation: slideInFromRight var(--transition-base) ease-out;
-}
-
-.login-alert.success {
-    background-color: #d1fae5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
-}
-
-.login-alert.error {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
-}
-
 @media (max-width: 480px) {
+    #contenedor1 {
+        padding: 0.5rem;
+    }
+
     .login-card {
-        border-radius: var(--border-radius-xl);
+        border-radius: 12px;
     }
 
-    .login-header {
-        padding: var(--spacing-xl);
-    }
-
+    .login-header,
     .login-body {
-        padding: var(--spacing-lg);
+        padding: 1.5rem;
     }
 
     .login-logo {
-        width: 200px;
+        width: 160px;
     }
 }
 </style>
 
-<div class="login-wrapper">
-    <div class="login-card">
-        <!-- Header con logo -->
-        <div class="login-header">
-            <img src="{{ url_for('static', filename='img/Buzon PLD.png') }}"
-                 alt="PipeEnLinea Logo"
-                 class="login-logo">
-            <h1 class="login-title">Bienvenido</h1>
-        </div>
+<div class="login-card">
+    <div class="login-header">
+        <img src="{{ url_for('static', filename='img/Buzon PLD.png') }}"
+             alt="PipeEnLinea"
+             class="login-logo">
+        <h1 class="login-title">Bienvenido</h1>
+    </div>
 
-        <!-- Cuerpo del formulario -->
-        <div class="login-body">
-            {%- if feedback is defined and feedback != "" -%}
-            <div class="login-alert error">
-                {{ feedback }}
+    <div class="login-body">
+        {%- if feedback is defined and feedback != "" -%}
+        <div class="login-alert">
+            {{ feedback }}
+        </div>
+        {%- endif -%}
+
+        <form id="formaLogIn" method="POST" enctype="multipart/form-data" class="login-form">
+            <div class="form-group">
+                <label for="username" class="form-label">Correo Electrónico</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    class="form-input"
+                    placeholder="correo@ejemplo.com"
+                    autocomplete="email"
+                    required
+                    autofocus
+                >
             </div>
-            {%- endif -%}
 
-            <form id="formaLogIn" method="POST" enctype="multipart/form-data" class="login-form">
-                <div class="form-group">
-                    <label for="username" class="form-label">Correo Electrónico</label>
-                    <input
-                        type="text"
-                        name="username"
-                        id="username"
-                        class="form-control"
-                        placeholder="tu@correo.com"
-                        autocomplete="email"
-                        required
-                        autofocus
-                    >
-                </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña</label>
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    class="form-input"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
 
-                <div class="form-group">
-                    <label for="password" class="form-label">Contraseña</label>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        class="form-control"
-                        placeholder="••••••••"
-                        autocomplete="current-password"
-                        required
-                    >
-                </div>
-
-                <button type="submit" class="btn-submit">
-                    Ingresar
-                </button>
-            </form>
-        </div>
+            <button type="submit" class="btn-submit">
+                Ingresar
+            </button>
+        </form>
     </div>
 </div>
 
 {%- endblock -%}
+{# [END form] #}
