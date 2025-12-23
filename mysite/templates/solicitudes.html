@@ -2,6 +2,161 @@
 {%- block content -%}
 
 <style>
+/* === PANEL LATERAL DE DETALLES === */
+#contenedor2 {
+    position: fixed !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 500px !important;
+    max-width: 90vw !important;
+    background: white !important;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15) !important;
+    z-index: 1000 !important;
+    overflow-y: auto !important;
+    padding: 0 !important;
+    animation: slideInFromRight 0.3s ease-out;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Overlay cuando se abre el panel */
+#contenedor2::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 500px;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+#contenedor2 .panel {
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#contenedor2 .listadoItems {
+    height: 100% !important;
+    padding: 0 !important;
+    background: #f9fafb !important;
+}
+
+/* Header del panel lateral */
+#contenedor2 .listadoItems::before {
+    content: 'Detalles de Solicitud';
+    display: block;
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#contenedor2 form {
+    padding: 2rem;
+    width: 100% !important;
+}
+
+/* Aplicar estilos al panel lateral también */
+#contenedor2 .details-title {
+    display: none; /* El header ya está arriba */
+}
+
+#contenedor2 .details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+#contenedor2 .detail-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#contenedor2 .detail-row.full-width {
+    grid-column: 1 / -1;
+}
+
+#contenedor2 .detail-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#contenedor2 .detail-input,
+#contenedor2 .detail-select,
+#contenedor2 .detail-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    background: white;
+    color: #1f2937;
+    font-family: inherit;
+}
+
+#contenedor2 .detail-input:focus,
+#contenedor2 .detail-select:focus,
+#contenedor2 .detail-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
+}
+
+#contenedor2 .detail-input:disabled,
+#contenedor2 .detail-select:disabled,
+#contenedor2 .detail-textarea:disabled {
+    background: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+#contenedor2 .detail-input:read-only,
+#contenedor2 .detail-textarea:read-only {
+    background: #f9fafb;
+    border-color: #f3f4f6;
+    cursor: default;
+}
+
+#contenedor2 .detail-textarea {
+    min-height: 100px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+#contenedor2 .detail-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem;
+    padding-right: 2.5rem;
+}
+
 /* === CONTENEDOR PRINCIPAL === */
 .solicitudes-container {
     padding: 1.5rem;
