@@ -136,12 +136,12 @@ def convert_value(value, column_name):
     if value is None or value == '':
         return None
 
-    # Si es lista o dict, convertir a JSON
-    if isinstance(value, (list, dict)):
-        return json.dumps(value)
-
-    # Manejar fechas
+    # Manejar campos de fecha primero (antes de listas/dicts)
     if 'fecha' in column_name.lower() or column_name == 'timeStamp':
+        # Si es lista o dict en campo de fecha, retornar None (datos inválidos)
+        if isinstance(value, (list, dict)):
+            return None
+
         if isinstance(value, str):
             # Intentar parsear diferentes formatos de fecha
             for fmt in ['%Y-%m-%d %H:%M:%S.%f', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d']:
@@ -153,6 +153,12 @@ def convert_value(value, column_name):
             return None
         elif isinstance(value, datetime):
             return value
+        # Si es otro tipo en campo de fecha, retornar None
+        return None
+
+    # Si es lista o dict (y NO es campo de fecha), convertir a JSON
+    if isinstance(value, (list, dict)):
+        return json.dumps(value)
 
     # Retornar el valor tal cual
     return value
