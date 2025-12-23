@@ -225,8 +225,12 @@ def convert_postgres_to_json_compatible(data, table_name=None):
             elif isinstance(value, Decimal):
                 # Convertir Decimal a float
                 converted_value = float(value) if value else 0.0
+            elif isinstance(value, int):
+                # Convertir int a string (para compatibilidad con código legacy)
+                # El código espera IDs como strings para usar .isnumeric()
+                converted_value = str(value)
             elif value is None:
-                # None se mantiene (será null en JSON)
+                # None se convierte a string vacío
                 converted_value = ""
             else:
                 # Otros tipos se mantienen igual
