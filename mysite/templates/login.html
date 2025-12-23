@@ -1,68 +1,197 @@
-{# [START form] #}
+{# Modern Login Page - PipeEnLinea #}
 {%- extends "base.html" -%}
 {%- block content -%}
 
-<div class="panelAviso">
-    <center>
-        <table width="250px" cellpadding="6">
-            <tr>
-                <td>
-                    <img src="{{ url_for('static', filename='img/Buzon PLD.png') }}"
-                         width="250px"
-                         height="150px">
-                </td>
-            </tr>
-        </table>
-    </center>
+<style>
+/* Login-specific styles */
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: var(--spacing-lg);
+}
 
+.login-card {
+    background: var(--color-white);
+    border-radius: var(--border-radius-2xl);
+    box-shadow: var(--shadow-2xl);
+    width: 100%;
+    max-width: 440px;
+    overflow: hidden;
+    animation: fadeIn var(--transition-slow) ease-out;
+}
+
+.login-header {
+    background: var(--color-primary-gradient);
+    padding: var(--spacing-2xl);
+    text-align: center;
+}
+
+.login-logo {
+    width: 250px;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-white);
+    padding: var(--spacing-md);
+}
+
+.login-title {
+    color: var(--color-white);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin: 0;
+}
+
+.login-body {
+    padding: var(--spacing-2xl);
+}
+
+.login-form .form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.login-form .form-label {
+    color: var(--color-gray-700);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--spacing-sm);
+    display: block;
+}
+
+.login-form .form-control {
+    width: 100%;
+    padding: var(--spacing-md);
+    font-size: var(--font-size-base);
+    border: 2px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-base);
+    text-align: center;
+}
+
+.login-form .form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+    outline: none;
+}
+
+.login-form .btn-submit {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-white);
+    background: var(--color-primary-gradient);
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    margin-top: var(--spacing-md);
+}
+
+.login-form .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.login-form .btn-submit:active {
+    transform: translateY(0);
+}
+
+.login-alert {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    font-weight: var(--font-weight-medium);
+    text-align: center;
+    animation: slideInFromRight var(--transition-base) ease-out;
+}
+
+.login-alert.success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.login-alert.error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        border-radius: var(--border-radius-xl);
+    }
+
+    .login-header {
+        padding: var(--spacing-xl);
+    }
+
+    .login-body {
+        padding: var(--spacing-lg);
+    }
+
+    .login-logo {
+        width: 200px;
+    }
+}
+</style>
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <!-- Header con logo -->
+        <div class="login-header">
+            <img src="{{ url_for('static', filename='img/Buzon PLD.png') }}"
+                 alt="PipeEnLinea Logo"
+                 class="login-logo">
+            <h1 class="login-title">Bienvenido</h1>
+        </div>
+
+        <!-- Cuerpo del formulario -->
+        <div class="login-body">
+            {%- if feedback is defined and feedback != "" -%}
+            <div class="login-alert error">
+                {{ feedback }}
+            </div>
+            {%- endif -%}
+
+            <form id="formaLogIn" method="POST" enctype="multipart/form-data" class="login-form">
+                <div class="form-group">
+                    <label for="username" class="form-label">Correo Electrónico</label>
+                    <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        class="form-control"
+                        placeholder="tu@correo.com"
+                        autocomplete="email"
+                        required
+                        autofocus
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        class="form-control"
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Ingresar
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
-<div class="panelLogIn" id="panelLogIn"> <!-- Panel de detalle para equipos de escritorio-->
-    <!-- <div class="listadoItems" id="solicitudEditItem" name="solicitudEditItem" style="height: 100%;"> -->
-        <form id="formaLogIn" method="POST" enctype="multipart/form-data">
-        	<table width="100%" cellpadding="6">
-
-
-        		<tr>
-                    {%- if feedback is not defined -%}
-        			<td align="center" style="background: rgb(0,0,75); border-radius: 8px; height: 40px">
-        				<label style="color:#FFFFFF;"> ¿Quién Eres? </label>
-        		    </td>
-                    {%- else -%}
-                    <td align="center" style="background: rgb(150,0,0); border-radius: 8px; height: 40px">
-                        <label style="color:#FFFFFF;"> {{feedback}} </label>
-                    </td>
-                    {%- endif -%}
-        		</tr>
-        		<tr>
-        			<td align="center">
-        				Correo:
-        			</td>
-        		</tr>
-        		<tr>
-        			<td align="center">
-        				<input class="roundInput" type="text" name="username" id="username" style="text-align: center">
-        			</td>
-        		</tr>
-        		<tr>
-        			<td align="center">
-        				Contraseña:
-        			</td>
-        		</tr>
-        		<tr>
-        			<td align="center">
-        				<input autocomplete class="roundInput" type="password" name="password" id="password" style="text-align: center">
-        			</td>
-        		</tr>
-        		<tr>
-        			<td align="center">
-        				<input class="buttonSubmit" type="submit" value="Ingresar">
-        			</td>
-        		</tr>
-        	</table>
-        </form>
-
-    <!-- </div>         -->
-</div>
 {%- endblock -%}
-{# [END form] #}
