@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================================
 # RESET Y MIGRACIÓN COMPLETA A POSTGRESQL
-# Elimina datos actuales, recrea schema flexible, migra TODO
+# Elimina datos actuales, recrea schema completo desde JSON real, migra TODO
 # ============================================================================
 
 set -e
@@ -51,15 +51,15 @@ else
 fi
 
 # ============================================================================
-# PASO 3: Eliminar schema actual y recrear con schema flexible
+# PASO 3: Eliminar schema actual y recrear con schema completo
 # ============================================================================
 echo ""
-echo -e "${BLUE}[3/5]${NC} Recreando schema flexible (acepta datos reales)..."
+echo -e "${BLUE}[3/5]${NC} Aplicando schema completo (generado desde estructura JSON real)..."
 
-# Aplicar schema flexible
-docker compose exec -T postgres psql -U pipeenlinea_user -d pipeenlinea < database/schema_flexible.sql
+# Aplicar schema completo
+docker compose exec -T postgres psql -U pipeenlinea_user -d pipeenlinea < database/schema_completo.sql
 
-echo -e "${GREEN}✅ Schema flexible creado${NC}"
+echo -e "${GREEN}✅ Schema completo creado${NC}"
 
 # ============================================================================
 # PASO 4: Ejecutar migración completa
