@@ -23,8 +23,8 @@ WORKDIR /app
 RUN pip install --upgrade pip && \
     pip install psycopg2-binary cryptography
 
-# Copiar script de migración
-COPY migrate_to_postgres.py /app/
+# Copiar script de migración V2 (usa nombres exactos del schema)
+COPY migrate_to_postgres_v2.py /app/
 COPY mysite/database.py /app/mysite/
 
 # Crear directorio para mysite module
@@ -32,8 +32,8 @@ RUN mkdir -p /app/mysite /app/logs && \
     touch /app/mysite/__init__.py
 
 # Hacer script ejecutable
-RUN chmod +x /app/migrate_to_postgres.py
+RUN chmod +x /app/migrate_to_postgres_v2.py
 
-# Por defecto, ejecutar migración completa
-ENTRYPOINT ["python", "/app/migrate_to_postgres.py"]
+# Por defecto, ejecutar migración completa con V2
+ENTRYPOINT ["python", "/app/migrate_to_postgres_v2.py"]
 CMD []
