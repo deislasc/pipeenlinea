@@ -53,6 +53,111 @@ FILE_TO_TABLE_MAP = {
     'working/roips.json': 'operaciones_internas_preocupantes',
 }
 
+# Mapeo de columnas PostgreSQL (lowercase) → JSON (camelCase)
+# PostgreSQL convierte todos los nombres a lowercase, necesitamos mapearlos de vuelta
+COLUMN_NAME_MAP = {
+    'usuarios': {
+        'ownerid': 'ownerID',
+        'apikey': 'apiKey',
+        'randomkey': 'randomKey',
+        'tipousuario': 'tipoUsuario',
+        'userestatus': 'userEstatus',
+        'username': 'userName',
+    },
+    'empresas': {
+        'ownerid': 'ownerID',
+        'autorizaciondg': 'autorizacionDG',
+        'empresapagadora': 'empresaPagadora',
+        'empresasegmentacioncobranza': 'empresaSegmentacionCobranza',
+        'voborequerido': 'voboRequerido',
+        'userid_10': 'userID_10',
+        'userid_14': 'userID_14',
+        'userid_30': 'userID_30',
+        'userid_52': 'userID_52',
+        'userid_59': 'userID_59',
+        'userid_65': 'userID_65',
+        'userid_9': 'userID_9',
+    },
+    'solicitudes': {
+        'asesornombre': 'asesorNombre',
+        'autorizaciondg': 'autorizacionDG',
+        'clienteantiguedad': 'clienteAntiguedad',
+        'clienteapellidomaterno': 'clienteApellidoMaterno',
+        'clienteapellidopaterno': 'clienteApellidoPaterno',
+        'clienteclabe': 'clienteClabe',
+        'clientecorreojefe': 'clienteCorreoJefe',
+        'clienteempresa': 'clienteEmpresa',
+        'clientenombre': 'clienteNombre',
+        'clientenombrejefe': 'clienteNombreJefe',
+        'clientenuevorrenovacion': 'clienteNuevoRenovacion',
+        'clientepuesto': 'clientePuesto',
+        'clientereferenciacobranza': 'clienteReferenciaCobranza',
+        'clientesalario': 'clienteSalario',
+        'clienteseenteropor': 'clienteSeEnteroPor',
+        'estatusembudo': 'estatusEmbudo',
+        'etapaembudo': 'etapaEmbudo',
+        'fechaautorizaciondg': 'fechaAutorizacionDG',
+        'fechacancelacioncartera': 'fechaCancelacionCartera',
+        'fechacancelacioncliente': 'fechaCancelacionCliente',
+        'fechacontacto': 'fechaContacto',
+        'fechacontratoimpreso': 'fechaContratoImpreso',
+        'fechaentregaariesgos': 'fechaEntregaARiesgos',
+        'fechaentregacontratofirmado': 'fechaEntregaContratoFirmado',
+        'fechafondeado': 'fechaFondeado',
+        'fechaprimersolicitudvobo': 'fechaPrimerSolicitudVoBo',
+        'fechapropuesta': 'fechaPropuesta',
+        'fecharechazo': 'fechaRechazo',
+        'fecharechazodg': 'fechaRechazoDG',
+        'fecharechazoriesgos': 'fechaRechazoRiesgos',
+        'fechareferenciacobranza': 'fechaReferenciaCobranza',
+        'fechasegundasolicitudvobo': 'fechaSegundaSolicitudVoBo',
+        'fechatercerasolicitudvobo': 'fechaTercerSolicitudVoBo',
+        'fechavalidacionclabe': 'fechaValidacionClabe',
+        'fechavobo': 'fechaVoBo',
+        'inheritedid': 'inheritedID',
+        'montoautorizado': 'montoAutorizado',
+        'montosolicitado': 'montoSolicitado',
+        'montotransferencia': 'montoTransferencia',
+        'motivonocierre': 'motivoNoCierre',
+        'oldid': 'oldID',
+        'ownerid': 'ownerID',
+        'plazoautorizado': 'plazoAutorizado',
+        'plazosolicitado': 'plazoSolicitado',
+        'polizaseguro': 'polizaSeguro',
+        'regionnombre': 'regionNombre',
+        'solicitudestatus': 'solicitudEstatus',
+        'solicitudnumerocontrol': 'solicitudNumeroControl',
+        'tipodenegocio': 'tipoDeNegocio',
+        'usuarioautorizacionriesgos': 'usuarioAutorizacionRiesgos',
+        'viewname': 'viewName',
+    },
+    'logs': {
+        'objeto': 'Objeto',
+        'logdata': 'logData',
+        'timestamp': 'timeStamp',
+    },
+    'geolocalizaciones': {
+        'ownerid': 'ownerID',
+        'viewname': 'viewName',
+    },
+    'agendas': {
+        'clientenombre': 'clienteNombre',
+        'clientenuevorrenovacion': 'clienteNuevoRenovacion',
+        'ownerid': 'ownerID',
+        'username': 'userName',
+    },
+    'operaciones_internas_preocupantes': {
+        'fechadictaminacion': 'fechaDictaminacion',
+        'fechareporte': 'fechaReporte',
+        'fechareportesiti': 'fechaReporteSITI',
+        'inheritedid': 'inheritedID',
+        'ownerid': 'ownerID',
+        'reportadopor': 'reportadoPor',
+        'reporteestatus': 'reporteEstatus',
+        'viewname': 'viewName',
+    },
+}
+
 
 # ============================================================================
 # Funciones de encriptación/desencriptación (mantenidas del original)
@@ -95,32 +200,44 @@ def decrypt_file(encrypted_data):
 # ============================================================================
 # Funciones de conversión de datos
 # ============================================================================
-def convert_postgres_to_json_compatible(data):
+def convert_postgres_to_json_compatible(data, table_name=None):
     """
     Convierte datos de PostgreSQL a formato compatible con JSON.
     - datetime → string ISO format
     - date → string YYYY-MM-DD
     - Decimal → float
     - None → mantener None (se convierte a null en JSON)
+    - Renombra columnas de lowercase a camelCase
     """
     from decimal import Decimal
+
+    # Obtener mapa de nombres de columnas para esta tabla
+    column_map = COLUMN_NAME_MAP.get(table_name, {}) if table_name else {}
 
     converted = []
     for row in data:
         new_row = {}
         for key, value in row.items():
+            # Convertir tipos de datos
             if isinstance(value, datetime):
                 # Convertir datetime a string ISO
-                new_row[key] = value.isoformat() if value else ""
+                converted_value = value.isoformat() if value else ""
             elif isinstance(value, Decimal):
                 # Convertir Decimal a float
-                new_row[key] = float(value) if value else 0.0
+                converted_value = float(value) if value else 0.0
             elif value is None:
                 # None se mantiene (será null en JSON)
-                new_row[key] = ""
+                converted_value = ""
             else:
                 # Otros tipos se mantienen igual
-                new_row[key] = value
+                converted_value = value
+
+            # Renombrar columna si está en el mapa
+            # PostgreSQL devuelve columnas en lowercase, mapear a camelCase
+            column_name = column_map.get(key.lower(), key)
+
+            new_row[column_name] = converted_value
+
         converted.append(new_row)
     return converted
 
@@ -152,7 +269,8 @@ def reloadJSONData(fileName):
                 data = [dict(row) for row in results]
 
                 # Convertir tipos de PostgreSQL a tipos compatibles con JSON
-                data = convert_postgres_to_json_compatible(data)
+                # Y renombrar columnas de lowercase a camelCase
+                data = convert_postgres_to_json_compatible(data, table_name=table_name)
 
                 print(f"✅ Leídos {len(data)} registros de PostgreSQL ({table_name})")
 
