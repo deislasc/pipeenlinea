@@ -3,38 +3,50 @@
 {%- block content -%}
 
 <style>
-/* Ocultar elementos de navegación en login */
-body {
-    margin: 0;
-    padding: 0;
+/* Reset y configuración de página completa */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
+/* Ocultar todo lo del base.html que no necesitamos */
 .panviewNavBar,
 .toogleButton,
 .locationButton,
 .toogleMenu,
-.pagebody > .container {
+.pagebody,
+#contenedor2,
+#contenedor3,
+#contenedor4,
+.updateDataDiv {
     display: none !important;
+    visibility: hidden !important;
 }
 
-/* Login container - ocupa toda la pantalla */
-#contenedor1 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
-    margin: 0;
-    padding: 1rem;
+/* Contenedor principal del login */
+.container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%) !important;
+    z-index: 9999 !important;
 }
 
+/* Card del login */
 .login-card {
-    background: white;
+    background: #ffffff;
     border-radius: 16px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     width: 100%;
@@ -54,8 +66,9 @@ body {
     }
 }
 
+/* Header con logo */
 .login-header {
-    background: white;
+    background: #ffffff;
     padding: 2rem;
     text-align: center;
     border-bottom: 1px solid #e5e7eb;
@@ -75,10 +88,13 @@ body {
     margin: 0;
 }
 
+/* Cuerpo del formulario */
 .login-body {
     padding: 2rem;
+    background: #ffffff;
 }
 
+/* Alerta de error */
 .login-alert {
     background: #fee2e2;
     border: 1px solid #fecaca;
@@ -91,11 +107,16 @@ body {
     font-weight: 500;
 }
 
-.login-form .form-group {
+/* Formulario */
+.login-form {
+    width: 100%;
+}
+
+.form-group {
     margin-bottom: 1.25rem;
 }
 
-.login-form .form-label {
+.form-label {
     display: block;
     color: #374151;
     font-weight: 500;
@@ -103,34 +124,35 @@ body {
     margin-bottom: 0.5rem;
 }
 
-.login-form .form-input {
+.form-input {
     width: 100%;
     padding: 0.75rem 1rem;
     font-size: 1rem;
     color: #1f2937;
-    background: white;
+    background: #ffffff;
     border: 2px solid #d1d5db;
     border-radius: 8px;
     transition: all 0.2s;
     box-sizing: border-box;
 }
 
-.login-form .form-input:focus {
+.form-input:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.login-form .form-input::placeholder {
+.form-input::placeholder {
     color: #9ca3af;
 }
 
-.login-form .btn-submit {
+/* Botón de submit */
+.btn-submit {
     width: 100%;
     padding: 0.875rem 1.5rem;
     font-size: 1rem;
     font-weight: 600;
-    color: white;
+    color: #ffffff;
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     border: none;
     border-radius: 8px;
@@ -139,19 +161,20 @@ body {
     margin-top: 0.5rem;
 }
 
-.login-form .btn-submit:hover {
+.btn-submit:hover {
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     transform: translateY(-1px);
     box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
 }
 
-.login-form .btn-submit:active {
+.btn-submit:active {
     transform: translateY(0);
 }
 
+/* Responsive */
 @media (max-width: 480px) {
-    #contenedor1 {
-        padding: 0.5rem;
+    .container {
+        padding: 0.5rem !important;
     }
 
     .login-card {
