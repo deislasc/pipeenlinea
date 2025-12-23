@@ -220,8 +220,9 @@ def migrate_table(file_name, config, batch_size=500):
             continue
 
         # Construir query de inserción
+        # PostgreSQL convierte nombres a lowercase automáticamente, usar sin comillas
         placeholders = ', '.join(['%s'] * len(columns))
-        columns_str = ', '.join([f'"{col}"' for col in columns])  # Usar comillas para case-sensitive
+        columns_str = ', '.join([col.lower() for col in columns])  # Convertir a lowercase
 
         query = f"""
             INSERT INTO {table_name} ({columns_str})
